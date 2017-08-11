@@ -7,6 +7,9 @@ from bs4.element import Tag
 from urllib.parse import urlparse
 from zipfile import ZipFile
 from json import loads
+from pathlib import Path
+from urllib.parse import unquote
+from sys import stdout
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -36,6 +39,11 @@ class CurseAPI:
                 break
 
         self.db = shelve.open(self.baseDir+"/omm.db")
+
+        if "packs" not in self.db:
+            self.db["packs"] = list()
+
+        self.packs = self.db["packs"]
 
 
     # SECTION MODS
@@ -87,12 +95,14 @@ class CurseAPI:
     # SECTION UTILS
 
     def download_file(self, url: str, filepath: str):
-        """Download a file from `url` to `filepath`"""
+        """Download a file from `url` to `filepath/name`"""
         r = self.session.get(url, stream=True)
-        with open(filepath, 'wb') as f:
+        fname = unquote(Path(r.url).name)
+        with open(filepath+"/"+fname, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
+        return filepath+"/"+fname
 
     def get(self, params={}, path="", host="", includeUrl=False):
         """HTTP GET with HTML parsing"""
@@ -181,44 +191,45 @@ class CurseFile:
 
 class CurseModpack:
     """Get information from a modpack"""
-    def __init__(self, project: CurseProject):
+    def __init__(self, project: CurseProject, curse: CurseAPI):
         self.project = project
-        self.curse = CurseAPI()
+        self.curse = curse
 
         self.availableFiles = self.curse.get_files(self.project.id)
 
-    def install(self, file: CurseFile, name=""):
-        if not name:
-            name = self.project.title
+        self.installed = False
+        self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
 
-        tempPath = "{}/instances/_MMC_TEMP/{}/".format(self.curse.baseDir, name)
+    def install(self, file: CurseFile):
+        tempPath = "{}/instances/_MMC_TEMP/{}/".format(self.curse.baseDir, self.project.title)
 
         # Create instance temp folder if doesn't exist
         if not os.path.exists(tempPath):
             os.makedirs(tempPath)
 
         # TODO: Pretty progress bar
-        self.curse.download_file(file.host+file.url, tempPath+"pack.zip")
+        packFile = self.curse.download_file(file.host+file.url, tempPath)
 
         # Unpack zip file
-        zipf = ZipFile(tempPath+"pack.zip")
+        zipf = ZipFile(packFile)
         zipf.extractall(tempPath+"raw/")
         zipf.close()
 
         # Delete ZIP file
-        os.remove(tempPath+"pack.zip")
+        os.remove(packFile)
 
         # Parse Manifest
         manifest = ModpackManifest(tempPath+"raw/manifest.json")
 
         # Make mods folder
-        mcPath = "{}/minecraft"
-        modPath = "{}/mods"
+        mcPath = "{}/minecraft".format(tempPath)
+        modPath = "{}/mods".format(mcPath)
         if not os.path.exists(modPath):
             os.makedirs(modPath)
 
-        for mod in manifest.mods:
-            self.curse.download_file()
+        for x, mod in enumerate(manifest.mods):
+            stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
+            self.curse.download_file("{}/projects/{}/files/{}/download".format(self.curse.forgeUrl, mod[0], mod[1]), modPath)
 
 
 class ModpackManifest:

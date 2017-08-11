@@ -54,7 +54,7 @@ except:
 
 print("Testing modpack data")
 try:
-    pack = CurseModpack(packs[0])
+    pack = CurseModpack(packs[0], curse)
     results["modpack_data"]["show"] = True
 except:
     results["modpack_data"]["err"] = format_exc()
@@ -78,9 +78,9 @@ except:
 
 print("Testing mod downloading")
 try:
-    curse.download_file(files[0].host+files[0].url, "test.jar")
+    downloadedFile = curse.download_file(files[0].host+files[0].url, ".")
     results["mod_download"]["show"] = True
-    remove("test.jar")
+    remove(downloadedFile)
 except:
     results["mod_download"]["err"] = format_exc()
     results["mod_download"]["show"] = False
