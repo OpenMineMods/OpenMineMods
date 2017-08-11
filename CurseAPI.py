@@ -23,7 +23,7 @@ class CurseAPI:
 
     def getFiles(self, pid):
         parsed = self.get(path="/{}/files".format(pid), host=self.forgeUrl)
-        return parsed
+        return [CurseFile(i) for i in parsed.select(".project-file-list-item")]
 
     def getVersionList(self):
         parsed = self.get()
@@ -60,13 +60,17 @@ class CurseFile:
     def __init__(self, element):
         self.el = element
 
+        self.name = self.getContent(".project-file-name-container > a")
+
         self.releaseType = self.getThing(".project-file-release-type > div", "title")
         self.uploaded = self.getContent(".standard-datetime")
 
-        self.dlLink = self.getThing(".fa-icon-download")[0]["href"]
+        self.url = self.getThing(".fa-icon-download", "href")
         self.size = float(self.getContent(".project-file-size")[14:-13])
 
         self.version = self.getContent(".version-label")
+
+        self.downloads = int(self.getContent(".project-file-downloads")[14:-10].replace(',', ''))
 
     def getThing(self, selector, tag, index=0):
         return self.el.select(selector)[index][tag]
