@@ -1,4 +1,5 @@
 import requests
+import os
 
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
@@ -7,14 +8,28 @@ useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50
 
 
 class CurseAPI:
+    search_types = {
+        "mod": "mc-mods",
+        "modpack": "modpacks",
+        "texturepack": "customization"
+    }
+
     """Curse API"""
     def __init__(self):
-        self.baseUrl = "https://mods.curse.com/mc-mods/minecraft"
-        self.modpacksUrl = "https://mods.curse.com/modpacks/minecraft"
+        self.baseUrl = "https://mods.curse.com"
         self.forgeUrl = "https://minecraft.curseforge.com"
+
         # Set User Agent header for extra sneakyness
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
+
+        # TODO: Find the MultiMC folder automatically
+        self.baseDir = ""
+        for dirf in ["~/.local/share/multimc", "~/.local/share/multimc5"]:
+            edir = os.path.expanduser(dirf)
+            if os.path.exists(edir):
+                self.baseDir = edir
+                break
 
     # SECTION MODS
 
@@ -23,7 +38,7 @@ class CurseAPI:
         parsed = self.get(params={
             "filter-project-game-version": version,
             "page": page
-        })
+        }, path="/mc-mods/minecraft")
         projects = parsed.select("#addons-browse")[0].select("ul > li > ul")
         return [CurseProject(i) for i in projects]
 
@@ -35,9 +50,18 @@ class CurseAPI:
 
     def get_version_list(self):
         """Get all versions available on Curse"""
-        parsed = self.get()
+        parsed = self.get(path="/mc-mods/minecraft")
         options = parsed.select("#filter-project-game-version > option")
         return [i["value"] for i in options if i["value"] != ""]
+
+    def search(self, query, stype="mc-mods"):
+        parsed = self.get(params={
+            "game-slug": "minecraft",
+            "search": query
+        }, path="/search")
+        results = parsed.select("tr.minecraft")
+        results = [SearchResult(i) for i in results]
+        return [i for i in results if i.type == stype]
 
     # END SECTION
 
@@ -47,7 +71,7 @@ class CurseAPI:
         parsed = self.get(params={
             "filter-project-game-version": version,
             "page": page
-        }, host=self.modpacksUrl)
+        }, path="/modpacks/minecraft")
         projects = parsed.select("#addons-browse")[0].select("ul > li > ul")
         return [CurseProject(i) for i in projects]
 
@@ -104,6 +128,23 @@ class CurseProject:
         return self.el.select(selector)[index].contents[0]
 
 
+class SearchResult:
+    def __init__(self, element):
+        self.el = element
+
+        self.name = self.get_content("dt > a")
+        self.author = self.get_content("a", 1)
+
+        self.url = self.get_tag("dt > a", "href")
+        self.type = self.url.split("/")[1]
+
+    def get_tag(self, selector, tag, index=0):
+        return self.el.select(selector)[index][tag]
+
+    def get_content(self, selector, index=0):
+        return self.el.select(selector)[index].contents[0]
+
+
 class CurseFile:
     """Class for getting information from a file element"""
     def __init__(self, element, baseUrl):
@@ -130,3 +171,12 @@ class CurseFile:
 
     def get_content(self, selector, index=0):
         return self.el.select(selector)[index].contents[0]
+
+
+class CurseModpack:
+    """Get information from a modpack"""
+    def __init__(self, project):
+        self.project = project
+        self.curse = CurseAPI()
+
+        self.availableFiles = self.curse.get_files(self.project.id)
