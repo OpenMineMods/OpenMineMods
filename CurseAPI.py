@@ -8,7 +8,7 @@ useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50
 class CurseAPI:
     def __init__(self):
         self.baseUrl = "https://mods.curse.com/mc-mods/minecraft"
-        self.forgeUrl = "https://minecraft.curseforge.com/projects"
+        self.forgeUrl = "https://minecraft.curseforge.com"
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
 
@@ -22,7 +22,7 @@ class CurseAPI:
         return projects
 
     def getFiles(self, pid):
-        parsed = self.get(path="/{}/files".format(pid), host=self.forgeUrl)
+        parsed = self.get(path="/projects/{}/files".format(pid), host=self.forgeUrl)
         return [CurseFile(i) for i in parsed.select(".project-file-list-item")]
 
     def getVersionList(self):
@@ -35,6 +35,13 @@ class CurseAPI:
             host = self.baseUrl
         html = self.session.get(host+path, params=params).text
         return BeautifulSoup(html, "html.parser")
+
+    def downloadFile(self, url, filepath):
+        r = self.session.get(url, stream=True)
+        with open(filepath, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024): 
+                if chunk:
+                    f.write(chunk)
 
 class CurseProject:
     def __init__(self, element):
