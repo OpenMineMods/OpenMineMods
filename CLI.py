@@ -7,7 +7,7 @@ _|    _|  _|  _|  _|  _|  _|  _|
 _|    _|  _|      _|  _|      _|  
   _|_|    _|      _|  _|      _|  
 
-        OpenMineMods V1.0
+        OpenMineMods V0.1
 """
 
 help = """
@@ -23,10 +23,12 @@ curse = CurseAPI()
 def show_help(args: list):
     print(help)
 
+
 def browse_mods(args: list):
     mods = curse.get_mod_list()
     for i in mods:
         print("{} ({})".format(i.title, i.latestVersion))
+
 
 def parse_cmd(inp: str):
     args = inp.split(" ")

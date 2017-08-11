@@ -71,15 +71,6 @@ class CurseAPI:
         options = parsed.select("#filter-project-game-version > option")
         return [i["value"] for i in options if i["value"] != ""]
 
-    def search(self, query: str, stype="mc-mods"):
-        parsed = self.get(params={
-            "game-slug": "minecraft",
-            "search": query
-        }, path="/search")
-        results = parsed.select("tr.minecraft")
-        results = [SearchResult(i) for i in results]
-        return [i for i in results if i.type == stype]
-
     # END SECTION
 
     # SECTION MODPACKS
@@ -95,6 +86,15 @@ class CurseAPI:
     # END SECTION
 
     # SECTION UTILS
+
+    def search(self, query: str, stype="mc-mods"):
+        parsed = self.get(params={
+            "game-slug": "minecraft",
+            "search": query
+        }, path="/search")
+        results = parsed.select("tr.minecraft")
+        results = [SearchResult(i, self) for i in results]
+        return [i for i in results if i.type == stype]
 
     def download_file(self, url: str, filepath: str):
         """Download a file from `url` to `filepath/name`"""
@@ -121,19 +121,38 @@ class CurseAPI:
 
 class CurseProject:
     """Class for getting project information"""
-    def __init__(self, element: Tag):
+    def __init__(self, element: Tag, detailed=False):
         self.el = element
+        self.detailed = detailed
+
+        if detailed:
+            self.title = self.get_content("header.h2 > h2")
+            self.likes = int(self.get_tag(".grats > span", "data-id"))
+            self.imgUrl = self.get_tag("a > img", "src")
+
+            self.el = self.el.select(".details-list")[0]
+
+            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2].split("-")[0]
+
+            self.updated = self.get_content(".standard-date")
+            self.created = self.get_content(".standard-date", 1)
+
+            self.monthly = int(self.get_content(".average-downloads")[:-18].replace(',', ''))
+            self.total = int(self.get_content(".downloads")[:-16].replace(',', ''))
+
+            self.latestVersion = self.get_content(".version")[10:]
+            return
 
         self.title = self.get_content("h4 > a")
-        self.id = self.el.select("h4 > a")[0]["href"].split("/")[-1].split("-")[0]
+        self.id = self.get_tag("h4 > a", "href").split("/")[-1].split("-")[0]
+
+        self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
 
         self.updated = self.get_content(".updated")[8:]
         self.created = self.get_content(".updated", 1)[8:]
 
         self.monthly = int(self.get_content(".average-downloads")[:-8].replace(',', ''))
         self.total = int(self.get_content(".download-total")[:-6].replace(',', ''))
-
-        self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
 
         self.latestVersion = self.get_content(".version")[10:]
 
@@ -147,8 +166,9 @@ class CurseProject:
 
 
 class SearchResult:
-    def __init__(self, element: Tag):
+    def __init__(self, element: Tag, curse: CurseAPI):
         self.el = element
+        self.curse = curse
 
         self.name = self.get_content("dt > a")
         self.author = self.get_content("a", 1)
@@ -161,6 +181,9 @@ class SearchResult:
 
     def get_content(self, selector, index=0):
         return self.el.select(selector)[index].contents[0]
+
+    def get_further_details(self):
+        return CurseProject(self.curse.get(path=self.url), detailed=True)
 
 
 class CurseFile:
@@ -178,7 +201,7 @@ class CurseFile:
         self.uploaded = self.get_content(".standard-datetime")
 
         self.url = self.get_tag(".project-file-name-container > a", "href")+"/download"
-        self.size = float(self.get_content(".project-file-size")[14:-13])
+        self.size = float(self.get_content(".project-file-size")[14:-13].replace(',', ''))
 
         self.version = self.get_content(".version-label")
 
@@ -256,8 +279,11 @@ class CurseModpack:
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             self.curse.download_file("{}/projects/{}/files/{}/download".format(self.curse.forgeUrl, mod[0], mod[1]), modPath)
+        stdout.write("\n\r")
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
+
+        rmtree("{}/raw/overrides".format(tempPath))
 
         if os.path.exists(newPath) and self.curse.baseDir:
             a = input("FOLDER AT {} ALREADY EXISTS! Delete? [Yes/No]".format(newPath))
