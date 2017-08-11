@@ -1,6 +1,7 @@
+import re
+
 from json import dumps
 from glob import glob
-import re
 
 class MultiMC:
     """Class for managing MultiMC instances"""
@@ -33,6 +34,7 @@ class InstanceCfg:
                     file.write(i+"="+["false", "true"][v]+"\n")
                 if type(v) == str:
                     file.write(i+"="+v+"\n")
+            file.write("name="+self.name)
 
 
 # TODO: Speak with MultiMC devs about a cleaner way to do this

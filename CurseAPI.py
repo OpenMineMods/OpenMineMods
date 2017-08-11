@@ -10,6 +10,8 @@ from json import loads
 from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
+from MultiMC import InstanceCfg, ForgePatch
+from shutil import move, copytree
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -201,7 +203,7 @@ class CurseModpack:
         self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
 
     def install(self, file: CurseFile):
-        tempPath = "{}/instances/_MMC_TEMP/{}/".format(self.curse.baseDir, self.project.title)
+        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
 
         # Create instance temp folder if doesn't exist
         if not os.path.exists(tempPath):
@@ -212,20 +214,37 @@ class CurseModpack:
 
         # Unpack zip file
         zipf = ZipFile(packFile)
-        zipf.extractall(tempPath+"raw/")
+        zipf.extractall("{}/raw".format(tempPath))
         zipf.close()
 
         # Delete ZIP file
         os.remove(packFile)
 
         # Parse Manifest
-        manifest = ModpackManifest(tempPath+"raw/manifest.json")
+        manifest = ModpackManifest("{}/raw/manifest.json".format(tempPath))
+
+        # Overrides
+        mcPath = "{}/minecraft".format(tempPath)
+        if os.path.exists("{}/raw/overrides".format(tempPath)):
+            copytree("{}/raw/overrides".format(tempPath), mcPath)
 
         # Make mods folder
-        mcPath = "{}/minecraft".format(tempPath)
         modPath = "{}/mods".format(mcPath)
         if not os.path.exists(modPath):
             os.makedirs(modPath)
+
+        # Make Patches Folder
+        patchPath = "{}/patches".format(tempPath)
+        if not os.path.exists(patchPath):
+            os.makedirs(patchPath)
+
+        # Configure Instance
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title)
+        instanceCfg.write("{}/instance.cfg".format(tempPath))
+
+        # Configure Forge
+        forgeCfg = ForgePatch(manifest.mcVersion, manifest.forgeVersion)
+        forgeCfg.write(patchPath+"/net.minecraftforge.json")
 
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
