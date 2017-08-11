@@ -2,6 +2,7 @@ import requests
 import os
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 from urllib.parse import urlparse
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
@@ -42,7 +43,7 @@ class CurseAPI:
         projects = parsed.select("#addons-browse")[0].select("ul > li > ul")
         return [CurseProject(i) for i in projects]
 
-    def get_files(self, pid):
+    def get_files(self, pid: str):
         """Get an array of `CurseFile`s from a project ID"""
         parsed = self.get(path="/projects/{}/files".format(pid), host=self.forgeUrl, includeUrl=True)
         files = parsed[0].select(".project-file-list-item")
@@ -54,7 +55,7 @@ class CurseAPI:
         options = parsed.select("#filter-project-game-version > option")
         return [i["value"] for i in options if i["value"] != ""]
 
-    def search(self, query, stype="mc-mods"):
+    def search(self, query: str, stype="mc-mods"):
         parsed = self.get(params={
             "game-slug": "minecraft",
             "search": query
@@ -79,7 +80,7 @@ class CurseAPI:
 
     # SECTION UTILS
 
-    def download_file(self, url, filepath):
+    def download_file(self, url: str, filepath: str):
         """Download a file from `url` to `filepath`"""
         r = self.session.get(url, stream=True)
         with open(filepath, 'wb') as f:
@@ -87,7 +88,7 @@ class CurseAPI:
                 if chunk:
                     f.write(chunk)
 
-    def get(self, params={}, path="", host=False, includeUrl=False):
+    def get(self, params={}, path="", host="", includeUrl=False):
         """HTTP GET with HTML parsing"""
         if not host:
             host = self.baseUrl
@@ -103,7 +104,7 @@ class CurseAPI:
 
 class CurseProject:
     """Class for getting project information"""
-    def __init__(self, element):
+    def __init__(self, element: Tag):
         self.el = element
 
         self.title = self.get_content("h4 > a")
@@ -129,7 +130,7 @@ class CurseProject:
 
 
 class SearchResult:
-    def __init__(self, element):
+    def __init__(self, element: Tag):
         self.el = element
 
         self.name = self.get_content("dt > a")
@@ -147,7 +148,7 @@ class SearchResult:
 
 class CurseFile:
     """Class for getting information from a file element"""
-    def __init__(self, element, baseUrl):
+    def __init__(self, element: Tag, baseUrl: str):
         self.el = element
 
         # FTB Official Packs redirect to a different domain
@@ -175,8 +176,12 @@ class CurseFile:
 
 class CurseModpack:
     """Get information from a modpack"""
-    def __init__(self, project):
+    def __init__(self, project: CurseProject):
         self.project = project
         self.curse = CurseAPI()
 
         self.availableFiles = self.curse.get_files(self.project.id)
+
+    def install(self, name=""):
+        if not name:
+            name = self.project.title
