@@ -1,5 +1,6 @@
 import requests
 import os
+import shelve
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
@@ -33,6 +34,9 @@ class CurseAPI:
             if os.path.exists(edir):
                 self.baseDir = edir
                 break
+
+        self.db = shelve.open(self.baseDir+"/omm.db")
+
 
     # SECTION MODS
 
@@ -207,6 +211,15 @@ class CurseModpack:
         # Parse Manifest
         manifest = ModpackManifest(tempPath+"raw/manifest.json")
 
+        # Make mods folder
+        mcPath = "{}/minecraft"
+        modPath = "{}/mods"
+        if not os.path.exists(modPath):
+            os.makedirs(modPath)
+
+        for mod in manifest.mods:
+            self.curse.download_file()
+
 
 class ModpackManifest:
     """Parse a modpack's manifest.json"""
@@ -218,4 +231,4 @@ class ModpackManifest:
         self.mcVersion = self.json["minecraft"]["version"]
         self.forgeVersion = self.json["minecraft"]["modLoaders"][0]["id"].replace("forge-", '')
 
-        self.mods = [i["projectID"] for i in self.json["files"]]
+        self.mods = [[i["projectID"], i["fileID"]] for i in self.json["files"]]
