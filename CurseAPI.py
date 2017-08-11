@@ -11,7 +11,7 @@ from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
 from MultiMC import InstanceCfg, ForgePatch
-from shutil import move, copytree
+from shutil import move, copytree, rmtree
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -205,6 +205,13 @@ class CurseModpack:
     def install(self, file: CurseFile):
         tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
 
+        if os.path.exists(tempPath) and self.curse.baseDir:
+            a = input("FOLDER AT {} ALREADY EXISTS! Delete? [Yes/No]".format(tempPath))
+            if a != "Yes":
+                print("ABORTING INSTALLATION")
+                return
+            rmtree(tempPath)
+
         # Create instance temp folder if doesn't exist
         if not os.path.exists(tempPath):
             os.makedirs(tempPath)
@@ -249,6 +256,16 @@ class CurseModpack:
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             self.curse.download_file("{}/projects/{}/files/{}/download".format(self.curse.forgeUrl, mod[0], mod[1]), modPath)
+
+        newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
+
+        if os.path.exists(newPath) and self.curse.baseDir:
+            a = input("FOLDER AT {} ALREADY EXISTS! Delete? [Yes/No]".format(newPath))
+            if a != "Yes":
+                print("ABORTING INSTALLATION")
+                return
+            rmtree(newPath)
+        move(tempPath, "{}/instances".format(self.curse.baseDir))
 
 
 class ModpackManifest:
