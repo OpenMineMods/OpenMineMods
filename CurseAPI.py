@@ -17,13 +17,13 @@ useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50
 
 
 class CurseAPI:
+    """Curse API"""
     search_types = {
         "mod": "mc-mods",
         "modpack": "modpacks",
         "texturepack": "customization"
     }
 
-    """Curse API"""
     def __init__(self):
         self.baseUrl = "https://mods.curse.com"
         self.forgeUrl = "https://minecraft.curseforge.com"
