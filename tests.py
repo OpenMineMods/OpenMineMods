@@ -1,6 +1,7 @@
 from CurseAPI import CurseAPI, CurseModpack
 from traceback import format_exc
 from json import dumps
+from os import remove
 
 results = {
     "multimc_folder": {},
@@ -79,11 +80,12 @@ print("Testing mod downloading")
 try:
     curse.download_file(files[0].host+files[0].url, "test.jar")
     results["mod_download"]["show"] = True
+    remove("test.jar")
 except:
     results["mod_download"]["err"] = format_exc()
     results["mod_download"]["show"] = False
 
-print("\n{} out of {} succeeded\n".format(len([i for i in results if results[i]["show"]]), len(results.keys())))
+print("\n{} out of {} passed\n".format(len([i for i in results if results[i]["show"]]), len(results.keys())))
 
 for i in results:
     print("{}: {}".format(i, ["Fail", "Pass"][results[i]["show"]]))
