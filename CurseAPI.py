@@ -4,6 +4,8 @@ import os
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 from urllib.parse import urlparse
+from zipfile import ZipFile
+from json import loads
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -182,6 +184,39 @@ class CurseModpack:
 
         self.availableFiles = self.curse.get_files(self.project.id)
 
-    def install(self, name=""):
+    def install(self, file: CurseFile, name=""):
         if not name:
             name = self.project.title
+
+        tempPath = "{}/instances/_MMC_TEMP/{}/".format(self.curse.baseDir, name)
+
+        # Create instance temp folder if doesn't exist
+        if not os.path.exists(tempPath):
+            os.makedirs(tempPath)
+
+        # TODO: Pretty progress bar
+        self.curse.download_file(file.host+file.url, tempPath+"pack.zip")
+
+        # Unpack zip file
+        zipf = ZipFile(tempPath+"pack.zip")
+        zipf.extractall(tempPath+"raw/")
+        zipf.close()
+
+        # Delete ZIP file
+        os.remove(tempPath+"pack.zip")
+
+        # Parse Manifest
+        manifest = ModpackManifest(tempPath+"raw/manifest.json")
+
+
+class ModpackManifest:
+    """Parse a modpack's manifest.json"""
+    def __init__(self, filename: str):
+        self.filename = filename
+
+        self.json = loads(open(self.filename).read())
+
+        self.mcVersion = self.json["minecraft"]["version"]
+        self.forgeVersion = self.json["minecraft"]["modLoaders"][0]["id"].replace("forge-", '')
+
+        self.mods = [i["projectId"] for i in self.json["files"]]
