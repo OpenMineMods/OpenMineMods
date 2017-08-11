@@ -7,6 +7,8 @@ Requirements:
 
 (Other versions may work, but those are the tested ones)
 
+---
+
 # Installing Requirements
 
 ## Linux
@@ -28,6 +30,8 @@ If you know how to install the dependencies on MacOS, please open a pull request
 ## Windows
 
 If you know how to install the dependencies on Windows, please open a pull request or an issue
+
+---
 
 # Using
 
