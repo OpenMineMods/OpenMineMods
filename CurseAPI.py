@@ -94,7 +94,6 @@ class CurseAPI:
         """HTTP GET with HTML parsing"""
         if not host:
             host = self.baseUrl
-        print("GET "+host+path)
         r = self.session.get(host + path, params=params)
         html = r.text
         if includeUrl:
