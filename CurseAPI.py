@@ -218,4 +218,4 @@ class ModpackManifest:
         self.mcVersion = self.json["minecraft"]["version"]
         self.forgeVersion = self.json["minecraft"]["modLoaders"][0]["id"].replace("forge-", '')
 
-        self.mods = [i["projectId"] for i in self.json["files"]]
+        self.mods = [i["projectID"] for i in self.json["files"]]
