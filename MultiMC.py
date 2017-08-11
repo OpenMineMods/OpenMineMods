@@ -8,7 +8,7 @@ class MultiMC:
     def __init__(self, path: str):
         self.path = path
 
-        self.instances = [MultiMCInstance(i) for i in glob(self.path+"/instances/*/instance.cfg")]
+        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '')) for i in glob(self.path+"/instances/*/instance.cfg")]
 
 class InstanceCfg:
     """MultiMC instance config"""
@@ -63,7 +63,8 @@ class ForgePatch:
 class MultiMCInstance:
     """MultiMC Instance"""
     def __init__(self, path: str):
-        self.fname = path
-        self.instanceCfg = open(self.fname).read()
+        self.path = path
+        self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
+        self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
