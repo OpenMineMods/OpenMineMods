@@ -1,11 +1,13 @@
 from json import dumps
-
+from glob import glob
+import re
 
 class MultiMC:
     """Class for managing MultiMC instances"""
     def __init__(self, path: str):
         self.path = path
 
+        self.instances = [MultiMCInstance(i) for i in glob(self.path+"/instances/*/instance.cfg")]
 
 class InstanceCfg:
     """MultiMC instance config"""
@@ -54,3 +56,12 @@ class ForgePatch:
     def write(self, path: str):
         with open(path, 'w+') as file:
             file.write(dumps(self.dat))
+
+
+class MultiMCInstance:
+    """MultiMC Instance"""
+    def __init__(self, path: str):
+        self.fname = path
+        self.instanceCfg = open(self.fname).read()
+
+        self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
