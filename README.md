@@ -21,15 +21,21 @@ sudo pacman -S python python-beautifulsoup4 python-requests
 
 ### Other
 
-If you know how to install the dependencies on another distro, please open a pull request or an issue
+```
+pip3 install beautifulsoup4 requests
+```
 
 ## MacOS
 
-If you know how to install the dependencies on MacOS, please open a pull request or an issue
+```
+pip3 install beautifulsoup4 requests
+```
 
 ## Windows
 
-If you know how to install the dependencies on Windows, please open a pull request or an issue
+Make sure you have `python3` and `pip3` installed, you can find instructions for that on the web.
+
+In `CMD`, run `pip3 install beautifulsoup4 requests`
 
 ---
 
