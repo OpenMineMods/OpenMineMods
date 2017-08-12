@@ -9,6 +9,16 @@ Requirements:
 
 ---
 
+# TL;DR:
+
+## Windows
+
+* Download and unzip https://github.com/joonatoona/OpenMineMods/archive/master.zip
+* Run `Intallers\Windows.bat` in the unzipped folder
+* Run `Installers\GUI_Win.bat` in the unzipped folder
+
+---
+
 # Installing Requirements
 
 ## Linux
