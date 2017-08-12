@@ -4,6 +4,7 @@ import shelve
 from json import dumps
 from glob import glob
 from os import remove
+from shutil import rmtree
 from sys import setrecursionlimit
 # Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
 from hashlib import md5
@@ -25,6 +26,14 @@ class MultiMC:
 
         for instance in self.instances:
             self.instanceMap[instance.uuid] = instance
+
+    def delete_instance(self, instance):
+        if instance.uuid in self.metaDb:
+            del self.metaDb[instance.uuid]
+        del self.instanceMap[instance.uuid]
+
+        rmtree(instance.path)
+
 
 class InstanceCfg:
     """MultiMC instance config"""

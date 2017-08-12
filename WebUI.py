@@ -2,6 +2,7 @@ from bottle import get, view, run, abort, static_file, redirect
 from CurseAPI import CurseAPI, CurseProject, CurseModpack
 from MultiMC import MultiMC
 from threading import Thread
+from easygui import ynbox
 
 curse = CurseAPI()
 
@@ -56,6 +57,18 @@ def installpack(packid):
     pack = CurseModpack(project, curse)
     Thread(target=packdlThread, args=(pack,)).start()
     redirect("/?installing=1")
+
+
+@get("/uninstall/<uuid>")
+def uninstall(uuid):
+    if uuid not in mmc.instanceMap:
+        abort(404, "Instance Not Found")
+    instance = mmc.instanceMap[uuid]
+    if not ynbox("Really delete {}?".format(instance.name), "OpenMineMods v"+CurseAPI.version, ('Yes', 'No')):
+        abort(401, "Canceled From UI")
+    mmc.delete_instance(instance)
+    redirect("/?removed=1")
+
 
 @get("/edit/<uuid>/add/<modid>")
 def addmodd(uuid, modid):
