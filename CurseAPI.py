@@ -340,8 +340,6 @@ class CurseModpack:
         modlist = list()
 
         for x, mod in enumerate(manifest.mods):
-            if x > 2:
-                break
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])
                                     , headers={"User-Agent": "OpenMineMods v"+CurseAPI.version}).json()
