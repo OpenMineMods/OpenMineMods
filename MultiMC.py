@@ -3,7 +3,7 @@ import shelve
 
 from json import dumps
 from glob import glob
-from os import remove
+from os import remove, path, makedirs
 from shutil import rmtree
 from sys import setrecursionlimit
 # Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
@@ -92,6 +92,7 @@ class MultiMCInstance:
         self.path = path
         self.db = db
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
+        self.modDir = "{}/minecraft/mods".format(self.path)
         self.uuid = md5((self.path+"/").encode()).hexdigest()
 
         if self.uuid in self.db:
@@ -103,7 +104,11 @@ class MultiMCInstance:
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
     def install_mod(self, file, curse):
-        fname = curse.download_file(file.host + file.url, "{}/minecraft/mods".format(self.path))
+
+        if not path.exists(self.modDir):
+            makedirs(self.modDir)
+
+        fname = curse.download_file(file.host + file.url, self.modDir)
         fname = fname.split("/")[-1]
         file.filename = fname
         self.mods.append(file)
