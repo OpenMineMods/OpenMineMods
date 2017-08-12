@@ -258,7 +258,10 @@ class JsonCurseFile:
     def __init__(self, obj: dict):
         self.obj = obj
 
-        self.name = self.obj["FileName"]
+        if "_Project" in self.obj:
+            self.name = self.obj["_Project"]["Name"]
+        else:
+            self.name = self.obj["FileName"]
 
         self.releaseType = self.obj["ReleaseType"]
         self.uploaded = self.obj["FileDate"]
