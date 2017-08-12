@@ -19,7 +19,7 @@ class MultiMC:
 
         self.metaDb = shelve.open("{}/meta.db".format(self.path))
 
-        cfgFiles = [i.replace("instance.cfg", '')[:-1] for i in glob("{}/instances/*/instance.cfg")]
+        cfgFiles = [i.replace("instance.cfg", '')[:-1] for i in glob("{}/instances/*/instance.cfg".format(self.path))]
         self.instances = [MultiMCInstance(i, self.metaDb) for i in cfgFiles]
 
         self.instanceMap = dict()
