@@ -3,12 +3,6 @@ from MultiMC import MultiMC
 from sys import exit
 
 motd = """
-  _|_|    _|      _|  _|      _|  
-_|    _|  _|_|  _|_|  _|_|  _|_|  
-_|    _|  _|  _|  _|  _|  _|  _|  
-_|    _|  _|      _|  _|      _|  
-  _|_|    _|      _|  _|      _|  
-
         OpenMineMods V0.1
 """
 

@@ -25,6 +25,16 @@ class CurseAPI:
         "texturepack": "customization"
     }
 
+    motd = """
+          _|_|    _|      _|  _|      _|
+        _|    _|  _|_|  _|_|  _|_|  _|_|
+        _|    _|  _|  _|  _|  _|  _|  _|
+        _|    _|  _|      _|  _|      _|
+          _|_|    _|      _|  _|      _|
+    """
+
+    version = "0.1-Alpha"
+
     def __init__(self):
         self.baseUrl = "https://mods.curse.com"
         self.forgeUrl = "https://minecraft.curseforge.com"
@@ -33,7 +43,7 @@ class CurseAPI:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
 
-        self.db = shelve.open(os.path.expanduser("~/.omm.db"))
+        self.db = shelve.open(os.path.expanduser("~/omm.db"))
 
         if "baseDir" not in self.db:
             for dirf in ["~/.local/share/multimc", "~/.local/share/multimc5"]:

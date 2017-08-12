@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenMineMods v{{version}}</title>
+</head>
+<body>
+    <h1>Installed Packs</h1>
+    <table border="1">
+        % for pack in packs:
+        <tr>
+            <td>
+                {{pack.name}}
+            </td>
+            <td>
+                Minecraft {{pack.version}}
+            </td>
+            <td>
+                <a href="/edit/{{pack.uuid}}">
+                    <button>Edit</button>
+                </a>
+            </td>
+        </tr>
+        % end
+    </table>
+</body>
+</html>

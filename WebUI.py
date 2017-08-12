@@ -1,19 +1,22 @@
-from bottle import get, post, run, request, response, template
+from bottle import get, view, run, abort
 from CurseAPI import CurseAPI
 from MultiMC import MultiMC
 
 curse = CurseAPI()
 
-while not curse.baseDir:
-    print("MultiMC folder not found!")
-    print("Please enter your MultiMC folder.")
-    curse.baseDir = input(">>> ")
-    print("To avoid this in the future, please send your MultiMC folder location to the developers!")
-
 mmc = MultiMC(curse.baseDir)
 
+
 @get("/")
+@view("index")
 def index():
-    return template("<b>Hello, {{world}}!", world="World")
+    return {"name": "OpenMineMods", "version": CurseAPI.version, "packs": mmc.instances}
+
+@get("/edit/<uuid>")
+@view("edit")
+def edit(uuid):
+    if uuid not in mmc.instanceMap:
+        abort(404, "Instance Not Found")
+    return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid]}
 
 run(port=8096)

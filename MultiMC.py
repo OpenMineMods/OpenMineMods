@@ -1,7 +1,10 @@
 import re
+import shelve
 
 from json import dumps
 from glob import glob
+# Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
+from hashlib import md5
 
 class MultiMC:
     """Class for managing MultiMC instances"""
@@ -9,6 +12,10 @@ class MultiMC:
         self.path = path
 
         self.instances = [MultiMCInstance(i.replace("/instance.cfg", '').replace("\\instance.cfg", '')) for i in glob(self.path+"/instances/*/instance.cfg")]
+
+        self.instanceMap = dict()
+        for instance in self.instances:
+            self.instanceMap[instance.uuid] = instance
 
 class InstanceCfg:
     """MultiMC instance config"""
@@ -68,3 +75,4 @@ class MultiMCInstance:
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
+        self.uuid = md5(self.path.encode()).hexdigest()
