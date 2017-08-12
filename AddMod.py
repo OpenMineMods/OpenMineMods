@@ -26,13 +26,6 @@ curse = CurseAPI()
 print(motd)
 print(disclaimer)
 
-while not curse.baseDir:
-    print("Unable to find MultiMC directory.")
-    print("Please input your MultiMC base directory location")
-    curse.baseDir = input(">>> ")
-    print("PLEASE SEND YOUR MultiMC DIRECTORY LOCATION TO THE AUTHOR")
-    print("That way anyone with the same MultiMC directory location won't have to do this")
-
 mmc = MultiMC(curse.baseDir)
 
 print("Found instances:")
