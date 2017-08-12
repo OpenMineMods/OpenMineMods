@@ -28,7 +28,7 @@ class MultiMC:
 
 class InstanceCfg:
     """MultiMC instance config"""
-    def __init__(self, mcver: str, forgever: str, name: str, notes=""):
+    def __init__(self, mcver: str, forgever: str, name: str, notes="", icon="default"):
         self.ForgeVersion = forgever
         self.InstanceType = "OneSix"
         self.IntendedVersion = mcver
@@ -38,7 +38,7 @@ class InstanceCfg:
         self.OverrideJavaLocation = False
         self.OverrideMemory = False
         self.OverrideWindow = False
-        self.iconKey = "default"
+        self.iconKey = icon
         self.name = name
         self.notes = notes
 

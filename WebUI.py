@@ -1,10 +1,17 @@
 from bottle import get, view, run, abort, static_file, redirect
-from CurseAPI import CurseAPI
+from CurseAPI import CurseAPI, CurseProject, CurseModpack
 from MultiMC import MultiMC
+from threading import Thread
 
 curse = CurseAPI()
 
 mmc = MultiMC(curse.baseDir)
+
+
+def packdlThread(pack: CurseModpack):
+    file = curse.get_files(pack.project.id)[0]
+    pack.install(file)
+    print("Installed Pack!")
 
 
 @get("/static/:filename")
@@ -42,6 +49,13 @@ def modbrowse():
     packs = curse.get_modpacks()
     return {"version": CurseAPI.version, "packs": packs}
 
+
+@get("/install/<packid>")
+def installpack(packid):
+    project = CurseProject(curse.get(path="/projects/{}".format(packid), host=curse.forgeUrl), detailed=True)
+    pack = CurseModpack(project, curse)
+    Thread(target=packdlThread, args=(pack,)).start()
+    redirect("/?installing=1")
 
 @get("/edit/<uuid>/add/<modid>")
 def addmodd(uuid, modid):

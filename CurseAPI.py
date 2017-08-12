@@ -110,10 +110,11 @@ class CurseAPI:
         results = [SearchResult(i, self) for i in results]
         return [i for i in results if i.type == stype]
 
-    def download_file(self, url: str, filepath: str):
+    def download_file(self, url: str, filepath: str, fname=""):
         """Download a file from `url` to `filepath/name`"""
         r = self.session.get(url, stream=True)
-        fname = unquote(Path(r.url).name)
+        if not fname:
+            fname = unquote(Path(r.url).name)
         with open(filepath+"/"+fname, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
@@ -140,24 +141,20 @@ class CurseProject:
         self.detailed = detailed
 
         if detailed:
-            self.title = self.get_content("header.h2 > h2")
-            try:
-                self.likes = int(self.get_tag(".grats > span", "data-id"))
-            except ValueError:
-                self.likes = 0
-            self.imgUrl = self.get_tag("a > img", "src")
+            self.title = self.get_content(".project-title > a > span")
+            self.likes = 0
+            self.imgUrl = self.get_tag(".e-avatar64", "href")
 
-            self.el = self.el.select(".details-list")[0]
+            self.el = self.el.select(".project-details")[0]
 
-            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
+            self.id = int(self.get_content(".info-data"))
 
-            self.updated = self.get_content(".standard-date")
-            self.created = self.get_content(".standard-date", 1)
+            self.updated = self.get_content(".standard-date", 1)
+            self.created = self.get_content(".standard-date")
 
-            self.monthly = int(self.get_content(".average-downloads")[:-18].replace(',', ''))
-            self.total = int(self.get_content(".downloads")[:-16].replace(',', ''))
+            self.total = int(self.get_content(".info-data", 3).replace(',', ''))
 
-            self.latestVersion = self.get_content(".version")[10:]
+            self.latestVersion = ""
             return
 
         self.title = self.get_content("h4 > a")
@@ -200,6 +197,12 @@ class SearchResult:
         self.author = self.get_content("a", 1)
 
         self.url = self.get_tag("dt > a", "href")
+        self.id = self.url.split("/")[-1]
+        try:
+            self.id = int(self.id.split("-")[0])
+            self.id = str(self.id)
+        except:
+            pass
         self.type = self.url.split("/")[1]
 
     def get_tag(self, selector, tag, index=0):
@@ -209,7 +212,7 @@ class SearchResult:
         return self.el.select(selector)[index].contents[0]
 
     def get_further_details(self):
-        return CurseProject(self.curse.get(path=self.url), detailed=True)
+        return CurseProject(self.curse.get(path="/projects/" + self.id, host=self.curse.forgeUrl), detailed=True)
 
 
 class CurseFile:
@@ -256,11 +259,9 @@ class CurseModpack:
     def install(self, file: CurseFile):
         tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
 
+        self.curse.download_file(self.project.imgUrl, "{}/icons".format(self.curse.baseDir), str(self.project.id)+".png")
+
         if os.path.exists(tempPath) and self.curse.baseDir:
-            a = input("FOLDER AT {} ALREADY EXISTS! Delete? [Yes/No]".format(tempPath))
-            if a != "Yes":
-                print("ABORTING INSTALLATION")
-                return
             rmtree(tempPath)
 
         # Create instance temp folder if doesn't exist
@@ -297,7 +298,7 @@ class CurseModpack:
             os.makedirs(patchPath)
 
         # Configure Instance
-        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title)
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title, icon=str(self.project.id))
         instanceCfg.write("{}/instance.cfg".format(tempPath))
 
         # Configure Forge
