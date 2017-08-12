@@ -1,16 +1,17 @@
 from CurseAPI import CurseAPI, CurseModpack
+from MultiMC import MultiMC
 from traceback import format_exc
 from json import dumps
 from os import remove
 
 results = {
     "multimc_folder": {},
+    "multimc_api": {},
     "version_list": {},
     "mod_list": {},
     "mod_files": {},
     "modpack_list": {},
     "modpack_data": {},
-    "modpack_install": {},
     "mod_search": {},
     "mod_download": {}
 }
@@ -19,6 +20,14 @@ print("Testing MultiMC folder detection")
 curse = CurseAPI()
 results["multimc_folder"]["show"] = bool(curse.baseDir)
 results["multimc_folder"]["err"] = curse.baseDir
+
+print("Testing MultiMC")
+try:
+    mmc = MultiMC(curse.baseDir)
+    results["multimc_api"]["show"] = True
+except:
+    results["multimc_api"]["err"] = format_exc()
+    results["multimc_api"]["show"] = False
 
 print("Testing version listing")
 try:
@@ -54,19 +63,19 @@ except:
 
 print("Testing modpack data")
 try:
-    pack = CurseModpack(packs[0], curse)
+    pack = CurseModpack(packs[0], curse, mmc)
     results["modpack_data"]["show"] = True
 except:
     results["modpack_data"]["err"] = format_exc()
     results["modpack_data"]["show"] = False
 
-print("Testing modpack installation")
-try:
-    pack.install(pack.availableFiles[0])
-    results["modpack_install"]["show"] = True
-except:
-    results["modpack_install"]["err"] = format_exc()
-    results["modpack_install"]["show"] = False
+#print("Testing modpack installation")
+#try:
+#    pack.install(pack.availableFiles[0])
+#    results["modpack_install"]["show"] = True
+#except:
+#    results["modpack_install"]["err"] = format_exc()
+#    results["modpack_install"]["show"] = False
 
 print("Testing mod search")
 try:
