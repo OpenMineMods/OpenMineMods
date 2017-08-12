@@ -48,24 +48,40 @@
 <table border="1">
     <tr>
         <td>
-            MOD NAME
+            <b>Mod Version</b>
         </td>
         <td>
-            MOD VERSION
+            <b>Mod Name</b>
+        </td>
+        <td>
+            <b>Filename</b>
+        </td>
+        <td>
+
         </td>
     </tr>
     % for mod in instance.mods:
     <tr>
         <td>
-            <b>{{mod.name}}</b>
+            {{mod.name}}
         </td>
         <td>
-            <b>{{mod.version}}</b>
+            {{mod.version}}
+        </td>
+        <td>
+            {{mod.filename}}
+        </td>
+        <td>
+            <a href="{{instance.uuid}}/remove/{{mod.name}}">
+                <button>
+                    Remove
+                </button>
+            </a>
         </td>
     </tr>
     % end
     <tr>
-        <td colspan="2">
+        <td colspan="4">
             <a href="{{instance.uuid}}/browse-mods">
                 <button style="width: 100%">
                     Browse Mods

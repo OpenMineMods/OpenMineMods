@@ -164,6 +164,12 @@ class CurseProject:
         self.id = self.get_tag("h4 > a", "href").split("/")[-1]
 
         try:
+            self.id = int(self.id.split("-")[0])
+            self.id = str(self.id)
+        except:
+            pass
+
+        try:
             self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
         except ValueError:
             self.likes = 0
@@ -226,6 +232,8 @@ class CurseFile:
         self.version = self.get_content(".version-label")
 
         self.downloads = int(self.get_content(".project-file-downloads")[14:-10].replace(',', ''))
+
+        self.filename = ""
 
     def get_tag(self, selector, tag, index=0):
         return self.el.select(selector)[index][tag]

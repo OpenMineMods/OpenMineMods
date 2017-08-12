@@ -3,9 +3,10 @@ import shelve
 
 from json import dumps
 from glob import glob
+from os import remove
+from sys import setrecursionlimit
 # Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
 from hashlib import md5
-from sys import setrecursionlimit
 
 # Don't worry about it
 setrecursionlimit(8096)
@@ -91,6 +92,17 @@ class MultiMCInstance:
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
-    def install_mod(self, file):
+    def install_mod(self, file, curse):
+        fname = curse.download_file(file.host + file.url, "{}/minecraft/mods".format(self.path))
+        fname = fname.split("/")[-1]
+        file.filename = fname
         self.mods.append(file)
+        self.db[self.uuid] = self.mods
+
+    def uninstall_mod(self, filename):
+        remove("{}/minecraft/mods/{}".format(self.path, filename))
+        for x, mod in enumerate(self.mods):
+            if mod.filename == filename:
+                del self.mods[x]
+                break
         self.db[self.uuid] = self.mods

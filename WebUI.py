@@ -35,17 +35,32 @@ def modbrowse(uuid):
     mods = curse.get_mod_list(instance.version)
     return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid], "mods": mods}
 
+
 @get("/edit/<uuid>/add/<modid>")
 def addmodd(uuid, modid):
     if uuid not in mmc.instanceMap:
         abort(404, "Instance Not Found")
     instance = mmc.instanceMap[uuid]
-    files = [i for i in curse.get_files(modid) if i.version == instance.version]
+    files = [i for i in curse.get_files(modid)]
     if len(files) < 1:
         abort(404, "No file for {} found".format(instance.version))
     file = files[0]
-    curse.download_file(file.host + file.url, "{}/minecraft/mods".format(instance.path))
-    instance.install_mod(file)
-    redirect("/edit/{}".format(instance.uuid))
+    instance.install_mod(file, curse)
+    redirect("/edit/{}?installed=1".format(instance.uuid))
+
+
+@get("/edit/<uuid>/remove/<modid>")
+def delmod(uuid, modid):
+    if uuid not in mmc.instanceMap:
+        abort(404, "Instance Not Found")
+    instance = mmc.instanceMap[uuid]
+    mod = False
+    for imod in instance.mods:
+        if imod.name == modid:
+            mod = imod
+    if not mod:
+        abort(404, "Mod not found")
+    instance.uninstall_mod(mod.filename)
+    redirect("/edit/{}?removed=1".format(instance.uuid))
 
 run(port=8096)
