@@ -54,17 +54,19 @@
             MOD VERSION
         </td>
     </tr>
+    % for mod in instance.mods:
     <tr>
         <td>
-            <b>TODO</b>
+            <b>{{mod.name}}</b>
         </td>
         <td>
-            <b>TODO</b>
+            <b>{{mod.version}}</b>
         </td>
     </tr>
+    % end
     <tr>
         <td colspan="2">
-            <a href="browse-mods">
+            <a href="{{instance.uuid}}/browse-mods">
                 <button style="width: 100%">
                     Browse Mods
                 </button>

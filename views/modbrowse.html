@@ -20,7 +20,10 @@
                 <b>Monthly Downloads</b>
             </td>
             <td>
-                
+
+            </td>
+            <td>
+
             </td>
         </tr>
         % for mod in mods:
@@ -38,9 +41,16 @@
                 {{mod.monthly}}
             </td>
             <td>
-                <a href="../add/{{mod.id}}">
+                <a href="add/{{mod.id}}">
                     <button>
                         Add To Pack
+                    </button>
+                </a>
+            </td>
+            <td>
+                <a href="more/{{mod.id}}">
+                    <button>
+                        More Information
                     </button>
                 </a>
             </td>

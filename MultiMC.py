@@ -5,15 +5,23 @@ from json import dumps
 from glob import glob
 # Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
 from hashlib import md5
+from sys import setrecursionlimit
+
+# Don't worry about it
+setrecursionlimit(8096)
+
 
 class MultiMC:
     """Class for managing MultiMC instances"""
     def __init__(self, path: str):
         self.path = path
 
-        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '').replace("\\instance.cfg", '')) for i in glob(self.path+"/instances/*/instance.cfg")]
+        self.metaDb = shelve.open("{}/meta.db".format(self.path))
+
+        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '').replace("\\instance.cfg", ''), self.metaDb) for i in glob(self.path+"/instances/*/instance.cfg")]
 
         self.instanceMap = dict()
+
         for instance in self.instances:
             self.instanceMap[instance.uuid] = instance
 
@@ -69,10 +77,20 @@ class ForgePatch:
 
 class MultiMCInstance:
     """MultiMC Instance"""
-    def __init__(self, path: str):
+    def __init__(self, path: str, db: shelve):
         self.path = path
+        self.db = db
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
+        self.uuid = md5(self.path.encode()).hexdigest()
+
+        if self.uuid in self.db:
+            self.mods = self.db[self.uuid]
+        else:
+            self.mods = list()
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
-        self.uuid = md5(self.path.encode()).hexdigest()
+
+    def install_mod(self, file):
+        self.mods.append(file)
+        self.db[self.uuid] = self.mods
