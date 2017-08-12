@@ -8,7 +8,7 @@ class MultiMC:
     def __init__(self, path: str):
         self.path = path
 
-        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '')) for i in glob(self.path+"/instances/*/instance.cfg")]
+        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '').replace("\\instance.cfg", '')) for i in glob(self.path+"/instances/*/instance.cfg")]
 
 class InstanceCfg:
     """MultiMC instance config"""
