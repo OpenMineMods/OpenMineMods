@@ -342,7 +342,7 @@ class CurseModpack:
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])
-                                    , headers={"User-Agent": "OpenMineMods v"+CurseAPI.version}).json()
+                                    , headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version}).json()
             cfile = JsonCurseFile(r)
             self.curse.download_file(cfile.url, modPath)
             modlist.append(cfile)
