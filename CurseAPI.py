@@ -12,6 +12,7 @@ from urllib.parse import unquote
 from sys import stdout
 from MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
+from easygui import diropenbox
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -32,15 +33,18 @@ class CurseAPI:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
 
-        # TODO: Find the MultiMC folder automatically
-        self.baseDir = ""
-        for dirf in ["~/.local/share/multimc", "~/.local/share/multimc5"]:
-            edir = os.path.expanduser(dirf)
-            if os.path.exists(edir):
-                self.baseDir = edir
-                break
+        self.db = shelve.open(os.path.expanduser("~/.omm.db"))
 
-        self.db = shelve.open(self.baseDir+"/omm.db")
+        if "baseDir" not in self.db:
+            for dirf in ["~/.local/share/multimc", "~/.local/share/multimc5"]:
+                edir = os.path.expanduser(dirf)
+                if os.path.exists(edir):
+                    self.db["baseDir"] = edir
+                    break
+            if "baseDir" not in self.db:
+                self.db["baseDir"] = diropenbox("Select your MultiMC folder")
+
+        self.baseDir = self.db["baseDir"]
 
         if "packs" not in self.db:
             self.db["packs"] = list()
