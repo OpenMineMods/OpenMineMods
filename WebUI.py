@@ -1,5 +1,5 @@
 from bottle import get, view, run, abort, static_file, redirect, request
-from CurseAPI import CurseAPI, CurseProject, CurseModpack
+from CurseAPI import CurseAPI, CurseProject, CurseModpack, SearchType
 from MultiMC import MultiMC
 from threading import Thread
 from easygui import ynbox
@@ -40,7 +40,7 @@ def modbrowse(uuid):
     if uuid not in mmc.instanceMap:
         abort(404, "Instance Not Found")
     instance = mmc.instanceMap[uuid]
-    if request.query["q"]:
+    if "q" in request.query:
         mods = curse.search(request.query["q"])
     else:
         mods = curse.get_mod_list(instance.version)
@@ -50,7 +50,10 @@ def modbrowse(uuid):
 @get("/browse-packs")
 @view("packbrowse")
 def modbrowse():
-    packs = curse.get_modpacks()
+    if "q" in request.query:
+        packs = curse.search(request.query["q"], SearchType.Modpack)
+    else:
+        packs = curse.get_modpacks()
     return {"version": CurseAPI.version, "packs": packs}
 
 

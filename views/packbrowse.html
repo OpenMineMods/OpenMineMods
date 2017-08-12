@@ -5,57 +5,61 @@
     <title>OpenMineMods v{{version}}</title>
 </head>
 <body>
-    <table border="1">
-        <tr>
-            <td>
-                <b>Thumbnail</b>
-            </td>
-            <td>
-                <b>Name</b>
-            </td>
-            <td>
-                <b>Likes</b>
-            </td>
-            <td>
-                <b>Monthly Downloads</b>
-            </td>
-            <td>
+<form method="get">
+    <input type="text" name="q" placeholder="Search Packs" />
+    <input type="submit" value="Go!" />
+</form>
+<table border="1">
+    <tr>
+        <td>
+            <b>Thumbnail</b>
+        </td>
+        <td>
+            <b>Name</b>
+        </td>
+        <td>
+            <b>Likes</b>
+        </td>
+        <td>
+            <b>Monthly Downloads</b>
+        </td>
+        <td>
 
-            </td>
-            <td>
+        </td>
+        <td>
 
-            </td>
-        </tr>
-        % for pack in packs:
-        <tr>
-            <td>
-                <img src="{{pack.imgUrl}}" width="75" />
-            </td>
-            <td>
-                {{pack.title}}
-            </td>
-            <td>
-                {{pack.likes}}
-            </td>
-            <td>
-                {{pack.monthly}}
-            </td>
-            <td>
-                <a href="/install/{{pack.id}}">
-                    <button>
-                        Install Pack
-                    </button>
-                </a>
-            </td>
-            <td>
-                <a href="/more/{{pack.id}}">
-                    <button>
-                        More Information
-                    </button>
-                </a>
-            </td>
-        </tr>
-        % end
-    </table>
+        </td>
+    </tr>
+    % for pack in packs:
+    <tr>
+        <td>
+            <img src="{{pack.imgUrl}}" width="75" />
+        </td>
+        <td>
+            {{pack.title}}
+        </td>
+        <td>
+            {{pack.likes}}
+        </td>
+        <td>
+            {{pack.monthly}}
+        </td>
+        <td>
+            <a href="/install/{{pack.id}}">
+                <button>
+                    Install Pack
+                </button>
+            </a>
+        </td>
+        <td>
+            <a href="/more/{{pack.id}}">
+                <button>
+                    More Information
+                </button>
+            </a>
+        </td>
+    </tr>
+    % end
+</table>
 </body>
 </html>
