@@ -10,8 +10,11 @@ mmc = MultiMC(curse.baseDir)
 
 
 def packdlThread(pack: CurseModpack):
+    global mmc
     file = curse.get_files(pack.project.id)[0]
     pack.install(file)
+    mmc.metaDb.close()
+    mmc = MultiMC(curse.baseDir)
     print("Installed Pack!")
 
 
@@ -60,7 +63,7 @@ def modbrowse():
 @get("/install/<packid>")
 def installpack(packid):
     project = CurseProject(curse.get(path="/projects/{}".format(packid), host=curse.forgeUrl), detailed=True)
-    pack = CurseModpack(project, curse)
+    pack = CurseModpack(project, curse, mmc)
     Thread(target=packdlThread, args=(pack,)).start()
     redirect("/?installing=1")
 

@@ -13,6 +13,7 @@ from sys import stdout
 from MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
 from easygui import diropenbox
+from hashlib import md5
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -252,9 +253,31 @@ class CurseFile:
         return self.el.select(selector)[index].contents[0]
 
 
+class JsonCurseFile:
+    """Class for getting information about a file from the API"""
+    def __init__(self, obj: dict):
+        self.obj = obj
+
+        self.name = self.obj["FileName"]
+
+        self.releaseType = self.obj["ReleaseType"]
+        self.uploaded = self.obj["FileDate"]
+
+        self.url = self.obj["DownloadURL"]
+        self.size = 0
+
+        self.version = self.obj["GameVersion"][0]
+
+        self.downloads = 0
+        self.filename = self.obj["FileNameOnDisk"]
+
+
 class CurseModpack:
     """Get information from a modpack"""
-    def __init__(self, project: CurseProject, curse: CurseAPI):
+
+    from MultiMC import MultiMC
+
+    def __init__(self, project: CurseProject, curse: CurseAPI, mmc: MultiMC):
         self.project = project
         self.curse = curse
 
@@ -262,6 +285,8 @@ class CurseModpack:
 
         self.installed = False
         self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
+        self.uuid = md5(self.installLocation.encode()).hexdigest()
+        self.mmc = mmc
 
     def install(self, file: CurseFile):
         tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
@@ -312,12 +337,20 @@ class CurseModpack:
         forgeCfg = ForgePatch(manifest.mcVersion, manifest.forgeVersion)
         forgeCfg.write(patchPath+"/net.minecraftforge.json")
 
+        modlist = list()
+
         for x, mod in enumerate(manifest.mods):
+            if x > 2:
+                break
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            fileMeta = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])
+            r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])
                                     , headers={"User-Agent": "OpenMineMods v"+CurseAPI.version}).json()
-            self.curse.download_file(fileMeta["DownloadURL"], modPath)
+            cfile = JsonCurseFile(r)
+            self.curse.download_file(cfile.url, modPath)
+            modlist.append(cfile)
         stdout.write("\n\r")
+
+        self.mmc.metaDb[self.uuid] = modlist
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
 
