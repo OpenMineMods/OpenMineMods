@@ -36,6 +36,13 @@ def modbrowse(uuid):
     return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid], "mods": mods}
 
 
+@get("/browse-packs")
+@view("packbrowse")
+def modbrowse():
+    packs = curse.get_modpacks()
+    return {"version": CurseAPI.version, "packs": packs}
+
+
 @get("/edit/<uuid>/add/<modid>")
 def addmodd(uuid, modid):
     if uuid not in mmc.instanceMap:
