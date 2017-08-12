@@ -1,4 +1,4 @@
-from bottle import get, view, run, abort, static_file, redirect
+from bottle import get, view, run, abort, static_file, redirect, request
 from CurseAPI import CurseAPI, CurseProject, CurseModpack
 from MultiMC import MultiMC
 from threading import Thread
@@ -40,7 +40,10 @@ def modbrowse(uuid):
     if uuid not in mmc.instanceMap:
         abort(404, "Instance Not Found")
     instance = mmc.instanceMap[uuid]
-    mods = curse.get_mod_list(instance.version)
+    if request.query["q"]:
+        mods = curse.search(request.query["q"])
+    else:
+        mods = curse.get_mod_list(instance.version)
     return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid], "mods": mods}
 
 

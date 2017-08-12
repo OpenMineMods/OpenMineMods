@@ -194,6 +194,10 @@ class SearchResult:
         self.curse = curse
 
         self.name = self.get_content("dt > a")
+
+        # Shhh it's OK
+        self.title = self.name
+        
         self.author = self.get_content("a", 1)
 
         self.url = self.get_tag("dt > a", "href")
@@ -204,6 +208,9 @@ class SearchResult:
         except:
             pass
         self.type = self.url.split("/")[1]
+        self.imgUrl = ""
+        self.likes = "N/A"
+        self.monthly = "N/A"
 
     def get_tag(self, selector, tag, index=0):
         return self.el.select(selector)[index][tag]
