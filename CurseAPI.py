@@ -141,7 +141,10 @@ class CurseProject:
 
         if detailed:
             self.title = self.get_content("header.h2 > h2")
-            self.likes = int(self.get_tag(".grats > span", "data-id"))
+            try:
+                self.likes = int(self.get_tag(".grats > span", "data-id"))
+            except ValueError:
+                self.likes = 0
             self.imgUrl = self.get_tag("a > img", "src")
 
             self.el = self.el.select(".details-list")[0]
@@ -160,7 +163,10 @@ class CurseProject:
         self.title = self.get_content("h4 > a")
         self.id = self.get_tag("h4 > a", "href").split("/")[-1].split("-")[0]
 
-        self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
+        try:
+            self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
+        except ValueError:
+            self.likes = 0
 
         self.updated = self.get_content(".updated")[8:]
         self.created = self.get_content(".updated", 1)[8:]

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenMineMods v{{version}}</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>
+                <b>Thumbnail</b>
+            </td>
+            <td>
+                <b>Name</b>
+            </td>
+            <td>
+                <b>Likes</b>
+            </td>
+            <td>
+                <b>Monthly Downloads</b>
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        % for mod in mods:
+        <tr>
+            <td>
+                <img src="{{mod.imgUrl}}" height="50" />
+            </td>
+            <td>
+                {{mod.title}}
+            </td>
+            <td>
+                {{mod.likes}}
+            </td>
+            <td>
+                {{mod.monthly}}
+            </td>
+            <td>
+                <a href="../add/{{mod.id}}">
+                    <button>
+                        Add To Pack
+                    </button>
+                </a>
+            </td>
+        </tr>
+        % end
+    </table>
+</body>
+</html>
