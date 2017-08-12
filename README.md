@@ -15,8 +15,8 @@ Requirements:
 ## Windows
 
 * Download and unzip https://github.com/joonatoona/OpenMineMods/archive/master.zip
-* Run `Intallers\Windows.bat` in the unzipped folder
-* Run `Installers\GUI_Win.bat` in the unzipped folder
+* Run `Windows\Install.bat` in the unzipped folder
+* Run `Windows\GUI.bat` in the unzipped folder
 
 If you get a 500 trying to open the webapp, you may need to disable windows firewall.
 

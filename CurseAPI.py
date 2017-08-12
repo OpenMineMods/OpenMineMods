@@ -20,11 +20,6 @@ useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50
 
 class CurseAPI:
     """Curse API"""
-    search_types = {
-        "mod": "mc-mods",
-        "modpack": "modpacks",
-        "texturepack": "customization"
-    }
 
     motd = """
           _|_|    _|      _|  _|      _|

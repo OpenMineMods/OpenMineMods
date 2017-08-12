@@ -1,10 +1,6 @@
-from CurseAPI import CurseAPI, CurseModpack
+from CurseAPI import CurseAPI
 from MultiMC import MultiMC
 from sys import exit
-
-motd = """
-        OpenMineMods V0.1
-"""
 
 disclaimer = """
 THIS SOFTWARE IS PROVIDED "AS IS" WITH NO WARRANTY, EXPRESS OR IMPLIED
@@ -17,7 +13,8 @@ Please be careful.
 
 curse = CurseAPI()
 
-print(motd)
+print(CurseAPI.motd)
+print("OpenMineMods v{}".format(CurseAPI.version))
 print(disclaimer)
 
 mmc = MultiMC(curse.baseDir)
@@ -60,7 +57,7 @@ while True:
 
     print("Found {} mods".format(len(mods)))
     for i, mod in enumerate(mods):
-        print("{}) \"{}\" - By {}".format(i+1, mod.name, mod.author))
+        print("{}) \"{}\" - By {}".format(i + 1, mod.name, mod.author))
 
     print("Select a mod to install")
     print("c to cancel")
@@ -103,7 +100,7 @@ while True:
         print("Invalid file selected!")
         continue
 
-    curse.download_file(file.host+file.url, "{}/minecraft/mods".format(instance.path))
+    curse.download_file(file.host + file.url, "{}/minecraft/mods".format(instance.path))
     print("Mod installed!")
 
 

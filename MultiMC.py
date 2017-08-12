@@ -6,7 +6,6 @@ from glob import glob
 from os import remove, path, makedirs
 from shutil import rmtree
 from sys import setrecursionlimit
-# Yes, I know MD5 is insecure. IT ISN'T FOR SECURITY!!!
 from hashlib import md5
 
 # Don't worry about it
@@ -15,12 +14,13 @@ setrecursionlimit(8096)
 
 class MultiMC:
     """Class for managing MultiMC instances"""
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, fpath: str):
+        self.path = fpath
 
         self.metaDb = shelve.open("{}/meta.db".format(self.path))
 
-        self.instances = [MultiMCInstance(i.replace("/instance.cfg", '').replace("\\instance.cfg", ''), self.metaDb) for i in glob(self.path+"/instances/*/instance.cfg")]
+        cfgFiles = [i.replace("instance.cfg", '')[:-1] for i in glob("{}/instances/*/instance.cfg")]
+        self.instances = [MultiMCInstance(i, self.metaDb) for i in cfgFiles]
 
         self.instanceMap = dict()
 
@@ -30,6 +30,7 @@ class MultiMC:
     def delete_instance(self, instance):
         if instance.uuid in self.metaDb:
             del self.metaDb[instance.uuid]
+
         del self.instanceMap[instance.uuid]
         del self.instances[self.instances.index(instance)]
 
