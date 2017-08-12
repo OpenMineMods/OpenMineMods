@@ -33,7 +33,7 @@ pip3 install beautifulsoup4 requests
 
 ## Windows
 
-Download `https://github.com/joonatoona/OpenMineMods/archive/master.zip` and unzip it somewhere
+Download `https://github.com/joonatoona/OpenMineMods/archive/master.zip` and unzip it somewhere.  S
 In `UnzippedFolder/Installers` run `Windows`
 
 Note: If it doesn't work, you need to uninstall Python 3.6.2 first.
