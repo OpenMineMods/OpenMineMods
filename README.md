@@ -33,9 +33,8 @@ pip3 install beautifulsoup4 requests
 
 ## Windows
 
-Make sure you have `python3` and `pip3` installed, you can find instructions for that on the web.
-
-In `CMD`, run `pip3 install beautifulsoup4 requests`
+Download `https://github.com/joonatoona/OpenMineMods/archive/master.zip` and unzip it somewhere
+In `UnzippedFolder/Installers` run `Windows`
 
 ---
 
@@ -58,8 +57,7 @@ Same as Linux
 
 ### Windows
 
-Download https://github.com/joonatoona/OpenMineMods/archive/master.zip and unzip it  
-Then in the unzipped folder, right click and select `Open in CMD` (Or something like that, let me know if it's different)
+Run `Mods_Win` or `Pack_Win` in the unzipped folder
 
 ## Test
 
