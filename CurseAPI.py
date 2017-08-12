@@ -149,7 +149,7 @@ class CurseProject:
 
             self.el = self.el.select(".details-list")[0]
 
-            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2].split("-")[0]
+            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
 
             self.updated = self.get_content(".standard-date")
             self.created = self.get_content(".standard-date", 1)
@@ -161,7 +161,7 @@ class CurseProject:
             return
 
         self.title = self.get_content("h4 > a")
-        self.id = self.get_tag("h4 > a", "href").split("/")[-1].split("-")[0]
+        self.id = self.get_tag("h4 > a", "href").split("/")[-1]
 
         try:
             self.likes = int(self.get_content(".grats")[:-6].replace(',', ''))
@@ -298,7 +298,8 @@ class CurseModpack:
 
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            self.curse.download_file("{}/projects/{}/files/{}/download".format(self.curse.forgeUrl, mod[0], mod[1]), modPath)
+            fileMeta = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])).json()
+            self.curse.download_file(fileMeta["DownloadURL"], modPath)
         stdout.write("\n\r")
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
