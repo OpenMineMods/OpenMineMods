@@ -1,0 +1,33 @@
+body {
+    background-color: #222222;
+}
+
+table {
+    border: 1px solid #00FF00;
+}
+
+* {
+    color: #00FF00;
+}
+
+button {
+    background-color: #333333;
+    border: 1px solid #00FF00;
+}
+
+.notif {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    margin: 20px;
+    background-color: #333333;
+    border: 1px solid #00FF00;
+    padding: 10px;
+}
+
+input {
+    color: #00FF00;
+    background: #333333;
+    border: 1px solid #00FF00;
+    margin-bottom: 10px;
+}

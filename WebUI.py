@@ -26,7 +26,7 @@ def serve_static(filename):
 @get("/")
 @view("index")
 def index():
-    return {"name": "OpenMineMods", "version": CurseAPI.version, "packs": mmc.instances}
+    return {"name": "OpenMineMods", "version": CurseAPI.version, "packs": mmc.instances, "q": request.query}
 
 
 @get("/edit/<uuid>")
@@ -34,7 +34,7 @@ def index():
 def edit(uuid):
     if uuid not in mmc.instanceMap:
         abort(404, "Instance Not Found")
-    return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid]}
+    return {"version": CurseAPI.version, "instance": mmc.instanceMap[uuid], "q": request.query}
 
 
 @get("/edit/<uuid>/browse-mods")

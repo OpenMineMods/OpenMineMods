@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>OpenMineMods v{{version}}</title>
+    <link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
+<div class="notif">
+    % if "installed" in q:
+    <h3>Mod Installed!</h3>
+    % end
+    % if "removed" in q:
+    <h3>Mod Removed!</h3>
+    % end
+</div>
+<center>
 <h3>
     Basic Information
 </h3>
@@ -90,5 +100,6 @@
         </td>
     </tr>
 </table>
+</center>
 </body>
 </html>
