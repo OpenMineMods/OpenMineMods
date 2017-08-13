@@ -12,7 +12,6 @@ from urllib.parse import unquote
 from sys import stdout
 from MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
-from easygui import diropenbox
 from hashlib import md5
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
