@@ -5,6 +5,8 @@ Requirements:
 * BeautifulSoup 4.6.0
 * Requests 2.18.3
 * Bottle v0.12.13
+* EasyGUI v<idfk, latest?>
+* PyQt5 v<idfk, latest?>
 
 (Other versions may work, but those are the tested ones)
 
@@ -17,8 +19,6 @@ Requirements:
 * Download and unzip https://github.com/joonatoona/OpenMineMods/archive/master.zip
 * Run `Windows\Install.bat` in the unzipped folder
 * Run `Windows\GUI.bat` in the unzipped folder
-
-If you get a 500 trying to open the webapp, you may need to disable windows firewall.
 
 ---
 
