@@ -18,6 +18,7 @@ class AppWindow(QWidget):
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
+            self.curse.db["baseDir"] = self.curse.baseDir
 
         self.mmc = MultiMC(self.curse.baseDir)
 
