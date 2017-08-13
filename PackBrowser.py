@@ -25,11 +25,13 @@ class PackBrowseWindow(QWidget):
 
         self.searchGrid = QGridLayout()
 
-        self.searchInp = QLineEdit(self)
-        self.searchGrid.addWidget(self.searchInp, 0, 0)
         searchBut = QPushButton("Go")
         searchBut.clicked.connect(self.init_packs)
         self.searchGrid.addWidget(searchBut, 0, 1)
+
+        self.searchInp = QLineEdit(self)
+        self.searchInp.returnPressed.connect(searchBut.click)
+        self.searchGrid.addWidget(self.searchInp, 0, 0)
 
         self.searchBox.setLayout(self.searchGrid)
 
