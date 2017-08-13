@@ -17,8 +17,11 @@ def confirmBox(parent, icon, text):
     return msgbox.exec_() == QMessageBox.Yes
 
 
-def msgBox(parent, icon, text):
-    msgbox = QMessageBox(parent)
+def msgBox(parent=False, icon=QMessageBox.Information, text="Someone forgot to set this..."):
+    if parent:
+        msgbox = QMessageBox(parent)
+    else:
+        msgbox = QMessageBox()
     msgbox.setIcon(icon)
     msgbox.setText(text)
     msgbox.addButton(QMessageBox.Ok)

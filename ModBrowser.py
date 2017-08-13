@@ -15,7 +15,7 @@ class ModBrowseWindow(QWidget):
 
         self.page = 0
 
-        self.setWindowTitle("Browsing mods for {}")
+        self.setWindowTitle("Browsing mods for {}".format(instance.name))
 
         self.layout = QVBoxLayout(self)
 

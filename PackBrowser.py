@@ -78,4 +78,4 @@ class PackBrowseWindow(QWidget):
         self.mmc.metaDb.close()
         self.mmc = MultiMC(self.curse.baseDir)
         self.parent.init_instances()
-        msgBox(self, QMessageBox.Information, "Finished installing {}!".format(pack.project.title))
+        msgBox(icon=QMessageBox.Information, text="Finished installing {}!".format(pack.project.title))
