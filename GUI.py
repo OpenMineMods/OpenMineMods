@@ -86,6 +86,8 @@ class InstanceEditWindow(QWidget):
 
         self.instanceTable = QGridLayout()
 
+        self.init_mods()
+
         self.instanceMetaBox.setLayout(self.instanceTable)
 
         scroll = QScrollArea()
@@ -102,8 +104,9 @@ class InstanceEditWindow(QWidget):
         ModBrowseWindow(self.curse, self.instance)
 
     def init_mods(self):
+        clearLayout(self.instanceTable)
 
-        for x, mod in enumerate(instance.mods):
+        for x, mod in enumerate(self.instance.mods):
             rmButton = QPushButton("Remove", self)
             rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.filename))
             self.instanceTable.addWidget(QLabel(mod.name), x, 0)
