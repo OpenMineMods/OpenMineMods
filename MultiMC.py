@@ -1,5 +1,6 @@
 import re
 import shelve
+import os
 
 from json import dumps
 from glob import glob
@@ -94,7 +95,10 @@ class MultiMCInstance:
         self.db = db
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
         self.modDir = "{}/minecraft/mods".format(self.path)
-        self.uuid = md5((self.path+"/").encode()).hexdigest()
+        if os.name == "nt":
+            self.uuid = md5((self.path+"\\").encode()).hexdigest()
+        else:
+            self.uuid = md5((self.path+"/").encode()).hexdigest()
 
         if self.uuid in self.db:
             self.mods = self.db[self.uuid]

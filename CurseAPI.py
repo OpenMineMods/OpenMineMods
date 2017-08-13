@@ -280,7 +280,10 @@ class CurseModpack:
         self.availableFiles = self.curse.get_files(self.project.id)
 
         self.installed = False
-        self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
+        if os.name == "nt":
+            self.installLocation = "{}\\instances\\{}\\".format(self.curse.baseDir, self.project.title)
+        else:
+            self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
         self.uuid = md5(self.installLocation.encode()).hexdigest()
         self.mmc = mmc
 
