@@ -42,13 +42,12 @@ class CurseAPI:
         self.db = shelve.open(os.path.expanduser("~/omm.db"))
 
         if "baseDir" not in self.db:
+            self.db["baseDir"] = ""
             for dirf in ["~/.local/share/multimc", "~/.local/share/multimc5"]:
                 edir = os.path.expanduser(dirf)
                 if os.path.exists(edir):
                     self.db["baseDir"] = edir
                     break
-            if "baseDir" not in self.db:
-                self.db["baseDir"] = diropenbox("Select your MultiMC folder")
 
         self.baseDir = self.db["baseDir"]
 

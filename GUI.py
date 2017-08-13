@@ -1,10 +1,10 @@
 import sys
 
 from PyQt5.QtWidgets import *
-from CurseAPI import CurseAPI, CurseProject, SearchType
+from CurseAPI import CurseAPI
 from MultiMC import MultiMC, MultiMCInstance
 from functools import partial
-from Utils import clearLayout, confirmBox
+from Utils import clearLayout, confirmBox, directoryBox
 
 from PackBrowser import PackBrowseWindow
 from ModBrowser import ModBrowseWindow
@@ -15,6 +15,10 @@ class AppWindow(QWidget):
         super().__init__()
 
         self.curse = CurseAPI()
+
+        if not self.curse.baseDir:
+            self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
+
         self.mmc = MultiMC(self.curse.baseDir)
 
         self.setWindowTitle("OpenMineMods v{}".format(CurseAPI.version))
@@ -114,7 +118,9 @@ class InstanceEditWindow(QWidget):
             self.instanceTable.addWidget(QLabel(mod.name), x, 0)
             self.instanceTable.addWidget(rmButton, x, 1)
 
+def main():
+    app = QApplication(sys.argv)
+    win2 = AppWindow()
+    sys.exit(app.exec_())
 
-app = QApplication(sys.argv)
-win2 = AppWindow()
-sys.exit(app.exec_())
+main()

@@ -25,3 +25,6 @@ def msgBox(parent, icon, text):
     msgbox.setDefaultButton(QMessageBox.Ok)
 
     msgbox.exec_()
+
+def directoryBox(parent, text):
+    return QFileDialog.getExistingDirectory(parent, text)

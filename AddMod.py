@@ -17,6 +17,10 @@ print(CurseAPI.motd)
 print("OpenMineMods v{}".format(CurseAPI.version))
 print(disclaimer)
 
+if not curse.baseDir:
+    print("Please select your MultiMC folder")
+    curse.baseDir = input(">>> ")
+
 mmc = MultiMC(curse.baseDir)
 
 print("Found instances:")
