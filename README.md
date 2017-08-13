@@ -81,22 +81,3 @@ python3 tests.py
 ```
 
 If not every test passed, please open an issue with `results.json` and your MultiMC installation folder.
-
-## Install Modpack
-
-```
-python3 ModpackDownloader.py
-```
-
-It might ask for your MultiMC installation folder, if it can't automatically find it.  
-If it does ask for the folder, please open an issue with your MultiMC installation folder.
-
-## Add Mods
-
-```
-python3 AddMod.py
-```
-
-It might ask for your MultiMC installation folder, if it can't automatically find it.
-If it does ask for the folder, please open an issue with your MultiMC installation folder.
-

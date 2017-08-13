@@ -2,15 +2,16 @@ from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI, CurseProject
 from MultiMC import MultiMCInstance
 from functools import partial
-from Utils import clearLayout
+from Utils import clearLayout, msgBox
 
 
 class ModBrowseWindow(QWidget):
-    def __init__(self, curse: CurseAPI, instance: MultiMCInstance):
+    def __init__(self, curse: CurseAPI, instance: MultiMCInstance, parent: QWidget):
         super().__init__()
 
         self.curse = curse
         self.instance = instance
+        self.parent = parent
 
         self.page = 0
 
@@ -63,4 +64,7 @@ class ModBrowseWindow(QWidget):
             self.modTable.addWidget(addButton, x, 1)
 
     def add_clicked(self, mod: CurseProject):
-        print("Install {}".format(mod.title))
+        file = [i for i in self.curse.get_files(mod.id)][0]
+        self.instance.install_mod(file, self.curse)
+        self.parent.init_mods()
+        msgBox(self, QMessageBox.Information, "Installed {}!".format(mod.title))

@@ -61,9 +61,10 @@ class AppWindow(QWidget):
                           "Are you sure you want to delete {}?".format(instance.name)):
             return
         self.mmc.delete_instance(instance)
+        self.init_instances()
 
     def browse_clicked(self):
-        PackBrowseWindow(self.curse, self.mmc)
+        PackBrowseWindow(self.curse, self.mmc, self)
 
 
 class InstanceEditWindow(QWidget):
@@ -99,9 +100,10 @@ class InstanceEditWindow(QWidget):
 
     def delete_clicked(self, mod: str):
         self.instance.uninstall_mod(mod)
+        self.init_mods()
 
     def browse_clicked(self):
-        ModBrowseWindow(self.curse, self.instance)
+        ModBrowseWindow(self.curse, self.instance, self)
 
     def init_mods(self):
         clearLayout(self.instanceTable)

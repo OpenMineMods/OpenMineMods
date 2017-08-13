@@ -7,11 +7,12 @@ from threading import Thread
 
 
 class PackBrowseWindow(QWidget):
-    def __init__(self, curse: CurseAPI, mmc: MultiMC):
+    def __init__(self, curse: CurseAPI, mmc: MultiMC, parent: QWidget):
         super().__init__()
 
         self.curse = curse
         self.mmc = mmc
+        self.parent = parent
 
         self.page = 0
 
@@ -63,15 +64,16 @@ class PackBrowseWindow(QWidget):
             self.packTable.addWidget(addButton, x, 1)
 
     def add_clicked(self, pack: CurseProject):
+        msgBox(self, QMessageBox.Information, "Installing {} in background!".format(pack.title))
         project = CurseProject(self.curse.get(path="/projects/{}".format(pack.id), host=self.curse.forgeUrl),
                                detailed=True)
         pack = CurseModpack(project, self.curse, self.mmc)
         Thread(target=self.packdlThread, args=(pack,)).start()
-        msgBox(self, QMessageBox.Information, "Installing {} in background!".format(project.title))
 
     def packdlThread(self, pack: CurseModpack):
         file = self.curse.get_files(pack.project.id)[0]
         pack.install(file)
         self.mmc.metaDb.close()
         self.mmc = MultiMC(self.curse.baseDir)
+        self.parent.init_instances()
         msgBox(self, QMessageBox.Information, "Finished installing {}!".format(pack.project.title))
