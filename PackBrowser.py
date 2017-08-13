@@ -1,20 +1,23 @@
 from PyQt5.QtWidgets import *
-from CurseAPI import CurseAPI, CurseProject, SearchType
+from CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
-from Utils import clearLayout
+from MultiMC import MultiMC
+from Utils import clearLayout, msgBox
+from threading import Thread
 
 
 class PackBrowseWindow(QWidget):
-    def __init__(self, curse: CurseAPI):
+    def __init__(self, curse: CurseAPI, mmc: MultiMC):
         super().__init__()
 
         self.curse = curse
+        self.mmc = mmc
 
         self.page = 0
 
         self.setWindowTitle("Browsing Modpacks")
 
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
 
         self.searchBox = QGroupBox("Search Modpacks")
         self.layout.addWidget(self.searchBox)
@@ -37,13 +40,17 @@ class PackBrowseWindow(QWidget):
         self.init_packs()
 
         self.packBox.setLayout(self.packTable)
-        self.setLayout(self.layout)
+
+        scroll = QScrollArea()
+        scroll.setWidget(self.packBox)
+        scroll.setWidgetResizable(True)
+        scroll.setFixedHeight(400)
+        self.layout.addWidget(scroll)
 
         self.show()
 
     def init_packs(self):
         clearLayout(self.packTable)
-        print("Cleared")
         if self.searchInp.text():
             packs = self.curse.search(self.searchInp.text(), SearchType.Modpack)
         else:
@@ -56,4 +63,15 @@ class PackBrowseWindow(QWidget):
             self.packTable.addWidget(addButton, x, 1)
 
     def add_clicked(self, pack: CurseProject):
-        print("Install {}".format(pack.title))
+        project = CurseProject(self.curse.get(path="/projects/{}".format(pack.id), host=self.curse.forgeUrl),
+                               detailed=True)
+        pack = CurseModpack(project, self.curse, self.mmc)
+        Thread(target=self.packdlThread, args=(pack,)).start()
+        msgBox(self, QMessageBox.Information, "Installing {} in background!".format(project.title))
+
+    def packdlThread(self, pack: CurseModpack):
+        file = self.curse.get_files(pack.project.id)[0]
+        pack.install(file)
+        self.mmc.metaDb.close()
+        self.mmc = MultiMC(self.curse.baseDir)
+        msgBox(self, QMessageBox.Information, "Finished installing {}!".format(pack.project.title))

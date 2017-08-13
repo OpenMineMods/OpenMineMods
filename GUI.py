@@ -19,7 +19,7 @@ class AppWindow(QWidget):
 
         self.setWindowTitle("OpenMineMods v{}".format(CurseAPI.version))
 
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
 
         self.hGroupBox = QGroupBox("Instances")
         self.layout.addWidget(self.hGroupBox)
@@ -29,14 +29,20 @@ class AppWindow(QWidget):
         self.init_instances()
 
         self.hGroupBox.setLayout(self.instanceTable)
-        self.setLayout(self.layout)
+
+        scroll = QScrollArea()
+        scroll.setWidget(self.hGroupBox)
+        scroll.setWidgetResizable(True)
+        self.layout.addWidget(scroll)
+
+        brButton = QPushButton("Browse", self)
+        brButton.clicked.connect(self.browse_clicked)
+        self.layout.addWidget(brButton)
 
         self.show()
 
     def init_instances(self):
-        brButton = QPushButton("Browse", self)
-        brButton.clicked.connect(self.browse_clicked)
-        self.instanceTable.addWidget(brButton, len(self.mmc.instances), 0)
+        clearLayout(self.instanceTable)
 
         for x, instance in enumerate(self.mmc.instances):
             editButton = QPushButton("Edit", self)
@@ -57,7 +63,7 @@ class AppWindow(QWidget):
         self.mmc.delete_instance(instance)
 
     def browse_clicked(self):
-        PackBrowseWindow(self.curse)
+        PackBrowseWindow(self.curse, self.mmc)
 
 
 class InstanceEditWindow(QWidget):
@@ -69,25 +75,23 @@ class InstanceEditWindow(QWidget):
 
         self.setWindowTitle("Editing {}".format(self.instance.name))
 
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
 
         self.instanceMetaBox = QGroupBox("Installed Mods")
         self.layout.addWidget(self.instanceMetaBox)
 
-        self.instanceTable = QGridLayout()
-
         brButton = QPushButton("Browse Mods")
         brButton.clicked.connect(partial(self.browse_clicked))
-        self.instanceTable.addWidget(brButton, len(instance.mods), 0)
+        self.layout.addWidget(brButton)
 
-        for x, mod in enumerate(instance.mods):
-            rmButton = QPushButton("Remove", self)
-            rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.filename))
-            self.instanceTable.addWidget(QLabel(mod.name), x, 0)
-            self.instanceTable.addWidget(rmButton, x, 1)
+        self.instanceTable = QGridLayout()
 
         self.instanceMetaBox.setLayout(self.instanceTable)
-        self.setLayout(self.layout)
+
+        scroll = QScrollArea()
+        scroll.setWidget(self.instanceMetaBox)
+        scroll.setWidgetResizable(True)
+        self.layout.addWidget(scroll)
 
         self.show()
 
@@ -96,6 +100,14 @@ class InstanceEditWindow(QWidget):
 
     def browse_clicked(self):
         ModBrowseWindow(self.curse, self.instance)
+
+    def init_mods(self):
+
+        for x, mod in enumerate(instance.mods):
+            rmButton = QPushButton("Remove", self)
+            rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.filename))
+            self.instanceTable.addWidget(QLabel(mod.name), x, 0)
+            self.instanceTable.addWidget(rmButton, x, 1)
 
 
 app = QApplication(sys.argv)

@@ -16,7 +16,7 @@ class ModBrowseWindow(QWidget):
 
         self.setWindowTitle("Browsing mods for {}")
 
-        self.layout = QVBoxLayout()
+        self.layout = QVBoxLayout(self)
 
         self.searchBox = QGroupBox("Search Mods")
         self.layout.addWidget(self.searchBox)
@@ -39,7 +39,12 @@ class ModBrowseWindow(QWidget):
         self.init_mods()
 
         self.modBox.setLayout(self.modTable)
-        self.setLayout(self.layout)
+
+        scroll = QScrollArea()
+        scroll.setWidget(self.modBox)
+        scroll.setWidgetResizable(True)
+        scroll.setFixedHeight(400)
+        self.layout.addWidget(scroll)
 
         self.show()
 
