@@ -96,6 +96,7 @@ class MultiMCInstance:
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
         self.modDir = "{}/minecraft/mods".format(self.path)
         if os.name == "nt":
+            self.path = self.path.replace("/", "\\")
             self.uuid = md5((self.path+"\\").encode()).hexdigest()
         else:
             self.uuid = md5((self.path+"/").encode()).hexdigest()
