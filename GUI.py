@@ -103,7 +103,7 @@ class AppWindow(QWidget):
         self.init_instances()
 
     def browse_clicked(self):
-        PackBrowseWindow(self.curse, self.mmc, self)
+        PackBrowseWindow(self.curse, self.mmc)
 
 
 class InstanceEditWindow(QWidget):

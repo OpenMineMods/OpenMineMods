@@ -8,12 +8,11 @@ from threading import Thread
 
 
 class PackBrowseWindow(QWidget):
-    def __init__(self, curse: CurseAPI, mmc: MultiMC, parent: QWidget):
+    def __init__(self, curse: CurseAPI, mmc: MultiMC):
         super().__init__()
 
         self.curse = curse
         self.mmc = mmc
-        self.parent = parent
 
         self.page = 0
 
@@ -87,5 +86,4 @@ class PackBrowseWindow(QWidget):
         pack.install(file)
         self.mmc.metaDb.close()
         self.mmc = MultiMC(self.curse.baseDir)
-        self.parent.init_instances()
         msgBox(icon=QMessageBox.Information, text="Finished installing {}!".format(pack.project.title))
