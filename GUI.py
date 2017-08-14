@@ -67,6 +67,7 @@ class AppWindow(QWidget):
         self.show()
 
     def refresh_instances(self):
+        self.mmc.metaDb.close()
         self.mmc = MultiMC(self.curse.baseDir)
         self.init_instances()
 
