@@ -121,7 +121,9 @@ class MultiMCInstance:
         self.db[self.uuid] = self.mods
 
     def uninstall_mod(self, filename):
-        remove("{}/minecraft/mods/{}".format(self.path, filename))
+        fpath = "{}/minecraft/mods/{}".format(self.path, filename)
+        if path.exists(fpath):
+            remove(fpath)
         for x, mod in enumerate(self.mods):
             if mod.filename == filename:
                 del self.mods[x]
