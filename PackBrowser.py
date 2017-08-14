@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
@@ -38,7 +39,7 @@ class PackBrowseWindow(QWidget):
         self.packBox = QGroupBox("Available Modpacks")
         self.layout.addWidget(self.packBox)
 
-        self.packTable = QGridLayout()
+        self.packTable = QVBoxLayout()
 
         self.init_packs()
 
@@ -59,11 +60,20 @@ class PackBrowseWindow(QWidget):
         else:
             packs = self.curse.get_modpacks(page=self.page)
 
-        for x, pack in enumerate(packs):
+        def create_pack_item(pack):
+            group = QGroupBox(self)
+            hbox = QHBoxLayout()
+            group.setLayout(hbox)
+            group.setStyleSheet("QGroupBox { border:0; } ")
             addButton = QPushButton("Install", self)
             addButton.clicked.connect(partial(self.add_clicked, pack=pack))
-            self.packTable.addWidget(QLabel(pack.title), x, 0)
-            self.packTable.addWidget(addButton, x, 1)
+            hbox.addStretch(0)
+            hbox.addWidget(addButton)
+            hbox.addWidget(QLabel(pack.title))
+            return group
+
+        for pack in packs:
+            self.packTable.addWidget(create_pack_item(pack),0, Qt.AlignLeft)
 
     def add_clicked(self, pack: CurseProject):
         msgBox(self, QMessageBox.Information, "Installing {} in background!".format(pack.title))

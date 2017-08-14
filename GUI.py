@@ -1,5 +1,7 @@
 import sys
 
+from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtGui import QIcon, QPalette
 from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI
 from MultiMC import MultiMC, MultiMCInstance
@@ -25,11 +27,33 @@ class AppWindow(QWidget):
         self.setWindowTitle("OpenMineMods v{}".format(CurseAPI.version))
 
         self.layout = QVBoxLayout(self)
+        # Start Buttons
+        self.buttonGroup = QGroupBox()
+        self.layoutButtons = QHBoxLayout()
+        self.buttonGroup.setLayout(self.layoutButtons)
+        self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
+        refreshInstances = QPushButton(self)
+        refreshInstances.setIcon(QIcon("assets/refresh.svg"))
+        refreshInstances.setIconSize(QSize(24, 24))
+        refreshInstances.setToolTip("Refresh Instances")
+        refreshInstances.clicked.connect(self.refresh_instances)
 
+        brButton = QPushButton(self)
+        brButton.setIcon(QIcon("assets/search.svg"))
+        brButton.setIconSize(QSize(24, 24))
+        brButton.setToolTip("Browse Curse Modpacks")
+        brButton.clicked.connect(self.browse_clicked)
+        self.layoutButtons.setAlignment(Qt.AlignTop)
+        self.layoutButtons.addWidget(refreshInstances)
+        self.layoutButtons.addWidget(brButton)
+        self.layoutButtons.addStretch(1)
+        self.layoutButtons.setContentsMargins(0, 0, 0, 0)
+        self.layout.addWidget(self.buttonGroup)
+        # End Buttons
         self.hGroupBox = QGroupBox("Instances")
         self.layout.addWidget(self.hGroupBox)
 
-        self.instanceTable = QGridLayout()
+        self.instanceTable = QVBoxLayout()
 
         self.init_instances()
 
@@ -40,23 +64,32 @@ class AppWindow(QWidget):
         scroll.setWidgetResizable(True)
         self.layout.addWidget(scroll)
 
-        brButton = QPushButton("Browse", self)
-        brButton.clicked.connect(self.browse_clicked)
-        self.layout.addWidget(brButton)
-
         self.show()
+
+    def refresh_instances(self):
+        self.mmc = MultiMC(self.curse.baseDir)
+        self.init_instances()
 
     def init_instances(self):
         clearLayout(self.instanceTable)
 
-        for x, instance in enumerate(self.mmc.instances):
+        def create_instance_item(instance):
+            group = QGroupBox(self)
+            hbox = QHBoxLayout()
+            group.setLayout(hbox)
+            group.setStyleSheet("QGroupBox { border:0; } ")
             editButton = QPushButton("Edit", self)
             editButton.clicked.connect(partial(self.edit_clicked, instance=instance))
             deleteButton = QPushButton("Delete", self)
             deleteButton.clicked.connect(partial(self.delete_clicked, instance=instance))
-            self.instanceTable.addWidget(QLabel("{} (Minecraft {})".format(instance.name, instance.version)), x, 0)
-            self.instanceTable.addWidget(editButton, x, 1)
-            self.instanceTable.addWidget(deleteButton, x, 2)
+            hbox.addStretch(1)
+            hbox.addWidget(QLabel("{} (Minecraft {})".format(instance.name, instance.version)))
+            hbox.addWidget(editButton)
+            hbox.addWidget(deleteButton)
+            return group
+
+        for instance in self.mmc.instances:
+            self.instanceTable.addWidget(create_instance_item(instance))
 
     def edit_clicked(self, instance):
         InstanceEditWindow(self.curse, instance)
@@ -119,9 +152,11 @@ class InstanceEditWindow(QWidget):
             self.instanceTable.addWidget(QLabel(mod.name), x, 0)
             self.instanceTable.addWidget(rmButton, x, 1)
 
+
 def main():
     app = QApplication(sys.argv)
     win2 = AppWindow()
     sys.exit(app.exec_())
+
 
 main()
