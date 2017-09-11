@@ -4,10 +4,16 @@
 
 ### *NIX:
 
+Generic:
+
 ```
 pip3 install -r requirements.txt
 python3 GUI.py
 ```
+
+Arch Linux:
+
+Install [OpenMineMods](https://aur.archlinux.org/packages/openminemods) from the AUR.
 
 ### Windoge:
 
