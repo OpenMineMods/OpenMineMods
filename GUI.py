@@ -7,6 +7,7 @@ from CurseAPI import CurseAPI
 from MultiMC import MultiMC, MultiMCInstance
 from functools import partial
 from Utils import clearLayout, confirmBox, directoryBox
+from pickle import UnpicklingError
 
 from PackBrowser import PackBrowseWindow
 from ModBrowser import ModBrowseWindow
@@ -16,7 +17,12 @@ class AppWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.curse = CurseAPI()
+        try:
+            self.curse = CurseAPI()
+        except UnpicklingError:
+            self.layout = QVBoxLayout(self)
+            self.setWindowTitle("ERROR")
+            self.layout.addWidget(QLabel("There was an error loading the database.\nPlease delete `omm.db*` from your home directory and try again."))
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
