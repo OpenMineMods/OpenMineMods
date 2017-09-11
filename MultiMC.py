@@ -15,10 +15,13 @@ setrecursionlimit(8096)
 
 class MultiMC:
     """Class for managing MultiMC instances"""
-    def __init__(self, fpath: str):
+    def __init__(self, fpath: str, db = False):
         self.path = fpath
 
-        self.metaDb = shelve.open("{}/meta.db".format(self.path))
+        if not db:
+            self.metaDb = shelve.open("{}/meta.db".format(self.path))
+        else:
+            self.metaDb = db
 
         cfgFiles = [i.replace("instance.cfg", '')[:-1] for i in glob("{}/instances/*/instance.cfg".format(self.path))]
         self.instances = [MultiMCInstance(i, self.metaDb) for i in cfgFiles]
