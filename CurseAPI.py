@@ -43,11 +43,7 @@ class CurseAPI:
         self.baseDir = ""
 
         if "baseDir" in self.db:
-            try:
-                self.baseDir = self.db["baseDir"]
-            except:
-                # TODO: More cleanly handle corrupted database
-                self.baseDir = ""
+            self.baseDir = self.db["baseDir"]
 
         if "packs" not in self.db:
             self.db["packs"] = list()
