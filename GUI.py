@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI
 from MultiMC import MultiMC, MultiMCInstance
 from functools import partial
-from Utils import clearLayout, confirmBox, directoryBox
+from Utils import clearLayout, confirmBox, directoryBox, makeIconButton
 from pickle import UnpicklingError
 
 from PackBrowser import PackBrowseWindow
@@ -50,22 +50,13 @@ class AppWindow(QWidget):
         self.buttonGroup.setLayout(self.layoutButtons)
         self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
 
-        refreshInstances = QPushButton(self)
-        refreshInstances.setIcon(QIcon("assets/refresh.svg"))
-        refreshInstances.setIconSize(QSize(24, 24))
-        refreshInstances.setToolTip("Refresh Instances")
+        refreshInstances = makeIconButton(self, "refresh", "Refresh Instances")
         refreshInstances.clicked.connect(self.refresh_instances)
 
-        brButton = QPushButton(self)
-        brButton.setIcon(QIcon("assets/search.svg"))
-        brButton.setIconSize(QSize(24, 24))
-        brButton.setToolTip("Browse Curse Modpacks")
+        brButton = makeIconButton(self, "search", "Browse Modpacks")
         brButton.clicked.connect(self.browse_clicked)
 
-        settingsButton = QPushButton(self)
-        settingsButton.setIcon(QIcon("assets/configure.svg"))
-        settingsButton.setIconSize(QSize(24, 24))
-        settingsButton.setToolTip("Configure OpenMineMods")
+        settingsButton = makeIconButton(self, "configure", "Configure OpenMineMods")
 
         self.layoutButtons.setAlignment(Qt.AlignTop)
         self.layoutButtons.addWidget(refreshInstances)
@@ -104,16 +95,10 @@ class AppWindow(QWidget):
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
 
-            editButton = QPushButton(self)
-            editButton.setIcon(QIcon("assets/edit.svg"))
-            editButton.setIconSize(QSize(24, 24))
-            editButton.setToolTip("Edit Instance")
+            editButton = makeIconButton(self, "edit", "Edit Instance")
             editButton.clicked.connect(partial(self.edit_clicked, instance=instance))
 
-            deleteButton = QPushButton(self)
-            deleteButton.setIcon(QIcon("assets/edit-delete.svg"))
-            deleteButton.setIconSize(QSize(24, 24))
-            deleteButton.setToolTip("Delete Instance")
+            deleteButton = makeIconButton(self, "edit-delete", "Delete Instance")
             deleteButton.clicked.connect(partial(self.delete_clicked, instance=instance))
 
             hbox.addStretch(1)
@@ -182,11 +167,9 @@ class InstanceEditWindow(QWidget):
         clearLayout(self.instanceTable)
 
         for x, mod in enumerate(self.instance.mods):
-            rmButton = QPushButton(self)
-            rmButton.setIcon(QIcon("assets/edit-delete.svg"))
-            rmButton.setIconSize(QSize(24, 24))
-            rmButton.setToolTip("Remove Mod")
+            rmButton = makeIconButton(self, "edit-delete", "Remove Mod")
             rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
+
             self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)
             self.instanceTable.addWidget(rmButton, x, 1)
 

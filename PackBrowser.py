@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
 from MultiMC import MultiMC
-from Utils import clearLayout, msgBox
+from Utils import clearLayout, msgBox, makeIconButton
 from threading import Thread
 
 
@@ -66,10 +66,7 @@ class PackBrowseWindow(QWidget):
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
 
-            addButton = QPushButton(self)
-            addButton.setIcon(QIcon("assets/download.svg"))
-            addButton.setIconSize(QSize(24, 24))
-            addButton.setToolTip("Install Pack")
+            addButton = makeIconButton(self, "download", "Install Pack")
             addButton.clicked.connect(partial(self.add_clicked, pack=pack))
 
             hbox.addStretch(1)

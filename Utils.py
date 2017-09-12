@@ -1,4 +1,6 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import QSize
 
 
 def clearLayout(layout):
@@ -32,3 +34,11 @@ def msgBox(parent=False, icon=QMessageBox.Information, text="Someone forgot to s
 
 def directoryBox(parent, text):
     return QFileDialog.getExistingDirectory(parent, text)
+
+
+def makeIconButton(parent, icon, text):
+    button = QPushButton(parent)
+    button.setIcon(QIcon("assets/{}.svg".format(icon)))
+    button.setIconSize(QSize(24, 24))
+    button.setToolTip(text)
+    return button
