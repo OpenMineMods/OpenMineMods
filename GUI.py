@@ -10,6 +10,8 @@ from Utils import clearLayout, confirmBox, directoryBox, makeIconButton
 from Analytics import send_data
 from pickle import UnpicklingError
 
+from Strings import en_US as Strings
+
 from PackBrowser import PackBrowseWindow
 from ModBrowser import ModBrowseWindow
 
@@ -24,7 +26,7 @@ class AppWindow(QWidget):
             self.layout = QVBoxLayout(self)
             Logger.err("Unable to read DB")
             self.setWindowTitle("ERROR")
-            self.layout.addWidget(QLabel("There was an error loading the database.\nPlease delete `omm.db*` from your home directory and try again."))
+            self.layout.addWidget(QLabel(Strings.db_error))
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
@@ -33,7 +35,7 @@ class AppWindow(QWidget):
         Logger.info("MultiMC folder is {}".format(self.curse.baseDir))
 
         if "analytics" not in self.curse.db:
-            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, "Enable basic analytics?")
+            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, Strings.analytics)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
 
