@@ -2,12 +2,12 @@ import sys
 import Logger
 
 from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI
 from MultiMC import MultiMC, MultiMCInstance
 from functools import partial
 from Utils import clearLayout, confirmBox, directoryBox, makeIconButton
+from Analytics import send_data
 from pickle import UnpicklingError
 
 from PackBrowser import PackBrowseWindow
@@ -34,6 +34,8 @@ class AppWindow(QWidget):
 
         if "analytics" not in self.curse.db:
             self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, "Enable basic analytics?")
+            if self.curse.db["analytics"]:
+                send_data(self.curse)
 
         self.analytics = self.curse.db["analytics"]
 

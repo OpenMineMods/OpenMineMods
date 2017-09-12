@@ -7,6 +7,7 @@ from bs4.element import Tag
 from urllib.parse import urlparse
 from zipfile import ZipFile
 from json import loads
+from uuid import uuid4
 from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
@@ -48,7 +49,11 @@ class CurseAPI:
         if "packs" not in self.db:
             self.db["packs"] = list()
 
+        if "uuid" not in self.db:
+            self.db["uuid"] = str(uuid4())
+
         self.packs = self.db["packs"]
+        self.uuid = self.db["uuid"]
 
 
     # SECTION MODS
