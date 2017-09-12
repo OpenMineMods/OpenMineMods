@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
-from CurseAPI import CurseAPI, CurseProject
-from MultiMC import MultiMCInstance
+from API.CurseAPI import CurseAPI, CurseProject
+from API.MultiMC import MultiMCInstance
 from functools import partial
-from Utils import clearLayout, msgBox
+from Utils.Utils import clearLayout, msgBox
 
 
 class ModBrowseWindow(QWidget):

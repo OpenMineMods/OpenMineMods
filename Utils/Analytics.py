@@ -3,7 +3,7 @@ from getpass import getuser
 from os import path
 from platform import system, release, processor
 
-from CurseAPI import CurseAPI
+from API.CurseAPI import CurseAPI
 
 
 def send_data(curse: CurseAPI):

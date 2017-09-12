@@ -1,19 +1,19 @@
 import sys
-import Logger
+import Utils.Logger as Logger
 
-from PyQt5.QtCore import QSize, Qt
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
-from CurseAPI import CurseAPI
-from MultiMC import MultiMC, MultiMCInstance
+from API.CurseAPI import CurseAPI
+from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
-from Utils import clearLayout, confirmBox, directoryBox, makeIconButton
-from Analytics import send_data
+from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton
+from Utils.Analytics import send_data
 from pickle import UnpicklingError
 
-from Strings import en_US as Strings
+from GUI.Strings import en_US as Strings
 
-from PackBrowser import PackBrowseWindow
-from ModBrowser import ModBrowseWindow
+from GUI.PackBrowser import PackBrowseWindow
+from GUI.ModBrowser import ModBrowseWindow
 
 
 class AppWindow(QWidget):
@@ -178,10 +178,6 @@ class InstanceEditWindow(QWidget):
             self.instanceTable.addWidget(rmButton, x, 1)
 
 
-def main():
-    app = QApplication(sys.argv)
-    win2 = AppWindow()
-    sys.exit(app.exec_())
-
-
-main()
+app = QApplication(sys.argv)
+win = AppWindow()
+sys.exit(app.exec_())

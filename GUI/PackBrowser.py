@@ -1,10 +1,9 @@
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
-from CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
+from API.CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
-from MultiMC import MultiMC
-from Utils import clearLayout, msgBox, makeIconButton
+from API.MultiMC import MultiMC
+from Utils.Utils import clearLayout, msgBox, makeIconButton
 from threading import Thread
 
 

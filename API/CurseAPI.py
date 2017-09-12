@@ -11,7 +11,7 @@ from uuid import uuid4
 from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
-from MultiMC import InstanceCfg, ForgePatch
+from API.MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
 from hashlib import md5
 
@@ -271,7 +271,7 @@ class JsonCurseFile:
 class CurseModpack:
     """Get information from a modpack"""
 
-    from MultiMC import MultiMC
+    from API.MultiMC import MultiMC
 
     def __init__(self, project: CurseProject, curse: CurseAPI, mmc: MultiMC):
         self.project = project

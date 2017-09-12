@@ -3,10 +3,10 @@
 block_cipher = None
 
 
-a = Analysis(['GUI.py'],
+a = Analysis(['Main.py'],
              pathex=['/home/joonatoona/src/OpenMineMods'],
              binaries=[],
-             datas=[('assets', 'assets'),
+             datas=[('Assets', 'Assets'),
                     ('LICENSE.txt', '.')],
              hiddenimports=['urllib3', 'PyQt5.uic.plugins', 'queue'],
              hookspath=[],
@@ -24,7 +24,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=False , icon='OMM.ico' )
+          console=True , icon='OMM.ico' )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
