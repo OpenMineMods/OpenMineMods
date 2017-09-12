@@ -1,5 +1,5 @@
 The following is all the data collected.
-You can view the server code [here](https://github.com/joonatoona/OpenMineMods_Analytics), and the code that sends data to the server [here](https://github.com/joonatoona/OpenMineMods/blob/master/Analytics.py)
+You can view the server code [here](https://github.com/joonatoona/OpenMineMods_Analytics), and the code that sends data to the server [here](https://github.com/joonatoona/OpenMineMods/blob/master/Utils/Analytics.py)
 
 ```
 TIMESTAMP: 1505221402316
