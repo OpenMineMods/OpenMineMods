@@ -14,7 +14,7 @@ def confirmBox(parent, icon, text, default=QMessageBox.No):
     msgbox.setText(text)
     msgbox.addButton(QMessageBox.Yes)
     msgbox.addButton(QMessageBox.No)
-    msgbox.setDefaultButton(QMessageBox.No)
+    msgbox.setDefaultButton(default)
 
     return msgbox.exec_() == QMessageBox.Yes
 

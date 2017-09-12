@@ -25,7 +25,7 @@ class PackBrowseWindow(QWidget):
 
         self.searchGrid = QGridLayout()
 
-        searchBut = QPushButton("Go")
+        searchBut = makeIconButton(self, "search", "Search")
         searchBut.clicked.connect(self.init_packs)
         self.searchGrid.addWidget(searchBut, 0, 1)
 
@@ -69,12 +69,12 @@ class PackBrowseWindow(QWidget):
             addButton.clicked.connect(partial(self.add_clicked, pack=pack))
 
             hbox.addStretch(1)
-            hbox.addWidget(addButton)
             hbox.addWidget(QLabel(pack.title))
+            hbox.addWidget(addButton)
             return group
 
         for pack in packs:
-            self.packTable.addWidget(create_pack_item(pack),0, Qt.AlignLeft)
+            self.packTable.addWidget(create_pack_item(pack), 0, Qt.AlignRight)
 
     def add_clicked(self, pack: CurseProject):
         msgBox(self, QMessageBox.Information, "Installing {} in background!".format(pack.title))

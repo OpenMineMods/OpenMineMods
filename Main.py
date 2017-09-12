@@ -35,7 +35,7 @@ class AppWindow(QWidget):
         Logger.info("MultiMC folder is {}".format(self.curse.baseDir))
 
         if "analytics" not in self.curse.db:
-            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, Strings.analytics)
+            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, Strings.analytics, QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
 

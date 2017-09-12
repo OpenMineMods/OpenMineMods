@@ -20,7 +20,7 @@ class InstanceEditWindow(QWidget):
         self.instanceMetaBox = QGroupBox("Installed Mods")
         self.layout.addWidget(self.instanceMetaBox)
 
-        brButton = QPushButton("Browse Mods")
+        brButton = makeIconButton(self, "search", "Browse Mods")
         brButton.clicked.connect(partial(self.browse_clicked))
         self.layout.addWidget(brButton)
 
