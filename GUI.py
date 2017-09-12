@@ -54,7 +54,7 @@ class AppWindow(QWidget):
         self.buttonGroup.setLayout(self.layoutButtons)
         self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
 
-        refreshInstances = makeIconButton(self, "refresh", "Refresh Instances")
+        refreshInstances = makeIconButton(self, "view-refresh", "Refresh Instances")
         refreshInstances.clicked.connect(self.refresh_instances)
 
         brButton = makeIconButton(self, "search", "Browse Modpacks")
