@@ -6,7 +6,7 @@ def clearLayout(layout):
         layout.itemAt(i).widget().setParent(None)
 
 
-def confirmBox(parent, icon, text):
+def confirmBox(parent, icon, text, default=QMessageBox.No):
     msgbox = QMessageBox(parent)
     msgbox.setIcon(icon)
     msgbox.setText(text)
@@ -28,6 +28,7 @@ def msgBox(parent=False, icon=QMessageBox.Information, text="Someone forgot to s
     msgbox.setDefaultButton(QMessageBox.Ok)
 
     msgbox.exec_()
+
 
 def directoryBox(parent, text):
     return QFileDialog.getExistingDirectory(parent, text)

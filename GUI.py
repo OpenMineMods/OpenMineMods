@@ -1,4 +1,5 @@
 import sys
+import Logger
 
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtGui import QIcon
@@ -21,12 +22,22 @@ class AppWindow(QWidget):
             self.curse = CurseAPI()
         except UnpicklingError:
             self.layout = QVBoxLayout(self)
+            Logger.err("Unable to read DB")
             self.setWindowTitle("ERROR")
             self.layout.addWidget(QLabel("There was an error loading the database.\nPlease delete `omm.db*` from your home directory and try again."))
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
             self.curse.db["baseDir"] = self.curse.baseDir
+
+        Logger.info("MultiMC folder is {}".format(self.curse.baseDir))
+
+        if "analytics" not in self.curse.db:
+            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, "Enable basic analytics?")
+
+        self.analytics = self.curse.db["analytics"]
+
+        Logger.info("Analytics are {}".format(["Disabled", "Enabled"][self.analytics]))
 
         self.mmc = MultiMC(self.curse.baseDir)
 
@@ -38,6 +49,7 @@ class AppWindow(QWidget):
         self.layoutButtons = QHBoxLayout()
         self.buttonGroup.setLayout(self.layoutButtons)
         self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
+
         refreshInstances = QPushButton(self)
         refreshInstances.setIcon(QIcon("assets/refresh.svg"))
         refreshInstances.setIconSize(QSize(24, 24))
@@ -49,9 +61,16 @@ class AppWindow(QWidget):
         brButton.setIconSize(QSize(24, 24))
         brButton.setToolTip("Browse Curse Modpacks")
         brButton.clicked.connect(self.browse_clicked)
+
+        settingsButton = QPushButton(self)
+        settingsButton.setIcon(QIcon("assets/configure.svg"))
+        settingsButton.setIconSize(QSize(24, 24))
+        settingsButton.setToolTip("Configure OpenMineMods")
+
         self.layoutButtons.setAlignment(Qt.AlignTop)
         self.layoutButtons.addWidget(refreshInstances)
         self.layoutButtons.addWidget(brButton)
+        self.layoutButtons.addWidget(settingsButton)
         self.layoutButtons.addStretch(1)
         self.layoutButtons.setContentsMargins(0, 0, 0, 0)
         self.layout.addWidget(self.buttonGroup)
@@ -84,14 +103,24 @@ class AppWindow(QWidget):
             hbox = QHBoxLayout()
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
-            editButton = QPushButton("Edit", self)
+
+            editButton = QPushButton(self)
+            editButton.setIcon(QIcon("assets/edit.svg"))
+            editButton.setIconSize(QSize(24, 24))
+            editButton.setToolTip("Edit Instance")
             editButton.clicked.connect(partial(self.edit_clicked, instance=instance))
-            deleteButton = QPushButton("Delete", self)
+
+            deleteButton = QPushButton(self)
+            deleteButton.setIcon(QIcon("assets/edit-delete.svg"))
+            deleteButton.setIconSize(QSize(24, 24))
+            deleteButton.setToolTip("Delete Instance")
             deleteButton.clicked.connect(partial(self.delete_clicked, instance=instance))
+
             hbox.addStretch(1)
             hbox.addWidget(QLabel("{} (Minecraft {})".format(instance.name, instance.version)))
             hbox.addWidget(editButton)
             hbox.addWidget(deleteButton)
+
             return group
 
         for instance in self.mmc.instances:
@@ -153,7 +182,10 @@ class InstanceEditWindow(QWidget):
         clearLayout(self.instanceTable)
 
         for x, mod in enumerate(self.instance.mods):
-            rmButton = QPushButton("Remove", self)
+            rmButton = QPushButton(self)
+            rmButton.setIcon(QIcon("assets/edit-delete.svg"))
+            rmButton.setIconSize(QSize(24, 24))
+            rmButton.setToolTip("Remove Mod")
             rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
             self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)
             self.instanceTable.addWidget(rmButton, x, 1)

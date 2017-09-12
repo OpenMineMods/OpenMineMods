@@ -1,4 +1,5 @@
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
@@ -64,9 +65,14 @@ class PackBrowseWindow(QWidget):
             hbox = QHBoxLayout()
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
-            addButton = QPushButton("Install", self)
+
+            addButton = QPushButton(self)
+            addButton.setIcon(QIcon("assets/download.svg"))
+            addButton.setIconSize(QSize(24, 24))
+            addButton.setToolTip("Install Pack")
             addButton.clicked.connect(partial(self.add_clicked, pack=pack))
-            hbox.addStretch(0)
+
+            hbox.addStretch(1)
             hbox.addWidget(addButton)
             hbox.addWidget(QLabel(pack.title))
             return group
