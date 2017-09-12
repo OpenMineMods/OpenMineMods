@@ -5,7 +5,7 @@ import os
 from json import dumps
 from glob import glob
 from os import remove, path, makedirs
-from shutil import rmtree
+from shutil import rmtree, move
 from sys import setrecursionlimit
 from hashlib import md5
 
@@ -118,9 +118,8 @@ class MultiMCInstance:
             makedirs(self.modDir)
 
         fname = curse.download_file(file.host + file.url, self.modDir)
-        fname = fname.split("/")[-1]
-        file.filename = fname
-        mod = InstalledMod(file, manual)
+        file.filename = fname.split("/")[-1]
+        mod = InstalledMod(file, manual, fname)
         self.mods.append(mod)
         self.db[self.uuid] = self.mods
 
@@ -137,6 +136,20 @@ class MultiMCInstance:
 
 class InstalledMod:
     """Information about a mod"""
-    def __init__(self, file, manual: bool):
+    def __init__(self, file, manual: bool, location: str):
         self.file = file
+        self.location = location
         self.manual = manual
+        self.enabled = True
+
+    def set_enabled(self, enabled: bool):
+        # TODO: Less hacky solution
+        if enabled != self.enabled:
+            if enabled:
+                newLoc = self.location[:-9]
+                move(self.location, newLoc)
+                self.enabled = True
+                return
+            newLoc = self.location + ".disabled"
+            move(self.location, newLoc)
+            self.enabled = False
