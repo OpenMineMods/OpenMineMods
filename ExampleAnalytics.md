@@ -9,4 +9,5 @@ LAST OCTLET OF IP: 87
 UUID: '6e300ac8-e0f6-4848-9668-bebfac0dfbc4'
 MULTIMC FOLDER: '/home/{USER}/.local/share/multimc'
 OPENMINEMODS FOLDER: '/home/{USER}/src/OpenMineMods'
+SYSTEM: 'Linux 4.10.0-33-generic (x86_64)'
 ```
