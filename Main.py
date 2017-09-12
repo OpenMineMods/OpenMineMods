@@ -14,6 +14,7 @@ from GUI.Strings import en_US as Strings
 
 from GUI.PackBrowser import PackBrowseWindow
 from GUI.ModBrowser import ModBrowseWindow
+from GUI.Setting import SettingsWindow
 
 
 class AppWindow(QWidget):
@@ -30,6 +31,8 @@ class AppWindow(QWidget):
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
+            if not self.curse.baseDir:
+                exit(1)
             self.curse.db["baseDir"] = self.curse.baseDir
 
         Logger.info("MultiMC folder is {}".format(self.curse.baseDir))
@@ -61,6 +64,7 @@ class AppWindow(QWidget):
         brButton.clicked.connect(self.browse_clicked)
 
         settingsButton = makeIconButton(self, "configure", "Configure OpenMineMods")
+        settingsButton.clicked.connect(self.settings_clicked)
 
         self.layoutButtons.setAlignment(Qt.AlignTop)
         self.layoutButtons.addWidget(refreshInstances)
@@ -127,6 +131,9 @@ class AppWindow(QWidget):
 
     def browse_clicked(self):
         PackBrowseWindow(self.curse, self.mmc)
+
+    def settings_clicked(self):
+        SettingsWindow(self.curse)
 
 
 class InstanceEditWindow(QWidget):

@@ -6,6 +6,7 @@ from Utils.Utils import clearLayout, makeIconButton
 
 from GUI.ModBrowser import ModBrowseWindow
 
+
 class InstanceEditWindow(QWidget):
     def __init__(self, curse: CurseAPI, instance: MultiMCInstance):
         super().__init__()
