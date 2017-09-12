@@ -10,7 +10,7 @@
 
 ### Generic
 
-Download and unpack `Linux.tar.xz` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods.exe`
+Download and unpack `Linux.tar.xz` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods`
 
 Alternatively, clone this repo and run these commands:
 
@@ -31,4 +31,12 @@ Download and unpack `Windows.zip` from the latest [release](https://github.com/O
 
 # Contributing:
 
-Idk, just don't write crap code and I'll probably accept it.
+## Translating:
+
+Do you know a different language and want to help translate OpenMineMods to said language?
+
+Translations go in `GUI/Strings.py`
+
+## Code:
+
+Code contributions are always appreciated! If you need ideas, check [issues marked as `Help Wanted`](https://github.com/joonatoona/OpenMineMods/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
