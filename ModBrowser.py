@@ -67,6 +67,6 @@ class ModBrowseWindow(QWidget):
 
     def add_clicked(self, mod: CurseProject):
         file = [i for i in self.curse.get_files(mod.id)][0]
-        self.instance.install_mod(file, self.curse)
+        self.instance.install_mod(file, self.curse, True)
         self.parent.init_mods()
         msgBox(self, QMessageBox.Information, "Installed {}!".format(mod.title))

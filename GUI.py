@@ -154,8 +154,8 @@ class InstanceEditWindow(QWidget):
 
         for x, mod in enumerate(self.instance.mods):
             rmButton = QPushButton("Remove", self)
-            rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.filename))
-            self.instanceTable.addWidget(QLabel(mod.name), x, 0)
+            rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
+            self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)
             self.instanceTable.addWidget(rmButton, x, 1)
 
 

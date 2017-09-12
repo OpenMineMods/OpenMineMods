@@ -112,7 +112,7 @@ class MultiMCInstance:
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
-    def install_mod(self, file, curse):
+    def install_mod(self, file, curse, manual = False):
 
         if not path.exists(self.modDir):
             makedirs(self.modDir)
@@ -120,7 +120,8 @@ class MultiMCInstance:
         fname = curse.download_file(file.host + file.url, self.modDir)
         fname = fname.split("/")[-1]
         file.filename = fname
-        self.mods.append(file)
+        mod = InstalledMod(file, manual)
+        self.mods.append(mod)
         self.db[self.uuid] = self.mods
 
     def uninstall_mod(self, filename):
@@ -132,3 +133,10 @@ class MultiMCInstance:
                 del self.mods[x]
                 break
         self.db[self.uuid] = self.mods
+
+
+class InstalledMod:
+    """Information about a mod"""
+    def __init__(self, file, manual: bool):
+        self.file = file
+        self.manual = manual
