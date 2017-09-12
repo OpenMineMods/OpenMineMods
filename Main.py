@@ -8,29 +8,25 @@ from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
 from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton
 from Utils.Analytics import send_data
-from pickle import UnpicklingError
 
-from GUI.Strings import en_US as Strings
+from GUI.Strings import Strings
 
 from GUI.PackBrowser import PackBrowseWindow
 from GUI.ModBrowser import ModBrowseWindow
 from GUI.Setting import SettingsWindow
+
+strings = Strings()
+translate = strings.get
 
 
 class AppWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        try:
-            self.curse = CurseAPI()
-        except UnpicklingError:
-            self.layout = QVBoxLayout(self)
-            Logger.err("Unable to read DB")
-            self.setWindowTitle("ERROR")
-            self.layout.addWidget(QLabel(Strings.db_error))
+        self.curse = CurseAPI()
 
         if not self.curse.baseDir:
-            self.curse.baseDir = directoryBox(self, "Please select your MultiMC folder")
+            self.curse.baseDir = directoryBox(self, translate("prompt.mmc"))
             if not self.curse.baseDir:
                 exit(1)
             self.curse.db["baseDir"] = self.curse.baseDir
@@ -38,7 +34,8 @@ class AppWindow(QWidget):
         Logger.info("MultiMC folder is {}".format(self.curse.baseDir))
 
         if "analytics" not in self.curse.db:
-            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question, Strings.analytics, QMessageBox.Yes)
+            self.curse.db["analytics"] = confirmBox(self, QMessageBox.Question,
+                                                    translate("prompt.analytics"), QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
 
@@ -57,13 +54,13 @@ class AppWindow(QWidget):
         self.buttonGroup.setLayout(self.layoutButtons)
         self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
 
-        refreshInstances = makeIconButton(self, "view-refresh", "Refresh Instances")
+        refreshInstances = makeIconButton(self, "view-refresh", translate("tooltip.refresh.instances"))
         refreshInstances.clicked.connect(self.refresh_instances)
 
         brButton = makeIconButton(self, "search", "Browse Modpacks")
         brButton.clicked.connect(self.browse_clicked)
 
-        settingsButton = makeIconButton(self, "configure", "Configure OpenMineMods")
+        settingsButton = makeIconButton(self, "configure", translate("tooltip.configure.omm"))
         settingsButton.clicked.connect(self.settings_clicked)
 
         self.layoutButtons.setAlignment(Qt.AlignTop)
@@ -74,7 +71,7 @@ class AppWindow(QWidget):
         self.layoutButtons.setContentsMargins(0, 0, 0, 0)
         self.layout.addWidget(self.buttonGroup)
         # End Buttons
-        self.hGroupBox = QGroupBox("Instances")
+        self.hGroupBox = QGroupBox(translate("label.instances"))
         self.layout.addWidget(self.hGroupBox)
 
         self.instanceTable = QVBoxLayout()
@@ -103,10 +100,10 @@ class AppWindow(QWidget):
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
 
-            editButton = makeIconButton(self, "edit", "Edit Instance")
+            editButton = makeIconButton(self, "edit", translate("tooltip.edit.instance"))
             editButton.clicked.connect(partial(self.edit_clicked, instance=instance))
 
-            deleteButton = makeIconButton(self, "edit-delete", "Delete Instance")
+            deleteButton = makeIconButton(self, "edit-delete", translate("tooltip.delete.instance"))
             deleteButton.clicked.connect(partial(self.delete_clicked, instance=instance))
 
             hbox.addStretch(1)
@@ -123,8 +120,7 @@ class AppWindow(QWidget):
         InstanceEditWindow(self.curse, instance)
 
     def delete_clicked(self, instance: MultiMCInstance):
-        if not confirmBox(self, QMessageBox.Warning,
-                          "Are you sure you want to delete {}?".format(instance.name)):
+        if not confirmBox(self, QMessageBox.Warning, translate("prompt.delete").format(instance.name)):
             return
         self.mmc.delete_instance(instance)
         self.init_instances()
@@ -143,14 +139,14 @@ class InstanceEditWindow(QWidget):
         self.curse = curse
         self.instance = instance
 
-        self.setWindowTitle("Editing {}".format(self.instance.name))
+        self.setWindowTitle(translate("title.editing").format(self.instance.name))
 
         self.layout = QVBoxLayout(self)
 
-        self.instanceMetaBox = QGroupBox("Installed Mods")
+        self.instanceMetaBox = QGroupBox(translate("label.installed"))
         self.layout.addWidget(self.instanceMetaBox)
 
-        brButton = QPushButton("Browse Mods")
+        brButton = QPushButton(translate("tooltip.browse.mods"))
         brButton.clicked.connect(partial(self.browse_clicked))
         self.layout.addWidget(brButton)
 
@@ -178,7 +174,7 @@ class InstanceEditWindow(QWidget):
         clearLayout(self.instanceTable)
 
         for x, mod in enumerate(self.instance.mods):
-            rmButton = makeIconButton(self, "edit-delete", "Remove Mod")
+            rmButton = makeIconButton(self, "edit-delete", translate("tooltip.delete.mod"))
             rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
 
             self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)
