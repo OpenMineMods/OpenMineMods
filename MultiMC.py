@@ -128,7 +128,7 @@ class MultiMCInstance:
         if path.exists(fpath):
             remove(fpath)
         for x, mod in enumerate(self.mods):
-            if mod.filename == filename:
+            if mod.file.filename == filename:
                 del self.mods[x]
                 break
         self.db[self.uuid] = self.mods
