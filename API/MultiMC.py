@@ -9,6 +9,8 @@ from shutil import rmtree, move
 from sys import setrecursionlimit
 from hashlib import md5
 
+from Utils.Migrate import migrate
+
 # Don't worry about it
 setrecursionlimit(8096)
 
@@ -20,6 +22,7 @@ class MultiMC:
 
         if not db:
             self.metaDb = shelve.open("{}/meta.db".format(self.path))
+            migrate(self.metaDb)
         else:
             self.metaDb = db
 

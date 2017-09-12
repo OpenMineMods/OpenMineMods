@@ -12,8 +12,8 @@ from Utils.Analytics import send_data
 from GUI.Strings import Strings
 
 from GUI.PackBrowser import PackBrowseWindow
-from GUI.ModBrowser import ModBrowseWindow
 from GUI.Setting import SettingsWindow
+from GUI.InstanceEdit import InstanceEditWindow
 
 strings = Strings()
 translate = strings.get
@@ -130,55 +130,6 @@ class AppWindow(QWidget):
 
     def settings_clicked(self):
         SettingsWindow(self.curse)
-
-
-class InstanceEditWindow(QWidget):
-    def __init__(self, curse: CurseAPI, instance: MultiMCInstance):
-        super().__init__()
-
-        self.curse = curse
-        self.instance = instance
-
-        self.setWindowTitle(translate("title.editing").format(self.instance.name))
-
-        self.layout = QVBoxLayout(self)
-
-        self.instanceMetaBox = QGroupBox(translate("label.installed"))
-        self.layout.addWidget(self.instanceMetaBox)
-
-        brButton = QPushButton(translate("tooltip.browse.mods"))
-        brButton.clicked.connect(partial(self.browse_clicked))
-        self.layout.addWidget(brButton)
-
-        self.instanceTable = QGridLayout()
-
-        self.init_mods()
-
-        self.instanceMetaBox.setLayout(self.instanceTable)
-
-        scroll = QScrollArea()
-        scroll.setWidget(self.instanceMetaBox)
-        scroll.setWidgetResizable(True)
-        self.layout.addWidget(scroll)
-
-        self.show()
-
-    def delete_clicked(self, mod: str):
-        self.instance.uninstall_mod(mod)
-        self.init_mods()
-
-    def browse_clicked(self):
-        ModBrowseWindow(self.curse, self.instance, self)
-
-    def init_mods(self):
-        clearLayout(self.instanceTable)
-
-        for x, mod in enumerate(self.instance.mods):
-            rmButton = makeIconButton(self, "edit-delete", translate("tooltip.delete.mod"))
-            rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
-
-            self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)
-            self.instanceTable.addWidget(rmButton, x, 1)
 
 
 app = QApplication(sys.argv)

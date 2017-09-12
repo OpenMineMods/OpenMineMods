@@ -288,6 +288,9 @@ class CurseModpack:
         self.mmc = mmc
 
     def install(self, file: CurseFile):
+
+        from API.MultiMC import InstalledMod
+
         tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
 
         self.curse.download_file(self.project.imgUrl, "{}/icons".format(self.curse.baseDir), str(self.project.id)+".png")
@@ -344,7 +347,7 @@ class CurseModpack:
                                     , headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version}).json()
             cfile = JsonCurseFile(r)
             self.curse.download_file(cfile.url, modPath)
-            modlist.append(cfile)
+            modlist.append(InstalledMod(cfile, False, modPath))
         stdout.write("\n\r")
 
         self.mmc.metaDb[self.uuid] = modlist
