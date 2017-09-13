@@ -2,11 +2,12 @@ import sys
 import Utils.Logger as Logger
 
 from PyQt5.QtCore import Qt, QThread
+from os.path import isfile, join
 from PyQt5.QtWidgets import *
 from API.CurseAPI import CurseAPI
 from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
-from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton
+from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton, getInstallDir
 from Utils.Analytics import send_data
 from Utils.Updater import UpdateCheckThread, Update
 
@@ -97,7 +98,8 @@ class AppWindow(QWidget):
         self.updatecheck.moveToThread(self.update_thread)
 
         self.update_thread.started.connect(self.updatecheck.check_updates)
-        self.update_thread.start()
+        if isfile(join(getInstallDir(), 'AutoUpdate')):
+            self.update_thread.start()
 
     def refresh_instances(self):
         self.mmc = MultiMC(self.curse.baseDir, self.mmc.metaDb)
