@@ -37,6 +37,8 @@ Do you know a different language and want to help translate OpenMineMods to said
 
 Translations go in `GUI/Strings.py`
 
+If you do translate OpenMineMods, be sure to give yourself credit in `CREDITS.md`!
+
 ## Code:
 
 Code contributions are always appreciated! If you need ideas, check [issues marked as `Help Wanted`](https://github.com/joonatoona/OpenMineMods/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
