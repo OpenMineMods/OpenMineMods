@@ -144,6 +144,8 @@ class PackDownloaderWindow(QWidget):
         self.download_thread.start()
 
     def download_done(self):
+        self.downloader.terminate()
+        self.download_thread.terminate()
         self.close()
         self.destroy()
 

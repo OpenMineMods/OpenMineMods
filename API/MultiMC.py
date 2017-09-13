@@ -110,7 +110,6 @@ class MultiMCInstance:
 
         if self.uuid in self.db:
             self.mods = self.db[self.uuid]["mods"]
-            print(self.mods)
             self.pack = self.db[self.uuid]["pack"]
         else:
             self.mods = list()

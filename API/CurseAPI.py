@@ -380,10 +380,10 @@ class CurseModpack:
         if self.uuid in self.mmc.metaDb:
             tmp = self.mmc.metaDb[self.uuid]
             tmp["mods"] += modlist
-            tmp["pack"] = self
+            tmp["pack"] = self.project
             self.mmc.metaDb[self.uuid] = tmp
         else:
-            self.mmc.metaDb[self.uuid] = {"mods": modlist, "pack": self}
+            self.mmc.metaDb[self.uuid] = {"mods": modlist, "pack": self.project}
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
 
