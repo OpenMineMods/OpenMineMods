@@ -38,6 +38,7 @@ class FileDownloaderWindow(QWidget):
         if self.callback:
             self.callback()
         self.close()
+        self.destroy()
 
 
 class FileDownloaderThread(QThread):
@@ -85,8 +86,11 @@ class ModDownloaderWindow(QWidget):
         self.download_thread.start()
 
     def download_done(self):
+        self.downloader.terminate()
+        self.download_thread.terminate()
         self.initmods()
         self.close()
+        self.destroy()
 
 
 class ModDownloaderThread(QThread):
@@ -104,6 +108,7 @@ class ModDownloaderThread(QThread):
         self.instance.install_mod(self.file, self.curse, True, self.update.emit)
 
         self.done.emit()
+        self.terminate()
 
 
 class PackDownloaderWindow(QWidget):
@@ -140,6 +145,7 @@ class PackDownloaderWindow(QWidget):
 
     def download_done(self):
         self.close()
+        self.destroy()
 
 
 class PackDownloaderThread(QThread):
@@ -159,3 +165,4 @@ class PackDownloaderThread(QThread):
         self.pack.install(self.file, self.setLabel.emit, self.bar1.emit, self.bar2.emit)
 
         self.done.emit()
+        self.terminate()

@@ -86,4 +86,9 @@ class ModBrowseWindow(QWidget):
 
     def add_clicked(self, mod: CurseProject):
         file = [i for i in self.curse.get_files(mod.id)][0]
-        self.dl_win = ModDownloaderWindow(file, self.curse, self.instance, self.parent.init_mods)
+        self.dl_win = ModDownloaderWindow(file, self.curse, self.instance, self.dl_done)
+
+    def dl_done(self):
+        self.parent.init_mods()
+        del self.dl_win
+        self.dl_win = None
