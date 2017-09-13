@@ -27,6 +27,8 @@ class AppWindow(QWidget):
 
         self.curse = CurseAPI()
         self.updatet = None
+        
+        data_sent = False
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, translate("prompt.mmc"))
@@ -41,9 +43,10 @@ class AppWindow(QWidget):
                                                     translate("prompt.analytics"), QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
+                data_sent = True
 
         if "ver" not in self.curse.db:
-            if self.curse.db["analytics"]:
+            if self.curse.db["analytics"] and not data_sent:
                 send_data(self.curse)
             self.curse.db["ver"] = self.curse.version
 
