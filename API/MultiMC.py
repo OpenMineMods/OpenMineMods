@@ -108,9 +108,12 @@ class MultiMCInstance:
             self.uuid = md5((self.path+"/").encode()).hexdigest()
 
         if self.uuid in self.db:
-            self.mods = self.db[self.uuid]
+            self.mods = self.db[self.uuid]["mods"]
+            self.pack = self.db[self.uuid]["pack"]
         else:
             self.mods = list()
+            self.pack = None
+            self.db[self.uuid]["pack"] = None
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
@@ -124,7 +127,7 @@ class MultiMCInstance:
         file.filename = fname.split("/")[-1]
         mod = InstalledMod(file, manual, fname)
         self.mods.append(mod)
-        self.db[self.uuid] = self.mods
+        self.db[self.uuid]["mods"] = self.mods
 
     def uninstall_mod(self, filename):
         fpath = "{}/minecraft/mods/{}".format(self.path, filename)
@@ -135,6 +138,11 @@ class MultiMCInstance:
                 del self.mods[x]
                 break
         self.db[self.uuid] = self.mods
+
+    def update(self, file):
+        if self.pack is None:
+            return False
+        # TODO: Acutally Update Pack
 
 
 class InstalledMod:

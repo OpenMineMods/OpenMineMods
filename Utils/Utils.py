@@ -1,3 +1,5 @@
+import os
+
 from os import path
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
@@ -55,3 +57,22 @@ def getVersionString(ver: tuple):
 
 def getInstallDir():
     return path.dirname(path.dirname(path.realpath(__file__)))
+
+
+def moveTree(sourceRoot, destRoot):
+    if not os.path.exists(destRoot):
+        return False
+    ok = True
+    for path, dirs, files in os.walk(sourceRoot):
+        relPath = os.path.relpath(path, sourceRoot)
+        destPath = os.path.join(destRoot, relPath)
+        if not os.path.exists(destPath):
+            os.makedirs(destPath)
+        for file in files:
+            destFile = os.path.join(destPath, file)
+            srcFile = os.path.join(path, file)
+            os.rename(srcFile, destFile)
+    for path, dirs, files in os.walk(sourceRoot, False):
+        if len(files) == 0 and len(dirs) == 0:
+            os.rmdir(path)
+    return ok
