@@ -3,9 +3,14 @@ from PyQt5.QtWidgets import *
 from API.CurseAPI import CurseAPI, CurseProject
 from API.MultiMC import MultiMCInstance
 from functools import partial
-from Utils.Utils import clearLayout, msgBox, makeIconButton
+from Utils.Utils import clearLayout, makeIconButton
+
+from GUI.Strings import Strings
 
 from GUI.Downloader import ModDownloaderWindow
+
+strings = Strings()
+translate = strings.get
 
 
 class ModBrowseWindow(QWidget):
@@ -19,16 +24,16 @@ class ModBrowseWindow(QWidget):
 
         self.page = 0
 
-        self.setWindowTitle("Browsing mods for {}".format(instance.name))
+        self.setWindowTitle(translate("title.browsing.mod").format(instance.name))
 
         self.layout = QVBoxLayout(self)
 
-        self.searchBox = QGroupBox("Search Mods")
+        self.searchBox = QGroupBox(translate("label.search.mods"))
         self.layout.addWidget(self.searchBox)
 
         self.searchGrid = QGridLayout()
 
-        searchBut = makeIconButton(self, "search", "Search")
+        searchBut = makeIconButton(self, "search", translate("tooltip.search"))
         searchBut.clicked.connect(self.init_mods)
         self.searchGrid.addWidget(searchBut, 0, 1)
 
@@ -38,7 +43,7 @@ class ModBrowseWindow(QWidget):
 
         self.searchBox.setLayout(self.searchGrid)
 
-        self.modBox = QGroupBox("Available Mods")
+        self.modBox = QGroupBox(translate("label.available.mods"))
         self.layout.addWidget(self.modBox)
 
         self.modTable = QVBoxLayout()
@@ -68,7 +73,7 @@ class ModBrowseWindow(QWidget):
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
 
-            addButton = makeIconButton(self, "download", "Install Mod")
+            addButton = makeIconButton(self, "download", translate("tooltip.install"))
             addButton.clicked.connect(partial(self.add_clicked, mod=mod))
 
             hbox.addStretch(1)

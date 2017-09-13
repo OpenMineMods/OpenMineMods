@@ -15,7 +15,12 @@ from API.MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
 from hashlib import md5
 
+from GUI.Strings import Strings
+
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
+
+strings = Strings()
+translate = strings.get
 
 
 class CurseAPI:
@@ -118,6 +123,8 @@ class CurseAPI:
                     if progf:
                         progf(int(step * prog))
                     f.write(chunk)
+        if progf:
+            progf(0)
         return filepath+"/"+fname
 
     def get(self, params={}, path="", host="", includeUrl=False):
@@ -292,13 +299,18 @@ class CurseModpack:
         self.uuid = md5(self.installLocation.encode()).hexdigest()
         self.mmc = mmc
 
-    def install(self, file: CurseFile):
+    def install(self, file: CurseFile, prog_label, progbar_1, progbar_2):
 
         from API.MultiMC import InstalledMod
 
         tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
 
-        self.curse.download_file(self.project.imgUrl, "{}/icons".format(self.curse.baseDir), str(self.project.id)+".png")
+        progbar_1(0)
+
+        prog_label(translate("downloading.icon"))
+
+        self.curse.download_file(self.project.imgUrl, "{}/icons".format(self.curse.baseDir),
+                                 str(self.project.id)+".png", progf=progbar_2)
 
         if os.path.exists(tempPath) and self.curse.baseDir:
             rmtree(tempPath)
@@ -307,8 +319,11 @@ class CurseModpack:
         if not os.path.exists(tempPath):
             os.makedirs(tempPath)
 
-        # TODO: Pretty progress bar
-        packFile = self.curse.download_file(file.host+file.url, tempPath)
+        progbar_1(5)
+
+        prog_label(translate("downloading.data"))
+
+        packFile = self.curse.download_file(file.host+file.url, tempPath, progf=progbar_2)
 
         # Unpack zip file
         zipf = ZipFile(packFile)
@@ -337,7 +352,8 @@ class CurseModpack:
             os.makedirs(patchPath)
 
         # Configure Instance
-        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title, icon=str(self.project.id))
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title,
+                                  icon=str(self.project.id))
         instanceCfg.write("{}/instance.cfg".format(tempPath))
 
         # Configure Forge
@@ -346,12 +362,18 @@ class CurseModpack:
 
         modlist = list()
 
+        progbar_1(10)
+
+        modf = (90 / len(manifest.mods))
+
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1])
-                                    , headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version}).json()
+            r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1]),
+                             headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version}).json()
             cfile = JsonCurseFile(r)
-            self.curse.download_file(cfile.url, modPath)
+            prog_label(translate("downloading.mod").format(cfile.name))
+            progbar_1(10 + (x * modf))
+            self.curse.download_file(cfile.url, modPath, progf=progbar_2)
             modlist.append(InstalledMod(cfile, False, modPath))
         stdout.write("\n\r")
 
@@ -362,10 +384,6 @@ class CurseModpack:
         rmtree("{}/raw/overrides".format(tempPath))
 
         if os.path.exists(newPath) and self.curse.baseDir:
-            a = input("FOLDER AT {} ALREADY EXISTS! Delete? [Yes/No]".format(newPath))
-            if a != "Yes":
-                print("ABORTING INSTALLATION")
-                return
             rmtree(newPath)
         move(tempPath, "{}/instances".format(self.curse.baseDir))
 

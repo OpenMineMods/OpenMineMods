@@ -14,6 +14,7 @@ Would you like to update to v{}?",
 "Would you like to enable basic analytics?\n\
 More information is availible at the URL below.\n\
 https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+        "prompt.restart": "A restart is required for new settings to take effect.",
 
         # SECTION TOOLTIPS
         "tooltip.refresh.instances": "Refresh Instances",
@@ -22,15 +23,35 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "tooltip.delete.instance": "Delete Instance",
         "tooltip.browse.mods": "Browse Mods",
         "tooltip.delete.mod": "Remove Mod",
+        "tooltip.search": "Search",
+        "tooltip.install": "Install",
+        "tooltip.mmc.change": "Change MultiMC Location",
+        "tooltip.toggle.analytics": "Toggle Analytics",
 
         # SECTION LABELS
         "label.instances": "Instances",
         "label.installed": "Installed Mods",
+        "label.search.mods": "Search Mods",
+        "label.available.mods": "Available Mods",
+        "label.search.packs": "Search Modpacks",
+        "label.available.packs": "Available Modpacks",
+        "label.mmc.location": "MultiMC Location",
+        "label.analytics": "Analytics",
+
+        # SECTION DOWNLOADING
+
+        "downloading.icon": "Downloading Icon",
+        "downloading.data": "Downloading Data",
+        "downloading.mod": "Downloading {}",
+        "downloading.pack": "Installing {}",
 
         # SECTION TITLES
-        "title.editing": "Editing {}"
+        "title.editing": "Editing {}",
+        "title.browsing.mod": "Browsing Mods For {}",
+        "title.browsing.packs": "Browsing Modpacks",
+        "title.settings": "OpenMineMods Settings"
     },
-    "nl_BE":{
+    "nl_BE": {
          # SECTION PROMPTS
         "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
         "prompt.delete": "Bent u zeker dat u {} wil verwijderen?",
@@ -57,7 +78,7 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         # SECTION TITLES
         "title.editing": "Aanpassen: {}"
     },
-    "nl_NL":{
+    "nl_NL": {
           # SECTION PROMPTS
         "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
         "prompt.delete": "Bent u zeker dat u {} wil verwijderen?",

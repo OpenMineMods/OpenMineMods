@@ -4,7 +4,12 @@ from API.MultiMC import MultiMCInstance
 from functools import partial
 from Utils.Utils import clearLayout, makeIconButton
 
+from GUI.Strings import Strings
+
 from GUI.ModBrowser import ModBrowseWindow
+
+strings = Strings()
+translate = strings.get
 
 
 class InstanceEditWindow(QWidget):
@@ -14,14 +19,14 @@ class InstanceEditWindow(QWidget):
         self.curse = curse
         self.instance = instance
 
-        self.setWindowTitle("Editing {}".format(self.instance.name))
+        self.setWindowTitle(translate("title.editing").format(self.instance.name))
 
         self.layout = QVBoxLayout(self)
 
-        self.instanceMetaBox = QGroupBox("Installed Mods")
+        self.instanceMetaBox = QGroupBox(translate("label.installed"))
         self.layout.addWidget(self.instanceMetaBox)
 
-        brButton = makeIconButton(self, "search", "Browse Mods")
+        brButton = makeIconButton(self, "search", translate("tooltip.browse.mods"))
         brButton.clicked.connect(partial(self.browse_clicked))
         self.layout.addWidget(brButton)
 
@@ -49,7 +54,7 @@ class InstanceEditWindow(QWidget):
         clearLayout(self.instanceTable)
 
         for x, mod in enumerate(self.instance.mods):
-            rmButton = makeIconButton(self, "edit-delete", "Remove Mod")
+            rmButton = makeIconButton(self, "edit-delete", translate("tooltip.delete.mod"))
             rmButton.clicked.connect(partial(self.delete_clicked, mod=mod.file.filename))
 
             self.instanceTable.addWidget(QLabel(mod.file.name), x, 0)

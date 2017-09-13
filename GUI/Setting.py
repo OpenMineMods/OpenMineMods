@@ -4,6 +4,11 @@ from API.CurseAPI import CurseAPI
 from functools import partial
 from Utils.Utils import makeIconButton, directoryBox, msgBox
 
+from GUI.Strings import Strings
+
+strings = Strings()
+translate = strings.get
+
 
 class SettingsWindow(QWidget):
     def __init__(self, curse: CurseAPI):
@@ -11,11 +16,11 @@ class SettingsWindow(QWidget):
 
         self.curse = curse
 
-        self.setWindowTitle("OpenMineMods Settings")
+        self.setWindowTitle(translate("title.settings"))
 
         self.layout = QVBoxLayout(self)
 
-        mmc_box = QGroupBox("MultiMC Location")
+        mmc_box = QGroupBox(translate("label.mmc.location"))
         mmc_layout = QHBoxLayout()
 
         mmc_box.setLayout(mmc_layout)
@@ -25,19 +30,20 @@ class SettingsWindow(QWidget):
         self.mmcDir.setMinimumWidth(250)
         mmc_layout.addWidget(self.mmcDir, 0, Qt.AlignLeft)
 
-        self.mmcEb = makeIconButton(self, "edit", "Change Install Location")
+        self.mmcEb = makeIconButton(self, "edit", translate("tooltip.mmc.change"))
         self.mmcEb.clicked.connect(partial(self.browse_clicked))
         mmc_layout.addWidget(self.mmcEb, 0, Qt.AlignRight)
 
         self.layout.addWidget(mmc_box)
 
-        analytics_box = QGroupBox("Analytics")
+        analytics_box = QGroupBox(translate("label.analytics"))
         analytics_layout = QHBoxLayout()
 
         analytics_box.setLayout(analytics_layout)
 
         self.analyticsToggle = QCheckBox()
         self.analyticsToggle.setChecked(self.curse.db["analytics"])
+        self.analyticsToggle.setToolTip(translate("tooltip.toggle.analytics"))
         self.analyticsToggle.stateChanged.connect(self.analytics_toggle)
         analytics_layout.addWidget(self.analyticsToggle, 1, Qt.AlignCenter)
 
@@ -46,11 +52,11 @@ class SettingsWindow(QWidget):
         self.show()
 
     def browse_clicked(self):
-        newBase = directoryBox(self, "Please select your MultiMC folder")
+        newBase = directoryBox(self, translate("prompt.mmc"))
         if newBase:
             self.curse.baseDir = newBase
             self.curse.db["baseDir"] = newBase
-            msgBox(self, QMessageBox.Information, "MultiMC folder updated!\nA restart is required for changes to take effect.")
+            msgBox(self, QMessageBox.Information, translate("prompt.restart"))
 
     def analytics_toggle(self):
         new = bool(self.analyticsToggle.checkState())

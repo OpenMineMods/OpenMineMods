@@ -3,8 +3,14 @@ from PyQt5.QtWidgets import *
 from API.CurseAPI import CurseAPI, CurseProject, SearchType, CurseModpack
 from functools import partial
 from API.MultiMC import MultiMC
-from Utils.Utils import clearLayout, msgBox, makeIconButton
-from threading import Thread
+from Utils.Utils import clearLayout, makeIconButton
+
+from GUI.Strings import Strings
+
+from GUI.Downloader import PackDownloaderWindow
+
+strings = Strings()
+translate = strings.get
 
 
 class PackBrowseWindow(QWidget):
@@ -13,19 +19,20 @@ class PackBrowseWindow(QWidget):
 
         self.curse = curse
         self.mmc = mmc
+        self.dlwin = None
 
         self.page = 0
 
-        self.setWindowTitle("Browsing Modpacks")
+        self.setWindowTitle(translate("title.browsing.packs"))
 
         self.layout = QVBoxLayout(self)
 
-        self.searchBox = QGroupBox("Search Modpacks")
+        self.searchBox = QGroupBox(translate("label.search.packs"))
         self.layout.addWidget(self.searchBox)
 
         self.searchGrid = QGridLayout()
 
-        searchBut = makeIconButton(self, "search", "Search")
+        searchBut = makeIconButton(self, "search", translate("tooltip.search"))
         searchBut.clicked.connect(self.init_packs)
         self.searchGrid.addWidget(searchBut, 0, 1)
 
@@ -35,7 +42,7 @@ class PackBrowseWindow(QWidget):
 
         self.searchBox.setLayout(self.searchGrid)
 
-        self.packBox = QGroupBox("Available Modpacks")
+        self.packBox = QGroupBox(translate("label.available.packs"))
         self.layout.addWidget(self.packBox)
 
         self.packTable = QVBoxLayout()
@@ -65,7 +72,7 @@ class PackBrowseWindow(QWidget):
             group.setLayout(hbox)
             group.setStyleSheet("QGroupBox { border:0; } ")
 
-            addButton = makeIconButton(self, "download", "Install Pack")
+            addButton = makeIconButton(self, "download", translate("tooltip.install"))
             addButton.clicked.connect(partial(self.add_clicked, pack=pack))
 
             hbox.addStretch(1)
@@ -77,15 +84,8 @@ class PackBrowseWindow(QWidget):
             self.packTable.addWidget(create_pack_item(pack), 0, Qt.AlignRight)
 
     def add_clicked(self, pack: CurseProject):
-        msgBox(self, QMessageBox.Information, "Installing {} in background!".format(pack.title))
         project = CurseProject(self.curse.get(path="/projects/{}".format(pack.id), host=self.curse.forgeUrl),
                                detailed=True)
         pack = CurseModpack(project, self.curse, self.mmc)
-        Thread(target=self.packdlThread, args=(pack,)).start()
-
-    def packdlThread(self, pack: CurseModpack):
         file = self.curse.get_files(pack.project.id)[0]
-        pack.install(file)
-        self.mmc.metaDb.close()
-        self.mmc = MultiMC(self.curse.baseDir)
-        msgBox(icon=QMessageBox.Information, text="Finished installing {}!".format(pack.project.title))
+        self.dlwin = PackDownloaderWindow(file, self.curse, pack)
