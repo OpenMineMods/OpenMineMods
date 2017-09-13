@@ -1,5 +1,5 @@
 import Utils.Logger as Logger
-from locale import getlocale
+from locale import getdefaultlocale
 
 translations = {
     "en_US": {
@@ -162,7 +162,7 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
 
 class Strings:
     def __init__(self):
-        self.lang = getlocale()[0]
+        self.lang = getdefaultlocale()[0]
         if self.lang not in translations:
             Logger.err("Locale {} is not translated!".format(self.lang))
             self.lang = "en_US"
