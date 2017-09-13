@@ -144,7 +144,7 @@ class AppWindow(QWidget):
         SettingsWindow(self.curse)
 
     def update_checked(self, res: dict):
-        if not res["res"]:
+        if not res["res"] or not res["update"]["downloads"][sys.platform]:
             return
 
         if not confirmBox(self, QMessageBox.Question,

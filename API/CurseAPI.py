@@ -55,7 +55,6 @@ class CurseAPI:
         self.packs = self.db["packs"]
         self.uuid = self.db["uuid"]
 
-
     # SECTION MODS
 
     def get_mod_list(self, version="", page=0):
@@ -104,14 +103,20 @@ class CurseAPI:
         results = [SearchResult(i, self) for i in results]
         return [i for i in results if i.type == stype]
 
-    def download_file(self, url: str, filepath: str, fname=""):
+    def download_file(self, url: str, filepath: str, fname="", progf=False):
         """Download a file from `url` to `filepath/name`"""
         r = self.session.get(url, stream=True)
+        dlen = r.headers.get("content-length")
+        step = (100 / int(dlen))
+        prog = 0
         if not fname:
             fname = unquote(Path(r.url).name)
         with open(filepath+"/"+fname, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
+                    prog += len(chunk)
+                    if progf:
+                        progf(int(step * prog))
                     f.write(chunk)
         return filepath+"/"+fname
 

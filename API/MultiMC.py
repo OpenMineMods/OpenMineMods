@@ -115,12 +115,12 @@ class MultiMCInstance:
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
-    def install_mod(self, file, curse, manual = False):
+    def install_mod(self, file, curse, manual=False, progress=False):
 
         if not path.exists(self.modDir):
             makedirs(self.modDir)
 
-        fname = curse.download_file(file.host + file.url, self.modDir)
+        fname = curse.download_file(file.host + file.url, self.modDir, progf=progress)
         file.filename = fname.split("/")[-1]
         mod = InstalledMod(file, manual, fname)
         self.mods.append(mod)

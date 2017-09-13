@@ -5,6 +5,8 @@ from API.MultiMC import MultiMCInstance
 from functools import partial
 from Utils.Utils import clearLayout, msgBox, makeIconButton
 
+from GUI.Downloader import ModDownloaderWindow
+
 
 class ModBrowseWindow(QWidget):
     def __init__(self, curse: CurseAPI, instance: MultiMCInstance, parent: QWidget):
@@ -13,6 +15,7 @@ class ModBrowseWindow(QWidget):
         self.curse = curse
         self.instance = instance
         self.parent = parent
+        self.dl_win = None
 
         self.page = 0
 
@@ -78,6 +81,4 @@ class ModBrowseWindow(QWidget):
 
     def add_clicked(self, mod: CurseProject):
         file = [i for i in self.curse.get_files(mod.id)][0]
-        self.instance.install_mod(file, self.curse, True)
-        self.parent.init_mods()
-        msgBox(self, QMessageBox.Information, "Installed {}!".format(mod.title))
+        self.dl_win = ModDownloaderWindow(file, self.curse, self.instance, self.parent.init_mods)
