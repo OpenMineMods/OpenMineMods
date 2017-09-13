@@ -34,7 +34,7 @@ class CurseAPI:
           _|_|    _|      _|  _|      _|
     """
 
-    version = "1.0.1"
+    version = "1.1.0"
 
     def __init__(self):
         self.baseUrl = "https://mods.curse.com"
