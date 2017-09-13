@@ -31,8 +31,6 @@ class UpdateCheckThread(QThread):
         vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
         latest = parseSemanticVersion(vers["latest_stable"])
 
-        print(latest)
-
         if latest > ver:
             self.done.emit({
                 "res": True,

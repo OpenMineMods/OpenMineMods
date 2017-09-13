@@ -76,3 +76,7 @@ def moveTree(sourceRoot, destRoot):
         if len(files) == 0 and len(dirs) == 0:
             os.rmdir(path)
     return ok
+
+
+def noop(*args):
+    return

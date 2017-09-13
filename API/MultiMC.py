@@ -9,6 +9,7 @@ from shutil import rmtree, move
 from sys import setrecursionlimit
 from hashlib import md5
 
+from Utils.Utils import noop, moveTree
 from Utils.Migrate import migrate
 
 # Don't worry about it
@@ -113,6 +114,8 @@ class MultiMCInstance:
         else:
             self.mods = list()
             self.pack = None
+            self.db[self.uuid] = dict()
+            self.db[self.uuid]["mods"] = list()
             self.db[self.uuid]["pack"] = None
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
@@ -142,7 +145,13 @@ class MultiMCInstance:
     def update(self, file):
         if self.pack is None:
             return False
-        # TODO: Acutally Update Pack
+        for mod in self.mods:
+            if not mod.manual:
+                self.uninstall_mod(mod.location)
+        move(self.path, self.path + ".preupdate")
+        self.pack.install(file, noop, noop, noop)
+        moveTree(self.path, self.path + ".preupdate")
+        move(self.path + ".preupdate", self.path)
 
 
 class InstalledMod:
