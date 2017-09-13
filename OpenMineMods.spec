@@ -26,7 +26,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=True , icon='OMM.ico' )
+          console=False , icon='OMM.ico' )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
