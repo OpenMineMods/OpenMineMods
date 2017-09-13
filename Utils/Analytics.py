@@ -7,7 +7,7 @@ from API.CurseAPI import CurseAPI
 
 
 def send_data(curse: CurseAPI):
-    post("https://digitalfishfun.com/openminemod_analytics/installed",
+    post("https://openminemods.digitalfishfun.com/analytics/installed",
          json={
              "uuid": curse.uuid,
              "ver": CurseAPI.version,
