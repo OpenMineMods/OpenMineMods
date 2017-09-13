@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import *
 from API.CurseAPI import CurseAPI
 from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
-from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton, getInstallDir
+from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton, getInstallDir, parseSemanticVersion
 from Utils.Analytics import send_data
 from Utils.Updater import UpdateCheckThread, Update
 
@@ -41,6 +41,11 @@ class AppWindow(QWidget):
                                                     translate("prompt.analytics"), QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
+
+        if "ver" not in self.curse.db:
+            if self.curse.db["analytics"]:
+                send_data(self.curse)
+            self.curse.db["ver"] = self.curse.version
 
         self.analytics = self.curse.db["analytics"]
 
