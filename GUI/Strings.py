@@ -29,6 +29,60 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
 
         # SECTION TITLES
         "title.editing": "Editing {}"
+    },
+    "nl_BE":{
+         # SECTION PROMPTS
+        "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
+        "prompt.delete": "Bent u zeker dat u {} wil verwijderen?",
+        "prompt.update":
+"Een nieuwe versie van OpenMineMods is beschikbaar!\n\
+Wilt u nu updaten naar v{}?",
+        "prompt.analytics":
+"Wilt u basis analytics inschakelen?\n\
+Meer informatie vind u in de link hieronder.\n\
+https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+
+        # SECTION TOOLTIPS
+        "tooltip.refresh.instances": "Vernieuw instanties",
+        "tooltip.configure.omm": "Configureer OpenMineMods",
+        "tooltip.edit.instance": "Pas Instantie aan",
+        "tooltip.delete.instance": "Verwijder Instance",
+        "tooltip.browse.mods": "Blader door mods",
+        "tooltip.delete.mod": "Verwijder Mod",
+
+        # SECTION LABELS
+        "label.instances": "Instanties",
+
+        "label.installed": "Geïnstalleerde mods",
+        # SECTION TITLES
+        "title.editing": "Aanpassen: {}"
+    },
+    "nl_NL":{
+          # SECTION PROMPTS
+        "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
+        "prompt.delete": "Bent u zeker dat u {} wil verwijderen?",
+        "prompt.update":
+"Een nieuwe versie van OpenMineMods is beschikbaar!\n\
+Wilt u nu updaten naar v{}?",
+        "prompt.analytics":
+"Wilt u basis analytics inschakelen?\n\
+Meer informatie vind u in de link hieronder.\n\
+https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+
+        # SECTION TOOLTIPS
+        "tooltip.refresh.instances": "Vernieuw instanties",
+        "tooltip.configure.omm": "Configureer OpenMineMods",
+        "tooltip.edit.instance": "Pas Instantie aan",
+        "tooltip.delete.instance": "Verwijder Instance",
+        "tooltip.browse.mods": "Blader door mods",
+        "tooltip.delete.mod": "Verwijder Mod",
+
+        # SECTION LABELS
+        "label.instances": "Instanties",
+
+        "label.installed": "Geïnstalleerde mods",
+        # SECTION TITLES
+        "title.editing": "Aanpassen: {}"
     }
 }
 
