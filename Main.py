@@ -8,7 +8,7 @@ from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
 from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton
 from Utils.Analytics import send_data
-from Utils.Updater import UpdateCheckThread
+from Utils.Updater import UpdateCheckThread, Update
 
 from GUI.Strings import Strings
 
@@ -25,6 +25,7 @@ class AppWindow(QWidget):
         super().__init__()
 
         self.curse = CurseAPI()
+        self.updatet = None
 
         if not self.curse.baseDir:
             self.curse.baseDir = directoryBox(self, translate("prompt.mmc"))
@@ -39,7 +40,6 @@ class AppWindow(QWidget):
                                                     translate("prompt.analytics"), QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
-
 
         self.analytics = self.curse.db["analytics"]
 
@@ -144,7 +144,7 @@ class AppWindow(QWidget):
         SettingsWindow(self.curse)
 
     def update_checked(self, res: dict):
-        if not res["res"] or not res["update"]["downloads"][sys.platform]:
+        if not res["res"] or not res["update"]["downloads"]["win32"]:
             return
 
         if not confirmBox(self, QMessageBox.Question,
@@ -152,7 +152,8 @@ class AppWindow(QWidget):
             return
 
         print("Updating...")
-
+        self.updatet = Update(self.curse, res["update"])
+        self.updatet.apply_update()
 
 app = QApplication(sys.argv)
 win = AppWindow()

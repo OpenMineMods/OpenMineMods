@@ -8,6 +8,56 @@ strings = Strings()
 translate = strings.get
 
 
+class FileDownloaderWindow(QWidget):
+    def __init__(self, file: str, curse: CurseAPI, path: str, fname=False, callback=False):
+        super().__init__()
+
+        self.callback = callback
+
+        self.setWindowTitle(translate("downloading.update"))
+
+        self.layout = QVBoxLayout(self)
+
+        self.progress = QProgressBar()
+        self.layout.addWidget(self.progress)
+
+        self.show()
+
+        self.downloader = FileDownloaderThread(file, curse, path, fname)
+        self.downloader.done.connect(self.download_done)
+        self.downloader.update.connect(self.progress.setValue)
+
+        self.download_thread = QThread()
+
+        self.downloader.moveToThread(self.download_thread)
+
+        self.download_thread.started.connect(self.downloader.download)
+        self.download_thread.start()
+
+    def download_done(self):
+        if self.callback:
+            self.callback()
+        self.close()
+
+
+class FileDownloaderThread(QThread):
+    done = pyqtSignal()
+    update = pyqtSignal(int, name="ping")
+
+    def __init__(self, file: str, curse: CurseAPI, path: str, fname: str):
+        super().__init__()
+
+        self.file = file
+        self.path = path
+        self.fname = fname
+        self.curse = curse
+
+    def download(self):
+        self.curse.download_file(self.file, self.path, self.fname, self.update.emit)
+
+        self.done.emit()
+
+
 class ModDownloaderWindow(QWidget):
     def __init__(self, file: CurseFile, curse: CurseAPI, instance, initmods):
         super().__init__()

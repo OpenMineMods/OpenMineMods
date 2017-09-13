@@ -10,7 +10,7 @@
 
 ### Generic
 
-Download and unpack `Linux.tar.xz` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods`
+Download and unpack `Linux.zip` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods`
 
 Alternatively, clone this repo and run these commands:
 

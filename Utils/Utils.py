@@ -1,3 +1,4 @@
+from os import path
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
@@ -50,3 +51,7 @@ def parseSemanticVersion(ver: str):
 
 def getVersionString(ver: tuple):
     return ".".join([str(i) for i in ver])
+
+
+def getInstallDir():
+    return path.dirname(path.dirname(path.realpath(__file__)))

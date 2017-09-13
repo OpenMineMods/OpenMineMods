@@ -10,6 +10,7 @@ translations = {
         "prompt.update":
 "A new version of OpenMineMods is available!\n\
 Would you like to update to v{}?",
+        "prompt.update.restart": "Please restart OpenMineMods to finish updating!",
         "prompt.analytics":
 "Would you like to enable basic analytics?\n\
 More information is availible at the URL below.\n\
@@ -44,6 +45,7 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "downloading.data": "Downloading Data",
         "downloading.mod": "Downloading {}",
         "downloading.pack": "Installing {}",
+        "downloading.update": "Downloading Update",
 
         # SECTION TITLES
         "title.editing": "Editing {}",
