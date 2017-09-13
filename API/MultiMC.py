@@ -114,7 +114,7 @@ class MultiMCInstance:
         else:
             self.mods = list()
             self.pack = None
-            self.db[self.uuid] = dict()
+            self.db[self.uuid] = {"mods": list(), "pack": None}
             self.db[self.uuid]["mods"] = list()
             self.db[self.uuid]["pack"] = None
 
