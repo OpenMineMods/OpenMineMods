@@ -3,6 +3,7 @@ import shutil
 from PyQt5.QtCore import QThread, pyqtSignal
 from requests import get
 from os import path, makedirs, remove, listdir
+from sys import platform
 from zipfile import ZipFile
 
 from GUI.Downloader import FileDownloaderWindow
@@ -51,7 +52,7 @@ class Update:
         self.idir = None
 
     def apply_update(self):
-        dl_url = self.update["downloads"]["win32"]
+        dl_url = self.update["downloads"][platform]
         idir = getInstallDir()
 
         self.idir = idir
