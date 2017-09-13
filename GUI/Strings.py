@@ -53,6 +53,7 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "title.browsing.packs": "Browsing Modpacks",
         "title.settings": "OpenMineMods Settings"
     },
+
     "nl_BE": {
          # SECTION PROMPTS
         "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
@@ -64,6 +65,8 @@ Wilt u nu updaten naar v{}?",
 "Wilt u basis analytics inschakelen?\n\
 Meer informatie vind u in de link hieronder.\n\
 https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+        "prompt.update.restart": "herstart OpenMineMods om het updaten te eindigen.",
+        "prompt.restart": "Het programma moet herstart worden om de wijzigingen correct uit te voeren.",
 
         # SECTION TOOLTIPS
         "tooltip.refresh.instances": "Vernieuw instanties",
@@ -72,16 +75,38 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "tooltip.delete.instance": "Verwijder Instance",
         "tooltip.browse.mods": "Blader door mods",
         "tooltip.delete.mod": "Verwijder Mod",
+        "tooltip.search": "Zoek",
+        "tooltip.install": "Installeer",
+        "tooltip.mmc.change": "Wijzig MultiMC Locatie",
+        "tooltip.toggle.analytics": "Wijzig optie: Analytics",
 
         # SECTION LABELS
         "label.instances": "Instanties",
-
         "label.installed": "Geïnstalleerde mods",
+        "label.search.mods": "Zoek Mods",
+        "label.available.mods": "Beschikbare Mods",
+        "label.search.packs": "Zoek Modpacks",
+        "label.available.packs": "Beschikbare Modpacks",
+        "label.mmc.location": "MultiMC Locatie",
+        "label.analytics": "Analytics",
+
+          # SECTION DOWNLOADING
+
+        "downloading.icon": "Icoon downloaden",
+        "downloading.data": "Data downloaden",
+        "downloading.mod": "{} aan het downloaden",
+        "downloading.pack": "{} aan het installeren",
+        "downloading.update": "update aan het downloaden",
+
+        
         # SECTION TITLES
-        "title.editing": "Aanpassen: {}"
+        "title.editing": "Aanpassen: {}",
+        "title.browsing.mod": "Bladeren door Mods voor {}",
+        "title.browsing.packs": "Bladeren door Modpacks",
+        "title.settings": "OpenMineMods Instellingen"
     },
     "nl_NL": {
-          # SECTION PROMPTS
+         # SECTION PROMPTS
         "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
         "prompt.delete": "Bent u zeker dat u {} wil verwijderen?",
         "prompt.update":
@@ -91,6 +116,8 @@ Wilt u nu updaten naar v{}?",
 "Wilt u basis analytics inschakelen?\n\
 Meer informatie vind u in de link hieronder.\n\
 https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+        "prompt.update.restart": "herstart OpenMineMods om het updaten te eindigen.",
+        "prompt.restart": "Het programma moet herstart worden om de wijzigingen correct uit te voeren.",
 
         # SECTION TOOLTIPS
         "tooltip.refresh.instances": "Vernieuw instanties",
@@ -99,14 +126,37 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "tooltip.delete.instance": "Verwijder Instance",
         "tooltip.browse.mods": "Blader door mods",
         "tooltip.delete.mod": "Verwijder Mod",
+        "tooltip.search": "Zoek",
+        "tooltip.install": "Installeer",
+        "tooltip.mmc.change": "Wijzig MultiMC Locatie",
+        "tooltip.toggle.analytics": "Wijzig optie: Analytics",
 
         # SECTION LABELS
         "label.instances": "Instanties",
-
         "label.installed": "Geïnstalleerde mods",
+        "label.search.mods": "Zoek Mods",
+        "label.available.mods": "Beschikbare Mods",
+        "label.search.packs": "Zoek Modpacks",
+        "label.available.packs": "Beschikbare Modpacks",
+        "label.mmc.location": "MultiMC Locatie",
+        "label.analytics": "Analytics",
+
+          # SECTION DOWNLOADING
+
+        "downloading.icon": "Icoon downloaden",
+        "downloading.data": "Data downloaden",
+        "downloading.mod": "{} aan het downloaden",
+        "downloading.pack": "{} aan het installeren",
+        "downloading.update": "update aan het downloaden",
+
+        
         # SECTION TITLES
-        "title.editing": "Aanpassen: {}"
-    }
+        "title.editing": "Aanpassen: {}",
+        "title.browsing.mod": "Bladeren door Mods voor {}",
+        "title.browsing.packs": "Bladeren door Modpacks",
+        "title.settings": "OpenMineMods Instellingen"
+    },
+   
 }
 
 
