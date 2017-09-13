@@ -377,7 +377,12 @@ class CurseModpack:
             modlist.append(InstalledMod(cfile, False, modPath))
         stdout.write("\n\r")
 
-        self.mmc.metaDb[self.uuid]["mods"] = modlist
+        if self.uuid in self.mmc.metaDb:
+            self.mmc.metaDb[self.uuid]["mods"] += modlist
+        else:
+            self.mmc.metaDb[self.uuid] = dict()
+            self.mmc.metaDb[self.uuid]["mods"] = modlist
+
         self.mmc.metaDb[self.uuid]["pack"] = self
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
