@@ -1,13 +1,14 @@
 import sys
 import Utils.Logger as Logger
 
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QThread
 from PyQt5.QtWidgets import *
 from API.CurseAPI import CurseAPI
 from API.MultiMC import MultiMC, MultiMCInstance
 from functools import partial
 from Utils.Utils import clearLayout, confirmBox, directoryBox, makeIconButton
 from Utils.Analytics import send_data
+from Utils.Updater import UpdateCheckThread
 
 from GUI.Strings import Strings
 
@@ -38,6 +39,7 @@ class AppWindow(QWidget):
                                                     translate("prompt.analytics"), QMessageBox.Yes)
             if self.curse.db["analytics"]:
                 send_data(self.curse)
+
 
         self.analytics = self.curse.db["analytics"]
 
@@ -87,6 +89,16 @@ class AppWindow(QWidget):
 
         self.show()
 
+        self.updatecheck = UpdateCheckThread(self.curse)
+        self.updatecheck.done.connect(self.update_checked)
+
+        self.update_thread = QThread()
+
+        self.updatecheck.moveToThread(self.update_thread)
+
+        self.update_thread.started.connect(self.updatecheck.check_updates)
+        self.update_thread.start()
+
     def refresh_instances(self):
         self.mmc = MultiMC(self.curse.baseDir, self.mmc.metaDb)
         self.init_instances()
@@ -130,6 +142,16 @@ class AppWindow(QWidget):
 
     def settings_clicked(self):
         SettingsWindow(self.curse)
+
+    def update_checked(self, res: dict):
+        if not res["res"]:
+            return
+
+        if not confirmBox(self, QMessageBox.Question,
+                          translate("prompt.update").format(res["ver"]), QMessageBox.Yes):
+            return
+
+        print("Updating...")
 
 
 app = QApplication(sys.argv)

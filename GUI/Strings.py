@@ -7,6 +7,9 @@ translations = {
         # SECTION PROMPTS
         "prompt.mmc": "Please select your MultiMC folder.",
         "prompt.delete": "Are you sure you want to delete {}?",
+        "prompt.update":
+"A new version of OpenMineMods is available!\n\
+Would you like to update to v{}?",
         "prompt.analytics":
 "Would you like to enable basic analytics?\n\
 More information is availible at the URL below.\n\

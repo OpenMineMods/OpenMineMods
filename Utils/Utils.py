@@ -42,3 +42,11 @@ def makeIconButton(parent, icon, text):
     button.setIconSize(QSize(24, 24))
     button.setToolTip(text)
     return button
+
+
+def parseSemanticVersion(ver: str):
+    return tuple([int(i) for i in ver.split(".")])
+
+
+def getVersionString(ver: tuple):
+    return ".".join([str(i) for i in ver])
