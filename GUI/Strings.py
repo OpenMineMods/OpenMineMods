@@ -2,7 +2,7 @@ import Utils.Logger as Logger
 from locale import getdefaultlocale
 
 translations = {
-      "en_US": {
+    "en_US": {
 
         # SECTION PROMPTS
         "prompt.mmc": "Please select your MultiMC folder.",

@@ -17,4 +17,16 @@ before_script:
 script:
         - "./dist/OpenMineMods/OpenMineMods --test"
 
-after_success: "sh .travis/deploy.sh"
+
+before_deploy:
+        - "zip -r Linux.zip dist/OpenMineMods"
+
+
+deploy:
+        provider: releases
+        api_key:
+                secure: sdjsd
+        file: "Linux.zip"
+        skip_cleanup: true
+        on:
+                tags: true
