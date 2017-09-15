@@ -2,7 +2,7 @@ import Utils.Logger as Logger
 from locale import getdefaultlocale
 
 translations = {
-    "en_US": {
+      "en_US": {
 
         # SECTION PROMPTS
         "prompt.mmc": "Please select your MultiMC folder.",
@@ -52,6 +52,58 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "title.browsing.mod": "Browsing Mods For {}",
         "title.browsing.packs": "Browsing Modpacks",
         "title.settings": "OpenMineMods Settings"
+    },
+
+     "ita_IT": {
+
+        # SECTION PROMPTS
+        "prompt.mmc": "Seleziona la cartella contenente MultiMC.",
+        "prompt.delete": "Sei sicuro di voler eliminare {}?",
+        "prompt.update":
+"Una nuova versione di OpenMineMods è disponibile!\n\
+Vorresti aggiornare a v{}?",
+        "prompt.update.restart": "Per favore riavvia OpenMineMods per finire l'aggiornamento!",
+        "prompt.analytics":
+"Vorresti attivare le statistiche base?\n\
+Maggiori informazioni nell'URL in basso.\n\
+https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+        "prompt.restart": "Un riavvio è necessario per rendere attivi i cambiamenti.",
+
+        # SECTION TOOLTIPS
+        "tooltip.refresh.instances": "Aggiorna Profilo",
+        "tooltip.configure.omm": "Configura OpenMineMods",
+        "tooltip.edit.instance": "Modifica Profilo",
+        "tooltip.delete.instance": "Elimina Profilo",
+        "tooltip.browse.mods": "Cerca Mod",
+        "tooltip.delete.mod": "Rimuovi Mod",
+        "tooltip.search": "Cerca",
+        "tooltip.install": "Installa",
+        "tooltip.mmc.change": "Cambia la posizione di MultiMC",
+        "tooltip.toggle.analytics": "Attiva Statistiche",
+
+        # SECTION LABELS
+        "label.instances": "Profili",
+        "label.installed": "Mod Installate",
+        "label.search.mods": "Cerca Mod",
+        "label.available.mods": "Mod Disponibili",
+        "label.search.packs": "Cerca Modpack",
+        "label.available.packs": "Modpack Disponibili",
+        "label.mmc.location": "Posizione MultiMC",
+        "label.analytics": "Statistiche",
+
+        # SECTION DOWNLOADING
+
+        "downloading.icon": "Download Icona",
+        "downloading.data": "Download File",
+        "downloading.mod": "Download {}",
+        "downloading.pack": "Installazione {}",
+        "downloading.update": "Download Aggiornamento",
+
+        # SECTION TITLES
+        "title.editing": "Modifica {}",
+        "title.browsing.mod": "Ricerca Mod Per {}",
+        "title.browsing.packs": "Ricerca Modpack",
+        "title.settings": "Impostazioni OpenMineMods"
     },
 
     "nl_BE": {
