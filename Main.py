@@ -165,6 +165,10 @@ class AppWindow(QWidget):
         self.updatet = Update(self.curse, res["update"])
         self.updatet.apply_update()
 
+if len(sys.argv) > 1 and sys.argv[1] == "--test":
+    # TODO: Actual Tests
+    sys.exit(0)
+
 app = QApplication(sys.argv)
 win = AppWindow()
 sys.exit(app.exec_())
