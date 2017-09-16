@@ -28,6 +28,7 @@ class InstanceWindow:
             self.ui.pack_pack.hide()
 
         self.setup_mods()
+        self.setup_mod_browse()
 
         self.win.show()
 
@@ -40,6 +41,23 @@ class InstanceWindow:
 
             el.mod_name.setText(mod.file.name)
 
+            el.mod_install.hide()
+
             self.ui.mod_box.addWidget(widget)
 
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def setup_mod_browse(self):
+        clear_layout(self.ui.browse_box)
+        for mod in ["Test Mod"] * 20:
+            widget = QWidget()
+            el = Ui_ModWidget()
+            el.setupUi(widget)
+
+            el.mod_name.setText(mod)
+
+            el.mod_delete.hide()
+
+            self.ui.browse_box.addWidget(widget)
+
+        self.ui.browse_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
