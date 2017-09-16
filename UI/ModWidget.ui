@@ -27,7 +27,7 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="info"/>
+      <iconset theme="browser"/>
      </property>
     </widget>
    </item>

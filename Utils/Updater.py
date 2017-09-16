@@ -6,11 +6,10 @@ from os import path, makedirs, remove, listdir
 from sys import platform
 from zipfile import ZipFile
 
-from GUI.Downloader import FileDownloaderWindow
 from GUI.Strings import Strings
 
 from API.CurseAPI import CurseAPI
-from Utils.Utils import parseSemanticVersion, getInstallDir, msgBox
+from Utils.Utils import parseSemanticVersion, getInstallDir
 
 
 strings = Strings()

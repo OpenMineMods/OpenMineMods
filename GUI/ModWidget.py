@@ -18,7 +18,7 @@ class Ui_ModWidget(object):
         self.mod_name.setObjectName("mod_name")
         self.horizontalLayout.addWidget(self.mod_name)
         self.mod_info = QtWidgets.QToolButton(ModWidget)
-        icon = QtGui.QIcon.fromTheme("info")
+        icon = QtGui.QIcon.fromTheme("browser")
         self.mod_info.setIcon(icon)
         self.mod_info.setObjectName("mod_info")
         self.horizontalLayout.addWidget(self.mod_info)

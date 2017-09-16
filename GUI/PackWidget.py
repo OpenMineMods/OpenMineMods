@@ -18,7 +18,7 @@ class Ui_PackWidget(object):
         self.pack_name.setObjectName("pack_name")
         self.horizontalLayout.addWidget(self.pack_name)
         self.pack_more = QtWidgets.QToolButton(PackWidget)
-        icon = QtGui.QIcon.fromTheme("info")
+        icon = QtGui.QIcon.fromTheme("browser")
         self.pack_more.setIcon(icon)
         self.pack_more.setObjectName("pack_more")
         self.horizontalLayout.addWidget(self.pack_more)

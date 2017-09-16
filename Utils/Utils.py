@@ -42,14 +42,6 @@ def dir_box(parent: QWidget, text: str, de_dir=""):
     return fd.getExistingDirectory(parent, text, de_dir)
 
 
-def makeIconButton(parent, icon, text):
-    button = QPushButton(parent)
-    button.setIcon(QIcon("Assets/{}.svg".format(icon)))
-    button.setIconSize(QSize(24, 24))
-    button.setToolTip(text)
-    return button
-
-
 def parseSemanticVersion(ver: str):
     return tuple([int(i) for i in ver.split(".")])
 
