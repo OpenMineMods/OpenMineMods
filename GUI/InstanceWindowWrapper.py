@@ -20,6 +20,13 @@ class InstanceWindow:
 
         self.win.setWindowTitle("Editing {}".format(instance.name))
 
+        self.ui.pack_version.setText("Minecraft: {}".format(instance.version))
+
+        if instance.pack is not None:
+            self.ui.pack_pack.setText("Modpack: {}".format(instance.pack.title))
+        else:
+            self.ui.pack_pack.hide()
+
         self.setup_mods()
 
         self.win.show()

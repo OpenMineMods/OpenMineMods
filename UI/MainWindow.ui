@@ -184,7 +184,7 @@
            <item>
             <widget class="QLabel" name="analytics_label">
              <property name="text">
-              <string>Send Basic Analytics:</string>
+              <string>Send basic analytics:</string>
              </property>
             </widget>
            </item>
@@ -196,6 +196,35 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="maximumSize">
+              <size>
+               <width>16</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Update Checker</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Check for updates when opening OpenMineMods:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="update_check">
              <property name="maximumSize">
               <size>
                <width>16</width>

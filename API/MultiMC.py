@@ -111,10 +111,18 @@ class MultiMCInstance:
         if self.uuid in self.db:
             self.mods = self.db[self.uuid]["mods"]
             self.pack = self.db[self.uuid]["pack"]
+            if "file" not in self.db[self.uuid]:
+                self.db[self.uuid] = {
+                    "mods": self.mods,
+                    "pack": self.pack,
+                    "file": None
+                }
+            self.file = self.db[self.uuid]["file"]
         else:
             self.mods = list()
             self.pack = None
-            self.db[self.uuid] = {"mods": list(), "pack": None}
+            self.file = None
+            self.db[self.uuid] = {"mods": list(), "pack": None, "file": None}
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
