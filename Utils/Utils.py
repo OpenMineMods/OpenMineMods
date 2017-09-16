@@ -2,13 +2,12 @@ import os
 
 from os import path
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
 
 
 def clear_layout(layout: QLayout):
     for i in reversed(range(layout.count())):
-        layout.itemAt(i).widget().setParent(None)
+        if layout.itemAt(i).widget() is not None:
+            layout.itemAt(i).widget().setParent(None)
 
 
 def confirm_box(parent: QWidget, icon: int, text: str, default=QMessageBox.No):

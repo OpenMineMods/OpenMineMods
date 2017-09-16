@@ -6,7 +6,7 @@ def log(text, ltype):
     out = {"INFO": stdout, "ERROR": stderr}[ltype]
     out.write(
         "[{}][{}] {}\r\n".format(
-            strftime("%D %D"),
+            strftime("%D %T"),
             ltype,
             str(text)
         )

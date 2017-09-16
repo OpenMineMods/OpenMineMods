@@ -7,11 +7,13 @@ from sys import platform
 from webbrowser import open as webopen
 
 from API.CurseAPI import CurseAPI
+from API.Threads import CurseMetaThread
 from API.MultiMC import MultiMC, MultiMCInstance
 
 from Utils.Utils import clear_layout, confirm_box, dir_box
 from Utils.Analytics import send_data
 from Utils.Updater import UpdateCheckThread
+from Utils.Logger import *
 
 from GUI.MainWindow import Ui_MainWindow
 
@@ -27,6 +29,15 @@ from GUI.PackWidget import Ui_PackWidget
 class MainWindow:
     def __init__(self):
         self.curse = CurseAPI()
+
+        info("Starting OpenMineMods v{}".format(self.curse.version))
+
+        self.curse_mthread = CurseMetaThread(self.curse)
+        self.curse_thread = QThread()
+
+        self.curse_mthread.moveToThread(self.curse_thread)
+        self.curse_mthread.data_found.connect(self.data_found)
+
         self.win = QMainWindow()
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
@@ -55,7 +66,6 @@ class MainWindow:
         self.ui.setupUi(self.win)
 
         self.init_instances()
-        self.init_packs()
 
         self.ui.mmc_folder.setText(self.curse.baseDir)
 
@@ -67,6 +77,9 @@ class MainWindow:
 
         self.win.show()
 
+        self.curse_thread.started.connect(self.curse_mthread.get_packs)
+        self.curse_thread.start()
+
         if self.curse.db["updater"]:
             self.update_tr = QThread()
             self.uc = UpdateCheckThread(self.curse)
@@ -76,7 +89,6 @@ class MainWindow:
             self.update_tr.started.connect(self.uc.check_updates)
 
             self.update_tr.start()
-
 
     """UI Initializations"""
 
@@ -98,19 +110,28 @@ class MainWindow:
 
         self.ui.instance_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-    def init_packs(self):
+    def init_packs(self, packs: list):
+        info("Received {} packs, loading into table...".format(len(packs)))
+
         clear_layout(self.ui.pack_box)
 
-        for pack in ["Test", "Test1"] * 20:
+        for pack in packs:
             widget = QWidget()
             el = Ui_PackWidget()
 
             el.setupUi(widget)
 
-            el.pack_name.setText(pack)
+            el.pack_name.setText("{} (MC {})".format(pack.title, pack.latestVersion))
 
             self.ui.pack_box.addWidget(widget)
 
+        self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def reset_packs(self):
+
+        clear_layout(self.ui.pack_box)
+
+        self.ui.pack_box.addWidget(self.ui.loading_label)
         self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     """Event Listeners"""
@@ -140,3 +161,14 @@ class MainWindow:
 
         if not up_win.exec_():
             return
+
+    def data_found(self, dat: dict):
+        if len(dat["res"]) < 1 and dat["succ"]:
+            return
+
+        if dat["type"] == "packs":
+            if not dat["succ"]:
+                err("Pack loading failed!")
+                self.ui.loading_label.setText("Network Error!")
+                return
+            self.init_packs(dat["res"])

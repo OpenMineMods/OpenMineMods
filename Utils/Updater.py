@@ -10,6 +10,7 @@ from GUI.Strings import Strings
 
 from API.CurseAPI import CurseAPI
 from Utils.Utils import parseSemanticVersion, getInstallDir
+from Utils.Logger import err
 
 
 strings = Strings()
@@ -27,7 +28,11 @@ class UpdateCheckThread(QThread):
     def check_updates(self):
         ver = parseSemanticVersion(self.curse.version)
 
-        vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
+        try:
+            vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
+        except:
+            err("Update check failed!")
+            return
         latest = parseSemanticVersion(vers["latest_stable"])
 
         if latest > ver:
