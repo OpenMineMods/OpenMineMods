@@ -28,6 +28,8 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "tooltip.install": "Install",
         "tooltip.mmc.change": "Change MultiMC Location",
         "tooltip.toggle.analytics": "Toggle Analytics",
+        "tooltip.update.check": "Check For Updates",
+        "tooltip.update.install": "Install Update",
 
         # SECTION LABELS
         "label.instances": "Instances",

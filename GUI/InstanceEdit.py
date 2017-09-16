@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QIcon
 from API.CurseAPI import CurseAPI
 from API.MultiMC import MultiMCInstance
 from functools import partial
@@ -26,9 +27,20 @@ class InstanceEditWindow(QWidget):
         self.instanceMetaBox = QGroupBox(translate("label.installed"))
         self.layout.addWidget(self.instanceMetaBox)
 
-        brButton = makeIconButton(self, "search", translate("tooltip.browse.mods"))
-        brButton.clicked.connect(partial(self.browse_clicked))
-        self.layout.addWidget(brButton)
+        self.buttonGroup = QGroupBox()
+        self.layoutButtons = QHBoxLayout()
+        self.buttonGroup.setLayout(self.layoutButtons)
+        self.buttonGroup.setStyleSheet("QGroupBox { border:0; } ")
+
+        self.brButton = makeIconButton(self, "search", translate("tooltip.browse.mods"))
+        self.brButton.clicked.connect(self.browse_clicked)
+        self.layoutButtons.addWidget(self.brButton)
+
+        self.ucButton = makeIconButton(self, "view-refresh", translate("tooltip.update.check"))
+        self.ucButton.clicked.connect(self.update_check_clicked)
+        self.layoutButtons.addWidget(self.ucButton)
+
+        self.layout.addWidget(self.buttonGroup)
 
         self.instanceTable = QGridLayout()
 
@@ -49,6 +61,10 @@ class InstanceEditWindow(QWidget):
 
     def browse_clicked(self):
         ModBrowseWindow(self.curse, self.instance, self)
+
+    def update_check_clicked(self):
+        self.ucButton.setIcon(QIcon("Assets/software-update-available-symbolic.svg"))
+        self.ucButton.setToolTip(translate("tooltip.update.install"))
 
     def init_mods(self):
         clearLayout(self.instanceTable)

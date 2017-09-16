@@ -19,7 +19,7 @@ class PackBrowseWindow(QWidget):
 
         self.curse = curse
         self.mmc = mmc
-        self.dlwin = None
+        self.dlwin = list()
 
         self.page = 0
 
@@ -88,4 +88,4 @@ class PackBrowseWindow(QWidget):
                                detailed=True)
         pack = CurseModpack(project, self.curse, self.mmc)
         file = self.curse.get_files(pack.project.id)[0]
-        self.dlwin = PackDownloaderWindow(file, self.curse, pack)
+        self.dlwin.append(PackDownloaderWindow(file, self.curse, pack))

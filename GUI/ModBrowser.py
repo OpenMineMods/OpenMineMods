@@ -20,7 +20,7 @@ class ModBrowseWindow(QWidget):
         self.curse = curse
         self.instance = instance
         self.parent = parent
-        self.dl_win = None
+        self.dl_win = list()
 
         self.page = 0
 
@@ -86,9 +86,7 @@ class ModBrowseWindow(QWidget):
 
     def add_clicked(self, mod: CurseProject):
         file = [i for i in self.curse.get_files(mod.id)][0]
-        self.dl_win = ModDownloaderWindow(file, self.curse, self.instance, self.dl_done)
+        self.dl_win.append(ModDownloaderWindow(file, self.curse, self.instance, self.dl_done))
 
     def dl_done(self):
         self.parent.init_mods()
-        del self.dl_win
-        self.dl_win = None

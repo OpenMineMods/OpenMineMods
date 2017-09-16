@@ -27,6 +27,7 @@ class AppWindow(QWidget):
 
         self.curse = CurseAPI()
         self.updatet = None
+        self.child_wins = list()
         
         data_sent = False
 
@@ -139,7 +140,7 @@ class AppWindow(QWidget):
             self.instanceTable.addWidget(create_instance_item(instance))
 
     def edit_clicked(self, instance):
-        InstanceEditWindow(self.curse, instance)
+        self.child_wins.append(InstanceEditWindow(self.curse, instance))
 
     def delete_clicked(self, instance: MultiMCInstance):
         if not confirmBox(self, QMessageBox.Warning, translate("prompt.delete").format(instance.name)):
@@ -148,10 +149,10 @@ class AppWindow(QWidget):
         self.init_instances()
 
     def browse_clicked(self):
-        PackBrowseWindow(self.curse, self.mmc)
+        self.child_wins.append(PackBrowseWindow(self.curse, self.mmc))
 
     def settings_clicked(self):
-        SettingsWindow(self.curse)
+        self.child_wins.append(SettingsWindow(self.curse))
 
     def update_checked(self, res: dict):
         if not res["res"] or not res["update"]["downloads"][sys.platform]:
