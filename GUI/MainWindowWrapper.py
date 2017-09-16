@@ -6,7 +6,7 @@ from os import path
 from sys import platform
 from webbrowser import open as webopen
 
-from API.CurseAPI import CurseAPI
+from API.CurseAPI import CurseAPI, CurseProject
 from API.Threads import CurseMetaThread
 from API.MultiMC import MultiMC, MultiMCInstance
 
@@ -39,8 +39,6 @@ class MainWindow:
         self.curse_mthread.data_found.connect(self.data_found)
 
         self.win = QMainWindow()
-
-        self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
         while not self.curse.baseDir:
             self.curse.baseDir = dir_box(self.win, "Select Your MultiMC Folder", path.expanduser("~"))
@@ -75,6 +73,8 @@ class MainWindow:
         self.ui.update_check.setChecked(self.curse.db["updater"])
         self.ui.update_check.clicked.connect(self.update_checked)
 
+        self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
+
         self.win.show()
 
         self.curse_thread.started.connect(self.curse_mthread.get_packs)
@@ -104,6 +104,8 @@ class MainWindow:
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
             el.instance_edit.clicked.connect(partial(self.edit_clicked, instance))
 
+            el.instance_update.hide()
+
             el.instance_name.setText(instance.name)
 
             self.ui.instance_box.addWidget(widget)
@@ -122,6 +124,7 @@ class MainWindow:
             el.setupUi(widget)
 
             el.pack_name.setText("{} (MC {})".format(pack.title, pack.latestVersion))
+            el.pack_more.clicked.connect(partial(webopen, pack.page))
 
             self.ui.pack_box.addWidget(widget)
 
@@ -141,7 +144,7 @@ class MainWindow:
                           "Are you sure you want to delete {}".format(instance.name)))
 
     def edit_clicked(self, instance: MultiMCInstance):
-        self.children.append(InstanceWindow(instance))
+        self.children.append(InstanceWindow(instance, self.curse))
 
     def analytics_checked(self):
         self.curse.db["analytics"] = self.ui.analytics_check.isChecked()

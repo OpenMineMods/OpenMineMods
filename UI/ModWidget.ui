@@ -22,6 +22,16 @@
     </widget>
    </item>
    <item>
+    <widget class="QToolButton" name="mod_update">
+     <property name="text">
+      <string>...</string>
+     </property>
+     <property name="icon">
+      <iconset theme="software-update-available-symbolic"/>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QToolButton" name="mod_info">
      <property name="text">
       <string>...</string>

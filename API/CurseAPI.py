@@ -35,10 +35,10 @@ class CurseAPI:
     """
 
     version = "1.1.0"
+    baseUrl = "https://mods.curse.com"
+    forgeUrl = "https://minecraft.curseforge.com"
 
     def __init__(self):
-        self.baseUrl = "https://mods.curse.com"
-        self.forgeUrl = "https://minecraft.curseforge.com"
 
         # Set User Agent header for extra sneakyness
         self.session = requests.Session()
@@ -165,6 +165,7 @@ class CurseProject:
 
         self.title = self.get_content("h4 > a")
         self.id = self.get_tag("h4 > a", "href").split("/")[-1]
+        self.page = CurseAPI.baseUrl + self.get_tag("h4 > a", "href")
 
         try:
             self.id = int(self.id.split("-")[0])

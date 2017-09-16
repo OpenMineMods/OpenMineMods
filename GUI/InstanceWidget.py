@@ -17,6 +17,11 @@ class Ui_InstanceWidget(object):
         self.instance_name = QtWidgets.QLabel(InstanceWidget)
         self.instance_name.setObjectName("instance_name")
         self.horizontalLayout.addWidget(self.instance_name)
+        self.instance_update = QtWidgets.QToolButton(InstanceWidget)
+        icon = QtGui.QIcon.fromTheme("software-update-available-symbolic")
+        self.instance_update.setIcon(icon)
+        self.instance_update.setObjectName("instance_update")
+        self.horizontalLayout.addWidget(self.instance_update)
         self.instance_delete = QtWidgets.QToolButton(InstanceWidget)
         icon = QtGui.QIcon.fromTheme("edit-delete")
         self.instance_delete.setIcon(icon)
@@ -35,6 +40,7 @@ class Ui_InstanceWidget(object):
         _translate = QtCore.QCoreApplication.translate
         InstanceWidget.setWindowTitle(_translate("InstanceWidget", "Form"))
         self.instance_name.setText(_translate("InstanceWidget", "TextLabel"))
+        self.instance_update.setText(_translate("InstanceWidget", "..."))
         self.instance_delete.setText(_translate("InstanceWidget", "..."))
         self.instance_edit.setText(_translate("InstanceWidget", "..."))
 
