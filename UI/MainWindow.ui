@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
-    <height>417</height>
+    <width>500</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,8 +42,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>475</width>
-             <height>292</height>
+             <width>458</width>
+             <height>301</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -78,8 +78,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>475</width>
-             <height>292</height>
+             <width>458</width>
+             <height>275</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -129,7 +129,8 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset theme="edit"/>
+              <iconset theme="edit">
+               <normaloff>.</normaloff>.</iconset>
              </property>
             </widget>
            </item>
@@ -147,12 +148,11 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>517</width>
+     <width>500</width>
      <height>26</height>
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

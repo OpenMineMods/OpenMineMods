@@ -11,10 +11,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_InstanceWidget(object):
     def setupUi(self, InstanceWidget):
         InstanceWidget.setObjectName("InstanceWidget")
-        InstanceWidget.resize(456, 48)
-        self.horizontalLayout_2 = QtWidgets.QHBoxLayout(InstanceWidget)
-        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        InstanceWidget.resize(400, 41)
+        self.horizontalLayout = QtWidgets.QHBoxLayout(InstanceWidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.instance_name = QtWidgets.QLabel(InstanceWidget)
         self.instance_name.setObjectName("instance_name")
@@ -29,7 +27,6 @@ class Ui_InstanceWidget(object):
         self.instance_edit.setIcon(icon)
         self.instance_edit.setObjectName("instance_edit")
         self.horizontalLayout.addWidget(self.instance_edit)
-        self.horizontalLayout_2.addLayout(self.horizontalLayout)
 
         self.retranslateUi(InstanceWidget)
         QtCore.QMetaObject.connectSlotsByName(InstanceWidget)

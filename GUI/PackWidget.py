@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_PackWidget(object):
     def setupUi(self, PackWidget):
         PackWidget.setObjectName("PackWidget")
-        PackWidget.resize(455, 59)
+        PackWidget.resize(400, 41)
         self.horizontalLayout = QtWidgets.QHBoxLayout(PackWidget)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.pack_name = QtWidgets.QLabel(PackWidget)
