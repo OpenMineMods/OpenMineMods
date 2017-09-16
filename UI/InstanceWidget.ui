@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>instance_obj</class>
- <widget class="QWidget" name="instance_obj">
+ <class>InstanceWidget</class>
+ <widget class="QWidget" name="InstanceWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -29,7 +29,8 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="edit-delete"/>
+        <iconset theme="edit-delete">
+         <normaloff>.</normaloff>.</iconset>
        </property>
       </widget>
      </item>
@@ -39,7 +40,8 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="edit"/>
+        <iconset theme="edit">
+         <normaloff>.</normaloff>.</iconset>
        </property>
       </widget>
      </item>
