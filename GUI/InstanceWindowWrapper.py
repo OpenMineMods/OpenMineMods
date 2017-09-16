@@ -88,6 +88,7 @@ class InstanceWindow:
 
         if dat["type"] == "mods":
             if not dat["succ"]:
+                self.ui.loading_label.setText("Network Error!")
                 err("Mod loading failed!")
                 return
             self.setup_mod_browse(dat["res"])
