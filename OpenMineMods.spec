@@ -3,13 +3,11 @@
 block_cipher = None
 
 
-a = Analysis(['Main.py'],
+a = Analysis(['OpenMineMods.py'],
              pathex=['/home/joonatoona/src/OpenMineMods'],
              binaries=[],
-             datas=[('Assets', 'Assets'),
-                    ('LICENSE.txt', '.'),
-                    ('CREDITS.md', '.'),
-                    ('Assets/AutoUpdate', '.')],
+             datas=[('LICENSE.txt', '.'),
+                    ('CREDITS.md', '.')],
              hiddenimports=['urllib3', 'PyQt5.uic.plugins', 'queue'],
              hookspath=[],
              runtime_hooks=[],
