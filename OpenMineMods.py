@@ -11,6 +11,8 @@ from API.MultiMC import MultiMC, MultiMCInstance
 from Utils.Utils import dir_box, confirm_box, clear_layout
 
 from GUI.MainWindow import Ui_MainWindow
+from GUI.InstanceWindowWrapper import InstanceWindow
+
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
 
@@ -27,6 +29,8 @@ def init_instances():
         el.setupUi(widget)
 
         el.instance_delete.clicked.connect(partial(delete_clicked, instance))
+        el.instance_edit.clicked.connect(partial(edit_clicked, instance))
+
         el.instance_name.setText(instance.name)
 
         ui.instance_box.addWidget(widget)
@@ -37,7 +41,7 @@ def init_instances():
 def init_packs():
     clear_layout(ui.pack_box)
 
-    for pack in ["Test", "Test1"]:
+    for pack in ["Test", "Test1"] * 20:
         widget = QWidget()
         el = Ui_PackWidget()
 
@@ -54,6 +58,13 @@ def delete_clicked(instance: MultiMCInstance):
     print(confirm_box(wg, QMessageBox.Question,
                       "Are you sure you want to delete {}".format(instance.name)))
 
+
+def edit_clicked(instance: MultiMCInstance):
+    wins.append(InstanceWindow(instance))
+
+def analytics_checked():
+    curse.db["analytics"] = ui.analytics_check.isChecked()
+
 """INITIALIZATION"""
 
 app = QApplication(sys.argv)
@@ -62,6 +73,7 @@ ui = Ui_MainWindow()
 ui.setupUi(wg)
 
 curse = CurseAPI()
+wins = list()
 
 wg.setWindowTitle("OpenMineMods v{}".format(curse.version))
 
@@ -74,7 +86,10 @@ mmc = MultiMC(curse.baseDir)
 
 init_instances()
 init_packs()
+
 ui.mmc_folder.setText(curse.baseDir)
+ui.analytics_check.setChecked(curse.db["analytics"])
+ui.analytics_check.clicked.connect(analytics_checked)
 
 wg.show()
 sys.exit(app.exec_())
