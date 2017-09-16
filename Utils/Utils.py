@@ -6,13 +6,14 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize
 
 
-def clearLayout(layout):
+def clear_layout(layout: QLayout):
     for i in reversed(range(layout.count())):
         layout.itemAt(i).widget().setParent(None)
 
 
-def confirmBox(parent, icon, text, default=QMessageBox.No):
+def confirm_box(parent: QWidget, icon: int, text: str, default=QMessageBox.No):
     msgbox = QMessageBox(parent)
+    msgbox.setWindowTitle(parent.windowTitle())
     msgbox.setIcon(icon)
     msgbox.setText(text)
     msgbox.addButton(QMessageBox.Yes)
@@ -22,7 +23,7 @@ def confirmBox(parent, icon, text, default=QMessageBox.No):
     return msgbox.exec_() == QMessageBox.Yes
 
 
-def msgBox(parent=False, icon=QMessageBox.Information, text="Someone forgot to set this..."):
+def msg_box(parent: QWidget, text: str, icon=QMessageBox.Information):
     if parent:
         msgbox = QMessageBox(parent)
     else:
@@ -35,8 +36,10 @@ def msgBox(parent=False, icon=QMessageBox.Information, text="Someone forgot to s
     msgbox.exec_()
 
 
-def directoryBox(parent, text):
-    return QFileDialog.getExistingDirectory(parent, text)
+def dir_box(parent: QWidget, text: str, de_dir=""):
+    fd = QFileDialog(parent)
+    fd.setWindowTitle(parent.windowTitle())
+    return fd.getExistingDirectory(parent, text, de_dir)
 
 
 def makeIconButton(parent, icon, text):
