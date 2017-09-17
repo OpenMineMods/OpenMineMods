@@ -145,7 +145,7 @@ class MultiMCInstance:
         if not path.exists(self.modDir):
             makedirs(self.modDir)
 
-        fname = curse.download_file(file.host + file.url, self.modDir, progf=progress)
+        fname = curse.download_file(file.dl, self.modDir, progf=progress)
         file.filename = fname.split("/")[-1]
         mod = InstalledMod(projectid, file, manual, fname)
         self.mods.append(mod)

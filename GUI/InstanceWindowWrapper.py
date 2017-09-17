@@ -83,11 +83,15 @@ class InstanceWindow:
 
     def mod_install(self, mod: CurseProject):
         fs = [i for i in mod.files if i.mc_ver == self.instance.version][::-1]
-        dia = FileDialog(fs)
-        f = dia.dia.exec_()
-        if not f:
-            return
+        if self.curse.db["filepick"]:
+            dia = FileDialog(fs)
+            f = dia.dia.exec_()
+            if not f:
+                return
 
-        f = fs[f - 1]
+            f = fs[f - 1]
 
-        print("Installing {}".format(f.filename))
+        else:
+            f = fs[-1]
+
+        self.instance.install_mod(mod.id, f, self.curse, manual=True)

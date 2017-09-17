@@ -47,6 +47,9 @@ class MainWindow:
         if "updater" not in self.curse.db:
             self.curse.db["updater"] = True
 
+        if "filepick" not in self.curse.db:
+            self.curse.db["filepick"] = False
+
         if "analytics" not in self.curse.db:
             ad = QDialog(self.win)
             ad.setWindowTitle("OpenMineMods Setup")
@@ -72,6 +75,9 @@ class MainWindow:
 
         self.ui.update_check.setChecked(self.curse.db["updater"])
         self.ui.update_check.clicked.connect(self.update_checked)
+
+        self.ui.file_check.setChecked(self.curse.db["filepick"])
+        self.ui.file_check.clicked.connect(self.file_checked)
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
@@ -138,11 +144,18 @@ class MainWindow:
     def edit_clicked(self, instance: MultiMCInstance):
         self.children.append(InstanceWindow(instance, self.curse))
 
+    # Settings Checkboxes
+
     def analytics_checked(self):
         self.curse.db["analytics"] = self.ui.analytics_check.isChecked()
 
     def update_checked(self):
         self.curse.db["updater"] = self.ui.update_check.isChecked()
+
+    def file_checked(self):
+        self.curse.db["filepick"] = self.ui.file_check.isChecked()
+
+    # Update Checker
 
     def update_check_done(self, res: dict):
         if not res["res"] or not res["update"]["downloads"][platform]:
