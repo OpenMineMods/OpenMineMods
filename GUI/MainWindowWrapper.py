@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QThread
+from PyQt5.QtCore import QThread, QStandardPaths
 
 from functools import partial
-from os import path
+from os import path, makedirs
 from webbrowser import open as webopen
 from sys import platform
 
@@ -28,9 +28,13 @@ from GUI.PackWidget import Ui_PackWidget
 
 class MainWindow:
     def __init__(self):
-        self.curse = CurseAPI()
+        data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation).replace(".py", "")
+        if not path.exists(data_dir):
+            makedirs(data_dir)
+        self.curse = CurseAPI(data_dir)
 
         info("Starting OpenMineMods v{}".format(self.curse.version))
+        info("Data dir: {}".format(data_dir))
 
         self.curse_mthread = CurseMetaThread(self.curse)
         self.curse_thread = QThread()

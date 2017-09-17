@@ -38,13 +38,14 @@ class CurseAPI:
     baseUrl = "https://mods.curse.com"
     forgeUrl = "https://minecraft.curseforge.com"
 
-    def __init__(self):
+    def __init__(self, data_dir="."):
+        self.data_dir = data_dir
 
         # Set User Agent header for extra sneakyness
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
 
-        self.db = shelve.open(os.path.expanduser("~/omm.db"))
+        self.db = shelve.open(os.path.join(self.data_dir, "omm.db"))
 
         self.baseDir = ""
 
