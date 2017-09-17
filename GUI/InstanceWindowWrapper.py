@@ -13,6 +13,7 @@ from Utils.Utils import clear_layout
 from GUI.InstanceWindow import Ui_InstanceWindow
 
 from GUI.FileDialogWrapper import FileDialog
+from GUI.DownloadDialogWrapper import DownloadDialog
 
 from GUI.ModWidget import Ui_ModWidget
 
@@ -94,4 +95,5 @@ class InstanceWindow:
         else:
             f = fs[-1]
 
-        self.instance.install_mod(mod.id, f, self.curse, manual=True)
+        dia = DownloadDialog()
+        dia.download_mod(mod.id, f, self.curse, self.instance)
