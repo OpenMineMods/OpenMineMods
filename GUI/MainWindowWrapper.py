@@ -4,7 +4,6 @@ from PyQt5.QtCore import QThread
 from functools import partial
 from os import path
 from sys import platform
-from webbrowser import open as webopen
 
 from API.CurseAPI import CurseAPI, CurseProject
 from API.Threads import CurseMetaThread
@@ -36,7 +35,7 @@ class MainWindow:
         self.curse_thread = QThread()
 
         self.curse_mthread.moveToThread(self.curse_thread)
-        self.curse_mthread.data_found.connect(self.data_found)
+        self.curse_mthread.data_found.connect(self.pack_found)
 
         self.win = QMainWindow()
 
@@ -112,26 +111,17 @@ class MainWindow:
 
         self.ui.instance_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-    def init_packs(self, packs: list):
-        info("Received {} packs, loading into table...".format(len(packs)))
+    def pack_found(self, pack: CurseProject):
+        widget = QWidget()
+        el = Ui_PackWidget()
 
-        clear_layout(self.ui.pack_box)
+        el.setupUi(widget)
 
-        for pack in packs:
-            widget = QWidget()
-            el = Ui_PackWidget()
+        el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
 
-            el.setupUi(widget)
-
-            el.pack_name.setText("{} (MC {})".format(pack.title, pack.latestVersion))
-            el.pack_more.clicked.connect(partial(webopen, pack.page))
-
-            self.ui.pack_box.addWidget(widget)
-
-        self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        self.ui.pack_box.insertWidget(self.ui.pack_box.count() - 2, widget)
 
     def reset_packs(self):
-
         clear_layout(self.ui.pack_box)
 
         self.ui.pack_box.addWidget(self.ui.loading_label)

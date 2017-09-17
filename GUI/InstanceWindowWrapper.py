@@ -73,6 +73,7 @@ class InstanceWindow:
             el.setupUi(widget)
 
             el.mod_name.setText(mod.title)
+            print(mod.id)
             el.mod_info.clicked.connect(partial(webopen, mod.page))
 
             el.mod_delete.hide()
