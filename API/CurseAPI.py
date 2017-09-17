@@ -165,8 +165,6 @@ class CurseProject:
 
         self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
 
-        print(self.id)
-
         self.meta = self.curse.get_json("/{}.json".format(self.id))
 
         self.type = self.meta["PackageType"]
@@ -174,6 +172,12 @@ class CurseProject:
         self.name = self.meta["Name"]
         self.author = self.meta["PrimaryAuthorName"]
         self.desc = self.meta["Summary"]
+
+        try:
+            self.icon = self.meta["Attachments"][0]["ThumbnailUrl"]
+        except KeyError:
+            self.icon = False
+        self.page = self.meta["WebSiteURL"]
 
         self.files = [CurseFile(i) for i in self.curse.get_json("/{}/files.json".format(self.id))]
 
@@ -194,6 +198,17 @@ class CurseFile:
 
         self.deps = self.f["Dependencies"]
 
+        self.dl = self.f["DownloadURL"]
+
+        self.filename = self.f["FileNameOnDisk"]
+
+        if "_Project" in self.f:
+            self.name = self.f["_Project"]["Name"]
+            self.desc = self.f["_Project"]["Summary"]
+        else:
+            self.name = self.filename
+            self.desc = ""
+
 
 class CurseModpack:
     """Get information from a modpack"""
@@ -204,27 +219,28 @@ class CurseModpack:
         self.project = project
         self.curse = curse
 
-        self.availableFiles = self.curse.get_files(self.project.id)
-
         self.installed = False
+
         if os.name == "nt":
-            self.installLocation = "{}\\instances\\{}\\".format(self.curse.baseDir, self.project.title)
+            self.installLocation = "{}\\instances\\{}\\".format(self.curse.baseDir, self.project.name)
         else:
-            self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.title)
+            self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.name)
+
         self.uuid = md5(self.installLocation.encode()).hexdigest()
+
         self.mmc = mmc
 
     def install(self, file: CurseFile, prog_label, progbar_1, progbar_2):
 
         from API.MultiMC import InstalledMod
 
-        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.title)
+        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.name)
 
         progbar_1(0)
 
         prog_label(translate("downloading.icon"))
 
-        self.curse.download_file(self.project.imgUrl, "{}/icons".format(self.curse.baseDir),
+        self.curse.download_file(self.project.icon, "{}/icons".format(self.curse.baseDir),
                                  str(self.project.id)+".png", progf=progbar_2)
 
         if os.path.exists(tempPath) and self.curse.baseDir:
@@ -238,7 +254,7 @@ class CurseModpack:
 
         prog_label(translate("downloading.data"))
 
-        packFile = self.curse.download_file(file.host+file.url, tempPath, progf=progbar_2)
+        packFile = self.curse.download_file(file.dl, tempPath, progf=progbar_2)
 
         # Unpack zip file
         zipf = ZipFile(packFile)
@@ -283,13 +299,14 @@ class CurseModpack:
 
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            r = requests.get("https://cursemeta.dries007.net/{}/{}.json".format(mod[0], mod[1]),
-                             headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version}).json()
-            cfile = JsonCurseFile(r)
-            prog_label(translate("downloading.mod").format(cfile.name))
+            r = self.curse.get_json("/{}/{}.json".format(mod[0], mod[1]))
+
+            f = CurseFile(r)
+
+            prog_label(translate("downloading.mod").format(f.name))
             progbar_1(10 + (x * modf))
-            self.curse.download_file(cfile.url, modPath, progf=progbar_2)
-            modlist.append(InstalledMod(cfile, False, modPath))
+            self.curse.download_file(r["DownloadURL"], modPath, progf=progbar_2)
+            modlist.append(InstalledMod(mod[0], f, False, modPath))
         stdout.write("\n\r")
 
         if self.uuid in self.mmc.metaDb:

@@ -119,7 +119,7 @@
               <item>
                <widget class="QLabel" name="loading_label">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>Loading...</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>

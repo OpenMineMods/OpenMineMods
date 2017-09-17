@@ -114,7 +114,7 @@ class Ui_InstanceWindow(object):
         InstanceWindow.setWindowTitle(_translate("InstanceWindow", "MainWindow"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_mods), _translate("InstanceWindow", "Installed Mods"))
         self.pack_search_button.setText(_translate("InstanceWindow", "..."))
-        self.loading_label.setText(_translate("InstanceWindow", "TextLabel"))
+        self.loading_label.setText(_translate("InstanceWindow", "Loading..."))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("InstanceWindow", "Browse Mods"))
         self.pack_version.setText(_translate("InstanceWindow", "TextLabel"))
         self.pack_pack.setText(_translate("InstanceWindow", "TextLabel"))

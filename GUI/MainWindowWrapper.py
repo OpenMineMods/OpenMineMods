@@ -3,6 +3,7 @@ from PyQt5.QtCore import QThread
 
 from functools import partial
 from os import path
+from webbrowser import open as webopen
 from sys import platform
 
 from API.CurseAPI import CurseAPI, CurseProject
@@ -118,6 +119,7 @@ class MainWindow:
         el.setupUi(widget)
 
         el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
+        el.pack_more.clicked.connect(partial(webopen, pack.page))
 
         self.ui.pack_box.insertWidget(self.ui.pack_box.count() - 2, widget)
 

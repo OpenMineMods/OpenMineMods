@@ -5,13 +5,14 @@ from functools import partial
 from webbrowser import open as webopen
 
 from API.MultiMC import MultiMCInstance
-from API.CurseAPI import CurseAPI
+from API.CurseAPI import CurseAPI, CurseProject
 from API.Threads import CurseMetaThread
 
 from Utils.Utils import clear_layout
-from Utils.Logger import *
 
 from GUI.InstanceWindow import Ui_InstanceWindow
+
+from GUI.FileDialogWrapper import FileDialog
 
 from GUI.ModWidget import Ui_ModWidget
 
@@ -25,7 +26,7 @@ class InstanceWindow:
         self.curse_thread = QThread()
 
         self.curse_mthread.moveToThread(self.curse_thread)
-        self.curse_mthread.data_found.connect(self.data_found)
+        self.curse_mthread.data_found.connect(self.mod_found)
 
         self.win = QMainWindow()
         self.ui = Ui_InstanceWindow()
@@ -37,7 +38,7 @@ class InstanceWindow:
         self.ui.pack_version.setText("Minecraft: {}".format(instance.version))
 
         if instance.pack is not None:
-            self.ui.pack_pack.setText("Modpack: {}".format(instance.pack.title))
+            self.ui.pack_pack.setText("Modpack ID: {}".format(instance.pack))
         else:
             self.ui.pack_pack.hide()
 
@@ -65,31 +66,28 @@ class InstanceWindow:
 
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-    def setup_mod_browse(self, mods: list()):
-        clear_layout(self.ui.browse_box)
-        for mod in mods:
-            widget = QWidget()
-            el = Ui_ModWidget()
-            el.setupUi(widget)
+    def mod_found(self, mod: CurseProject):
+        widget = QWidget()
+        el = Ui_ModWidget()
 
-            el.mod_name.setText(mod.title)
-            print(mod.id)
-            el.mod_info.clicked.connect(partial(webopen, mod.page))
+        el.setupUi(widget)
 
-            el.mod_delete.hide()
-            el.mod_update.hide()
+        el.mod_name.setText(mod.name)
+        el.mod_install.clicked.connect(partial(self.mod_install, mod))
+        el.mod_info.clicked.connect(partial(webopen, mod.page))
 
-            self.ui.browse_box.addWidget(widget)
+        el.mod_delete.hide()
+        el.mod_update.hide()
 
-        self.ui.browse_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        self.ui.browse_box.insertWidget(self.ui.browse_box.count() - 2, widget)
 
-    def data_found(self, dat: dict):
-        if len(dat["res"]) < 1 and dat["succ"]:
+    def mod_install(self, mod: CurseProject):
+        fs = [i for i in mod.files if i.mc_ver == self.instance.version][::-1]
+        dia = FileDialog(fs)
+        f = dia.dia.exec_()
+        if not f:
             return
 
-        if dat["type"] == "mods":
-            if not dat["succ"]:
-                self.ui.loading_label.setText("Network Error!")
-                err("Mod loading failed!")
-                return
-            self.setup_mod_browse(dat["res"])
+        f = fs[f - 1]
+
+        print("Installing {}".format(f.filename))

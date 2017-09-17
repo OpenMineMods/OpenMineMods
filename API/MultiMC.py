@@ -17,7 +17,7 @@ setrecursionlimit(8096)
 
 class MultiMC:
     """Class for managing MultiMC instances"""
-    def __init__(self, fpath: str, db = False):
+    def __init__(self, fpath: str, db=False):
         self.path = fpath
 
         if not db:
@@ -93,6 +93,28 @@ class ForgePatch:
             file.write(dumps(self.dat))
 
 
+class InstalledMod:
+    """Information about a mod"""
+    def __init__(self, projectid: str, file, manual: bool, location: str):
+        self.file = file
+        self.proj = projectid
+        self.location = location
+        self.manual = manual
+        self.enabled = True
+
+    def set_enabled(self, enabled: bool):
+        # TODO: Less hacky solution
+        if enabled != self.enabled:
+            if enabled:
+                newLoc = self.location[:-9]
+                move(self.location, newLoc)
+                self.enabled = True
+                return
+            newLoc = self.location + ".disabled"
+            move(self.location, newLoc)
+            self.enabled = False
+
+
 class MultiMCInstance:
     """MultiMC Instance"""
     def __init__(self, path: str, db: shelve):
@@ -109,32 +131,25 @@ class MultiMCInstance:
         if self.uuid in self.db:
             self.mods = self.db[self.uuid]["mods"]
             self.pack = self.db[self.uuid]["pack"]
-            if "file" not in self.db[self.uuid]:
-                self.db[self.uuid] = {
-                    "mods": self.mods,
-                    "pack": self.pack,
-                    "file": None
-                }
             self.file = self.db[self.uuid]["file"]
         else:
             self.mods = list()
             self.pack = None
             self.file = None
-            self.db[self.uuid] = {"mods": list(), "pack": None, "file": None}
+            self._save()
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
-    def install_mod(self, file, curse, manual=False, progress=False):
-
+    def install_mod(self, projectid: str, file, curse, manual=False, progress=False):
         if not path.exists(self.modDir):
             makedirs(self.modDir)
 
         fname = curse.download_file(file.host + file.url, self.modDir, progf=progress)
         file.filename = fname.split("/")[-1]
-        mod = InstalledMod(file, manual, fname)
+        mod = InstalledMod(projectid, file, manual, fname)
         self.mods.append(mod)
-        self.db[self.uuid] = {"mods": self.mods, "pack": self.pack}
+        self._save()
 
     def uninstall_mod(self, filename):
         fpath = "{}/minecraft/mods/{}".format(self.path, filename)
@@ -144,7 +159,7 @@ class MultiMCInstance:
             if mod.file.filename == filename:
                 del self.mods[x]
                 break
-        self.db[self.uuid] = {"mods": self.mods, "pack": self.pack}
+        self._save()
 
     def update(self, file):
         if self.pack is None:
@@ -157,23 +172,12 @@ class MultiMCInstance:
         moveTree(self.path, self.path + ".preupdate")
         move(self.path + ".preupdate", self.path)
 
+    def update_mod(self, mod: InstalledMod, file, curse, progress=False):
+        if mod not in self.mods:
+            return False
 
-class InstalledMod:
-    """Information about a mod"""
-    def __init__(self, file, manual: bool, location: str):
-        self.file = file
-        self.location = location
-        self.manual = manual
-        self.enabled = True
+        self.uninstall_mod(mod.file.filename)
+        self.install_mod(mod.proj, file, curse, mod.manual, progress)
 
-    def set_enabled(self, enabled: bool):
-        # TODO: Less hacky solution
-        if enabled != self.enabled:
-            if enabled:
-                newLoc = self.location[:-9]
-                move(self.location, newLoc)
-                self.enabled = True
-                return
-            newLoc = self.location + ".disabled"
-            move(self.location, newLoc)
-            self.enabled = False
+    def _save(self):
+        self.db[self.uuid] = {"mods": self.mods, "pack": self.pack, "file": self.file}
