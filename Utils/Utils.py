@@ -8,6 +8,8 @@ def clear_layout(layout: QLayout):
     for i in reversed(range(layout.count())):
         if layout.itemAt(i).widget() is not None:
             layout.itemAt(i).widget().setParent(None)
+        if layout.itemAt(i).spacerItem() is not None:
+            layout.itemAt(i).spacerItem().setParemt(None)
 
 
 def confirm_box(parent: QWidget, icon: int, text: str, default=QMessageBox.No):
