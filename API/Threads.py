@@ -1,5 +1,7 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from traceback import format_exc
+
 from API.CurseAPI import CurseAPI, CurseProject
 
 
@@ -15,16 +17,16 @@ class CurseMetaThread(QThread):
         try:
             self.curse.get_modpacks(ver, page, callback=self.data_found.emit)
         except:
-            return
+            print(format_exc())
 
     def get_mods(self, ver="", page=""):
         try:
             self.curse.get_mod_list(ver, page, callback=self.data_found.emit)
         except:
-            return
+            print(format_exc())
 
     def search(self, query: str, stype: str):
         try:
             self.curse.search(query, stype, callback=self.data_found.emit)
         except:
-            return
+            print(format_exc())
