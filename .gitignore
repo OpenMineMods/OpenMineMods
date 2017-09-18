@@ -4,3 +4,9 @@ __pycache__
 .vscode
 build
 dist
+
+GUI/*.py
+!GUI/*Wrapper.py
+!GUI/Strings.py
+
+icons_rc.py

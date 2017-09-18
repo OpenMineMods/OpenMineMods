@@ -27,7 +27,8 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="browser"/>
+      <iconset resource="../Assets/icons.qrc">
+       <normaloff>:/icons/web-browser-symbolic.svg</normaloff>:/icons/web-browser-symbolic.svg</iconset>
      </property>
     </widget>
    </item>
@@ -37,13 +38,15 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="down">
-       <normaloff>.</normaloff>.</iconset>
+      <iconset resource="../Assets/icons.qrc">
+       <normaloff>:/icons/download.svg</normaloff>:/icons/download.svg</iconset>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Assets/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

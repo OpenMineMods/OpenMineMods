@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="/icons">
+    <file>web-browser-symbolic.svg</file>
+    <file>configure.svg</file>
+    <file>download.svg</file>
+    <file>edit.svg</file>
+    <file>edit-delete.svg</file>
+    <file>search.svg</file>
+    <file>software-update-available-symbolic.svg</file>
+    <file>view-refresh.svg</file>
+  </qresource>
+</RCC>

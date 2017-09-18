@@ -35,7 +35,8 @@
         <string>...</string>
        </property>
        <property name="icon">
-        <iconset theme="down"/>
+        <iconset resource="../Assets/icons.qrc">
+         <normaloff>:/icons/download.svg</normaloff>:/icons/download.svg</iconset>
        </property>
       </widget>
      </item>
@@ -43,6 +44,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Assets/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

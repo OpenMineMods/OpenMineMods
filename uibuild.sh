@@ -5,3 +5,5 @@ for f in UI/*.ui; do
 	echo "Building $f to $pyn"
 	python -m PyQt5.uic.pyuic $f -o $pyn
 done
+
+pyrcc5 Assets/icons.qrc -o icons_rc.py

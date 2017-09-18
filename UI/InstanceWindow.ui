@@ -88,8 +88,8 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset theme="search">
-               <normaloff>.</normaloff>.</iconset>
+              <iconset resource="../Assets/icons.qrc">
+               <normaloff>:/icons/search.svg</normaloff>:/icons/search.svg</iconset>
              </property>
             </widget>
            </item>
@@ -203,6 +203,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Assets/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

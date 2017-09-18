@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>400</height>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,7 +43,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>301</height>
+             <height>308</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -89,8 +89,8 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset theme="search">
-               <normaloff>.</normaloff>.</iconset>
+              <iconset resource="../Assets/icons.qrc">
+               <normaloff>:/icons/search.svg</normaloff>:/icons/search.svg</iconset>
              </property>
             </widget>
            </item>
@@ -111,7 +111,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>248</height>
+             <height>255</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -190,8 +190,8 @@
               <string>...</string>
              </property>
              <property name="icon">
-              <iconset theme="edit">
-               <normaloff>.</normaloff>.</iconset>
+              <iconset resource="../Assets/icons.qrc">
+               <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
              </property>
             </widget>
            </item>
@@ -321,6 +321,8 @@
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Assets/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

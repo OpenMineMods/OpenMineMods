@@ -27,7 +27,8 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="software-update-available-symbolic"/>
+      <iconset resource="../Assets/icons.qrc">
+       <normaloff>:/icons/software-update-available-symbolic.svg</normaloff>:/icons/software-update-available-symbolic.svg</iconset>
      </property>
     </widget>
    </item>
@@ -37,8 +38,8 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="edit-delete">
-       <normaloff>.</normaloff>.</iconset>
+      <iconset resource="../Assets/icons.qrc">
+       <normaloff>:/icons/edit-delete.svg</normaloff>:/icons/edit-delete.svg</iconset>
      </property>
     </widget>
    </item>
@@ -48,13 +49,15 @@
       <string>...</string>
      </property>
      <property name="icon">
-      <iconset theme="edit">
-       <normaloff>.</normaloff>.</iconset>
+      <iconset resource="../Assets/icons.qrc">
+       <normaloff>:/icons/edit.svg</normaloff>:/icons/edit.svg</iconset>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Assets/icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
