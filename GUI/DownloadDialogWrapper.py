@@ -39,5 +39,8 @@ class DownloadDialog:
         self.dia.exec_()
 
     def _dl_done(self, status: int):
-        self.dlthread.terminate()
+        try:
+            self.dlthread.terminate()
+        except:
+            pass
         self.dia.done(status)
