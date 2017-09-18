@@ -15,11 +15,13 @@ class DownloaderThread(QThread):
         super().__init__()
 
     def download_mod(self, modid: str, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
+        manual = True
         existing = [i for i in instance.mods if i.proj == modid]
         if len(existing) > 0:
             for i in existing:
+                manual = i.manual
                 instance.uninstall_mod(i.file.filename)
-        instance.install_mod(modid, f, curse, True, self.prog_1.emit)
+        instance.install_mod(modid, f, curse, manual, self.prog_1.emit)
         self.done.emit(1)
         self.exit(1)
 
