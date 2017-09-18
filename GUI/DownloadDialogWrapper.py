@@ -36,7 +36,7 @@ class DownloadDialog:
 
         self.dlthread.started.connect(partial(self.downloader.download_mod, modid, f, curse, instance))
         self.dlthread.start()
-        self.dia.exec_()
+        return self.dia.exec_()
 
     def _dl_done(self, status: int):
         try:

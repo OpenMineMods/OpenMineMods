@@ -18,7 +18,10 @@ class CurseMetaThread(QThread):
             return
 
     def get_mods(self, ver="", page=""):
-        self.curse.get_mod_list(ver, page, callback=self.data_found.emit)
+        try:
+            self.curse.get_mod_list(ver, page, callback=self.data_found.emit)
+        except:
+            return
 
     def search(self, query: str, stype: str):
         try:

@@ -108,4 +108,5 @@ class InstanceWindow:
             f = fs[0]
 
         dia = DownloadDialog()
-        dia.download_mod(mod.id, f, self.curse, self.instance)
+        print(dia.download_mod(mod.id, f, self.curse, self.instance))
+        self.setup_mods()
