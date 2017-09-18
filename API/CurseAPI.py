@@ -102,18 +102,18 @@ class CurseAPI:
 
     # SECTION UTILS
 
-    def search(self, query: str, stype="mod", callback=False):
+    def search(self, query: str, stype="mc-mods", callback=False):
         parsed = self.get(params={
             "game-slug": "minecraft",
             "search": query
         }, path="/search")
         results = parsed.select("tr.minecraft")
+        results = [i for i in results if i.select("dt > a")[0]["href"].split("/")[1] == stype]
         if callback:
             for i in results:
                 callback(CurseProject(i, self, search=True))
             return
-        results = [CurseProject(i, self, search=True) for i in results]
-        return [i for i in results if i.type == stype]
+        return [CurseProject(i, self, search=True) for i in results]
 
     def download_file(self, url: str, filepath: str, fname="", progf=False):
         """Download a file from `url` to `filepath/name`"""
@@ -157,14 +157,18 @@ class CurseProject:
         self.el = el
         self.curse = curse
 
-        if not detailed:
-            if search:
-                r = self.curse.get(path=self.get_tag("dt > a", "href"))
-            else:
-                r = self.curse.get(path=self.get_tag("h4 > a", "href"))
-            self.el = r
+        if type(el) == str:
+            self.el = None
+            self.id = el
+        else:
+            if not detailed:
+                if search:
+                    r = self.curse.get(path=self.get_tag("dt > a", "href"))
+                else:
+                    r = self.curse.get(path=self.get_tag("h4 > a", "href"))
+                self.el = r
 
-        self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
+            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
 
         self.meta = self.curse.get_json("/{}.json".format(self.id))
 
@@ -341,6 +345,6 @@ class ModpackManifest:
 
 
 class SearchType:
-    Mod = "mod"
+    Mod = "mc-mods"
     Modpack = "modpacks"
     Texturepack = "customiaztion"

@@ -23,6 +23,8 @@ class InstanceWindow:
         self.curse = curse
         self.instance = instance
 
+        self.mod_widgets = list()
+
         self.curse_mthread = CurseMetaThread(self.curse)
         self.curse_thread = QThread()
 
@@ -39,7 +41,7 @@ class InstanceWindow:
         self.ui.pack_version.setText("Minecraft: {}".format(instance.version))
 
         if instance.pack is not None:
-            self.ui.pack_pack.setText("Modpack ID: {}".format(instance.pack))
+            self.ui.pack_pack.setText("Modpack ID: {} ({})".format(instance.pack, instance.file.pub_time))
         else:
             self.ui.pack_pack.hide()
 
@@ -49,6 +51,12 @@ class InstanceWindow:
 
         self.curse_thread.started.connect(partial(self.curse_mthread.get_mods, instance.version))
         self.curse_thread.start()
+
+    def clear_browse(self):
+        for m in self.mod_widgets:
+            m.setParent(None)
+
+        self.mod_widgets = list()
 
     def setup_mods(self):
         clear_layout(self.ui.mod_box)
@@ -68,6 +76,8 @@ class InstanceWindow:
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def mod_found(self, mod: CurseProject):
+        self.mod_widgets = list()
+
         widget = QWidget()
         el = Ui_ModWidget()
 
@@ -79,6 +89,8 @@ class InstanceWindow:
 
         el.mod_delete.hide()
         el.mod_update.hide()
+
+        self.mod_widgets.append(widget)
 
         self.ui.browse_box.insertWidget(self.ui.browse_box.count() - 2, widget)
 
@@ -93,7 +105,7 @@ class InstanceWindow:
             f = fs[f - 1]
 
         else:
-            f = fs[-1]
+            f = fs[0]
 
         dia = DownloadDialog()
         dia.download_mod(mod.id, f, self.curse, self.instance)

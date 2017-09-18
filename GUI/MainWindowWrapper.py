@@ -6,7 +6,7 @@ from os import path, makedirs
 from webbrowser import open as webopen
 from sys import platform
 
-from API.CurseAPI import CurseAPI, CurseProject
+from API.CurseAPI import CurseAPI, CurseProject, CurseModpack
 from API.Threads import CurseMetaThread
 from API.MultiMC import MultiMC, MultiMCInstance
 
@@ -21,6 +21,9 @@ from GUI.InstanceWindowWrapper import InstanceWindow
 
 from GUI.AnalyticsDialog import Ui_AnalyticsDialog
 from GUI.UpdateDialog import Ui_UpdateDialog
+
+from GUI.FileDialogWrapper import FileDialog
+from GUI.DownloadDialogWrapper import DownloadDialog
 
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
@@ -147,6 +150,25 @@ class MainWindow:
 
     def edit_clicked(self, instance: MultiMCInstance):
         self.children.append(InstanceWindow(instance, self.curse))
+
+    def install_clicked(self, project: CurseProject):
+        fs = project.files[::-1]
+        if self.curse.db["filepick"]:
+            dia = FileDialog(fs)
+            f = dia.dia.exec_()
+            if not f:
+                return
+
+            f = fs[f - 1]
+
+        else:
+            f = fs[0]
+
+        pack = CurseModpack(project, self.curse, self.mmc)
+
+        dia = DownloadDialog()
+        dia.download_mod(mod.id, f, self.curse, self.instance)
+
 
     # Settings Checkboxes
 
