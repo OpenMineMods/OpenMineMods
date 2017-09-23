@@ -1,0 +1,3 @@
+[submodule "CurseMetaDB"]
+	path = CurseMetaDB
+	url = git@github.com:OpenMineMods/CurseMetaDB.git
