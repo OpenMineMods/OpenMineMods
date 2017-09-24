@@ -31,13 +31,17 @@ from GUI.PackWidget import Ui_PackWidget
 
 class MainWindow:
     def __init__(self):
-        data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation).replace(".py", "")
+        data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
+        cache_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
         if not path.exists(data_dir):
             makedirs(data_dir)
+        if not path.exists(cache_dir):
+            makedirs(cache_dir)
         self.curse = CurseAPI(data_dir)
 
         info("Starting OpenMineMods v{}".format(self.curse.version))
         info("Data dir: {}".format(data_dir))
+        info("Cache dir: {}")
 
         self.curse_mthread = CurseMetaThread(self.curse)
         self.curse_thread = QThread()

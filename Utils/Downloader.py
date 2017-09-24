@@ -23,9 +23,14 @@ class DownloaderThread(QThread):
                 instance.uninstall_mod(i.file.filename)
         instance.install_mod(modid, f, curse, manual, self.prog_1.emit)
         self.done.emit(1)
-        self.exit(1)
+        self.exit()
 
     def download_pack(self, pack: CurseModpack, f: CurseFile):
         pack.install(f, self.label.emit, self.prog_1.emit, self.prog_2.emit)
         self.done.emit(1)
-        self.exit(0)
+        self.exit()
+
+    def download_file(self, f: str, path: str, curse: CurseAPI, fname=""):
+        curse.download_file(f, path, fname)
+        self.done.emit(1)
+        self.exit()

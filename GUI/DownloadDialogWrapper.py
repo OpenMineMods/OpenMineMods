@@ -38,6 +38,20 @@ class DownloadDialog:
         self.dlthread.start()
         return self.dia.exec_()
 
+    def download_file(self, f: str, path: str, curse: CurseAPI, fname: ""):
+        if not fname:
+            self.dia.setWindowTitle("Downloading {}".format(f.split("/")[-1]))
+        else:
+            self.dia.setWindowTitle("Downloading {}".format(fname))
+
+        self.ui.progbar_1.setValue(0)
+        self.ui.status_label.hide()
+        self.ui.progbar_2.hide()
+
+        self.dlthread.started.connect(partial(self.downloader.download_file, f, path, curse, fname))
+        self.dlthread.start()
+        return self.dia.exec_()
+
     def _dl_done(self, status: int):
         try:
             self.dlthread.terminate()
