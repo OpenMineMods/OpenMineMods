@@ -13,7 +13,7 @@ Would you like to update to v{}?",
         "prompt.update.restart": "Please restart OpenMineMods to finish updating!",
         "prompt.analytics":
 "Would you like to enable basic analytics?\n\
-More information is availible at the URL below.\n\
+More information is available at the URL below.\n\
 https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "prompt.restart": "A restart is required for new settings to take effect.",
 
@@ -159,6 +159,7 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "title.browsing.packs": "Bladeren door Modpacks",
         "title.settings": "OpenMineMods Instellingen"
     },
+
     "nl_NL": {
          # SECTION PROMPTS
         "prompt.mmc": "Gelieve de MultiMC hoofdfolder te selecteren.",
@@ -210,7 +211,60 @@ https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
         "title.browsing.packs": "Bladeren door Modpacks",
         "title.settings": "OpenMineMods Instellingen"
     },
-   
+    
+    "fr_FR": {
+
+        # SECTION PROMPTS
+        "prompt.mmc": "Cherchez l'emplacement de MultiMC.",
+        "prompt.delete": "Êtes vous sûr de vouloir supprimer {} ?",
+        "prompt.update":
+"Une nouvelle version d'OpenMineMods est disponible !\n\
+Voulez-vous télécharger la version v{} ?",
+        "prompt.update.restart": "Veuillez redémarrer OpenMineMods pour finir la mise à jour.",
+        "prompt.analytics":
+"Voulez-vous activer les options de télémétrie ?\n\
+Plus d'informations sont disponibles à cette adresse:\n\
+https://github.com/joonatoona/OpenMineMods/blob/master/ExampleAnalytics.md",
+        "prompt.restart": "Un redémarrage est requis pour que ces nouveaux paramètres rentrent en vigueur.",
+
+        # SECTION TOOLTIPS
+        "tooltip.refresh.instances": "Actualiser les Instances",
+        "tooltip.configure.omm": "Configurer OpenMineMods",
+        "tooltip.edit.instance": "Éditer l'instance",
+        "tooltip.delete.instance": "Supprimer l'instance",
+        "tooltip.browse.mods": "Parcourir les Mods",
+        "tooltip.delete.mod": "Supprimer le mod",
+        "tooltip.search": "Recherche",
+        "tooltip.install": "Installation",
+        "tooltip.mmc.change": "Changer l'emplacement de MultiMC",
+        "tooltip.toggle.analytics": "Activer la télémétrie",
+        "tooltip.update.check": "Vérifier les mises à jour",
+        "tooltip.update.install": "Installer les mises à jour",
+
+        # SECTION LABELS
+        "label.instances": "Instances",
+        "label.installed": "Mods installés",
+        "label.search.mods": "Chercher un mod",
+        "label.available.mods": "Mods disponibles",
+        "label.search.packs": "Chercher un modpack",
+        "label.available.packs": "Modpacks disponibles",
+        "label.mmc.location": "Emplacement de MultiMC",
+        "label.analytics": "Télémétrie",
+
+        # SECTION DOWNLOADING
+
+        "downloading.icon": "Téléchargement de l'icone",
+        "downloading.data": "Téléchargement des données",
+        "downloading.mod": "Téléchargement de {}",
+        "downloading.pack": "Installation de {}",
+        "downloading.update": "Téléchargement de la mise à jour",
+
+        # SECTION TITLES
+        "title.editing": "Édition de {}",
+        "title.browsing.mod": "Parcourir les mods de {}",
+        "title.browsing.packs": "Parcourir les modpacks",
+        "title.settings": "Paramètres d'OpenMineMods"
+    },
 }
 
 
