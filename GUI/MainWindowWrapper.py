@@ -158,6 +158,8 @@ class MainWindow:
     def delete_clicked(self, instance: MultiMCInstance):
         print(confirm_box(self.win, QMessageBox.Question,
                           "Are you sure you want to delete {}".format(instance.name)))
+        self.mmc.delete_instance(instance)
+        self.init_instances()
 
     def edit_clicked(self, instance: MultiMCInstance):
         self.children.append(InstanceWindow(instance, self.curse, self.conf))
