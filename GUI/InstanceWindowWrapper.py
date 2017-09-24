@@ -113,6 +113,8 @@ class InstanceWindow:
     def mod_install(self, mod: CurseProject):
         files = [self.curse.get_file(i) for i in mod.files]
         fs = [i for i in files if self.instance.version in i.versions]
+        if len(fs) < 1:
+            return False
         if self.conf.read(Setting.ask_file):
             dia = FileDialog(fs)
             f = dia.dia.exec_()
