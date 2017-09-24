@@ -80,5 +80,6 @@ class SetupWindow:
             with open(path.join(self.cache, "meta.json"), "wb+") as f2:
                 f2.write(f.read())
         remove(path.join(self.cache, "cursemeta.json.xz"))
-        self.ui.prog_label.setText("Doing stuff and things")
+        self.dlthread.terminate()
+        self.downloader.terminate()
         self.win.done(1)
