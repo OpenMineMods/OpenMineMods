@@ -9,7 +9,6 @@ from urllib.parse import unquote
 from sys import stdout
 from API.MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
-from hashlib import md5
 
 from GUI.Strings import Strings
 from CurseMetaDB.DB import DB
@@ -46,7 +45,7 @@ class CurseAPI:
 
     def get_mod_list(self, version="*"):
         """Get an array of `CurseProject`s"""
-        mods = self.db.get_popular("mod", 100, version)
+        mods = self.db.get_popular("mod", 25, version)
         return [self.get_project(i) for i in mods]
 
     def get_project(self, pid: int):

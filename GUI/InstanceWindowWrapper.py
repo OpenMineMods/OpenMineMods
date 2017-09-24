@@ -7,6 +7,7 @@ from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI, CurseProject
 
 from Utils.Utils import clear_layout
+from Utils.Config import Config, Setting
 
 from GUI.InstanceWindow import Ui_InstanceWindow
 
@@ -17,9 +18,10 @@ from GUI.ModWidget import Ui_ModWidget
 
 
 class InstanceWindow:
-    def __init__(self, instance: MultiMCInstance, curse: CurseAPI):
+    def __init__(self, instance: MultiMCInstance, curse: CurseAPI, conf: Config):
         self.curse = curse
         self.instance = instance
+        self.conf = conf
 
         self.mod_widgets = list()
 
@@ -42,14 +44,27 @@ class InstanceWindow:
             self.ui.pack_pack.hide()
 
         self.setup_mods()
+        self.setup_mod_browse(curse.get_mod_list(self.instance.version))
+
+        self.ui.pack_search.textChanged.connect(self.q_typed)
+        self.ui.pack_search.returnPressed.connect(self.search_packs)
+        self.ui.pack_search_button.clicked.connect(self.search_packs)
 
         self.win.show()
 
-    def clear_browse(self):
-        for m in self.mod_widgets:
-            m.setParent(None)
+    def q_typed(self):
+        if not self.conf.read(Setting.live_search):
+            return
+        if self.ui.pack_search.text() == "":
+            self.setup_mod_browse(self.curse.get_mod_list())
+            return
+        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod"))
 
-        self.mod_widgets = list()
+    def search_packs(self):
+        if self.ui.pack_search.text() == "":
+            self.setup_mod_browse(self.curse.get_mod_list())
+            return
+        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod"))
 
     def setup_mods(self):
         clear_layout(self.ui.mod_box)
@@ -59,6 +74,8 @@ class InstanceWindow:
             el.setupUi(widget)
 
             modf = self.curse.get_file(mod["id"])
+            if not modf:
+                continue
             proj = self.curse.get_project(modf.project)
             el.mod_name.setText(proj.name)
 
@@ -69,6 +86,22 @@ class InstanceWindow:
             self.ui.mod_box.addWidget(widget)
 
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
+    def setup_mod_browse(self, mods: list):
+        clear_layout(self.ui.browse_box)
+        for mod in mods:
+            widget = QWidget()
+            el = Ui_ModWidget()
+            el.setupUi(widget)
+
+            el.mod_name.setText(mod.name)
+            el.mod_delete.hide()
+
+            el.mod_info.clicked.connect(partial(webopen, mod.page))
+
+            self.ui.browse_box.addWidget(widget)
+
+        self.ui.browse_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def mod_install(self, mod: CurseProject):
         fs = [i for i in mod.files if i.mc_ver == self.instance.version][::-1]

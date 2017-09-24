@@ -76,6 +76,8 @@ class MainWindow:
         self.ui.file_check.clicked.connect(self.file_checked)
 
         self.ui.pack_search.textChanged.connect(self.q_typed)
+        self.ui.pack_search.returnPressed.connect(self.search_packs)
+        self.ui.pack_search_button.clicked.connect(self.search_packs)
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
@@ -129,6 +131,8 @@ class MainWindow:
             el.pack_more.clicked.connect(partial(webopen, pack.page))
             self.ui.pack_box.addWidget(widget)
 
+        self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
+
     def reset_packs(self):
         clear_layout(self.ui.pack_box)
 
@@ -138,6 +142,14 @@ class MainWindow:
     """Event Listeners"""
 
     def q_typed(self):
+        if not self.conf.read(Setting.live_search):
+            return
+        if self.ui.pack_search.text() == "":
+            self.init_packs(self.curse.get_modpacks())
+            return
+        self.init_packs(self.curse.search(self.ui.pack_search.text(), "modpack"))
+
+    def search_packs(self):
         if self.ui.pack_search.text() == "":
             self.init_packs(self.curse.get_modpacks())
             return
@@ -148,7 +160,7 @@ class MainWindow:
                           "Are you sure you want to delete {}".format(instance.name)))
 
     def edit_clicked(self, instance: MultiMCInstance):
-        self.children.append(InstanceWindow(instance, self.curse))
+        self.children.append(InstanceWindow(instance, self.curse, self.conf))
 
     def install_clicked(self, project: CurseProject):
         fs = project.files

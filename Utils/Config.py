@@ -15,7 +15,8 @@ class Config:
                 "AutoUpdate": True,
                 "AskFile": False,
                 "CurrentVersion": "0.0",
-                "UUID": str(uuid4())
+                "UUID": str(uuid4()),
+                "LiveSearch": False
             }
             self.config["MultiMC"] = {
                 "Location": ""
@@ -42,5 +43,6 @@ class Setting:
     ask_file = ("Settings", "AskFile", bool)
     current_version = ("Settings", "CurrentVersion", str)
     uuid = ("Settings", "UUID", str)
+    live_search = ("Settings", "LiveSearch", bool)
 
     location = ("MultiMC", "Location", str)
