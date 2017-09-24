@@ -44,6 +44,8 @@ class MainWindow:
         info("Data dir: {}".format(data_dir))
         info("Cache dir: {}".format(cache_dir))
 
+        self.cache_dir = cache_dir
+
         if not path.isfile(path.join(data_dir, "settings.ini")):
             dia = SetupWindow(data_dir, cache_dir)
             dia.win.exec_()
@@ -112,7 +114,7 @@ class MainWindow:
 
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
             el.instance_edit.clicked.connect(partial(self.edit_clicked, instance))
-            el.share_button.clicked.connect(partial(ExportDialog, instance))
+            el.share_button.clicked.connect(partial(ExportDialog, instance, self.curse, self.cache_dir))
 
             el.instance_update.hide()
 

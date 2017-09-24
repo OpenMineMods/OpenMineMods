@@ -111,6 +111,10 @@ class MultiMCInstance:
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
+        try:
+            self.forge = re.search("ForgeVersion=(.*)\n", self.instanceCfg).group(1)
+        except AttributeError:
+            self.forge = ""
 
     def install_mod(self, file, curse, progress=False):
         if not path.exists(self.modDir):
