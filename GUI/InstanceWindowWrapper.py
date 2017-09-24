@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QThread
 
 from functools import partial
 from webbrowser import open as webopen
@@ -24,12 +23,6 @@ class InstanceWindow:
 
         self.mod_widgets = list()
 
-        self.curse_mthread = CurseMetaThread(self.curse)
-        self.curse_thread = QThread()
-
-        self.curse_mthread.moveToThread(self.curse_thread)
-        self.curse_mthread.data_found.connect(self.mod_found)
-
         self.win = QMainWindow()
         self.ui = Ui_InstanceWindow()
 
@@ -39,17 +32,18 @@ class InstanceWindow:
 
         self.ui.pack_version.setText("Minecraft: {}".format(instance.version))
 
-        if instance.pack is not None:
-            self.ui.pack_pack.setText("Modpack ID: {} ({})".format(instance.pack, instance.file.pub_time))
+        if instance.file is not None:
+            self.file = self.curse.get_file(instance.file)
+            self.pack = self.curse.get_project(self.file.project)
+            self.ui.pack_pack.setText("Modpack ID: {} ({})".format(self.pack.name, self.file.pub_time))
         else:
+            self.file = None
+            self.pack = None
             self.ui.pack_pack.hide()
 
         self.setup_mods()
 
         self.win.show()
-
-        self.curse_thread.started.connect(partial(self.curse_mthread.get_mods, instance.version))
-        self.curse_thread.start()
 
     def clear_browse(self):
         for m in self.mod_widgets:
@@ -64,7 +58,9 @@ class InstanceWindow:
             el = Ui_ModWidget()
             el.setupUi(widget)
 
-            el.mod_name.setText(mod.file.name)
+            modf = self.curse.get_file(mod["id"])
+            proj = self.curse.get_project(modf.project)
+            el.mod_name.setText(proj.name)
 
             el.mod_install.hide()
             el.mod_info.hide()
@@ -73,25 +69,6 @@ class InstanceWindow:
             self.ui.mod_box.addWidget(widget)
 
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
-
-    def mod_found(self, mod: CurseProject):
-        self.mod_widgets = list()
-
-        widget = QWidget()
-        el = Ui_ModWidget()
-
-        el.setupUi(widget)
-
-        el.mod_name.setText(mod.name)
-        el.mod_install.clicked.connect(partial(self.mod_install, mod))
-        el.mod_info.clicked.connect(partial(webopen, mod.page))
-
-        el.mod_delete.hide()
-        el.mod_update.hide()
-
-        self.mod_widgets.append(widget)
-
-        self.ui.browse_box.insertWidget(self.ui.browse_box.count() - 2, widget)
 
     def mod_install(self, mod: CurseProject):
         fs = [i for i in mod.files if i.mc_ver == self.instance.version][::-1]

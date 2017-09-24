@@ -225,6 +225,8 @@ class CurseModpack:
 
         modf = (90 / len(manifest.mods))
 
+        newPath = "{}/instances/{}".format(self.mmc.path, self.project.name)
+
         for x, mod in enumerate(manifest.mods):
             #stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             f = self.curse.get_file(mod[1])
@@ -234,21 +236,20 @@ class CurseModpack:
             prog_label(translate("downloading.mod").format(f.filename))
             progbar_1(10 + (x * modf))
             mpath = self.curse.download_file(f.dl, modPath, progf=progbar_2)
-            modlist.append({"id": mod[1], "path": mpath, "manual": False})
+            modlist.append({"id": mod[1], "path": mpath.replace(tempPath, newPath), "manual": False})
         stdout.write("\n\r")
 
-        open("{}/omm_dat.json").write(dumps({
+        open("{}/omm_dat.json".format(tempPath), "w+").write(dumps({
             "file": file.id,
             "mods": modlist
         }, indent=4))
 
-        newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
 
         rmtree("{}/raw/overrides".format(tempPath))
 
-        if os.path.exists(newPath) and self.curse.baseDir:
+        if os.path.exists(newPath):
             rmtree(newPath)
-        move(tempPath, "{}/instances".format(self.curse.baseDir))
+        move(tempPath, "{}/instances".format(self.mmc.path))
 
 
 class ModpackManifest:

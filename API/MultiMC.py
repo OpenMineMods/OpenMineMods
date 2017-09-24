@@ -106,6 +106,7 @@ class MultiMCInstance:
             self.dat = loads(open(self.dat_file).read())
 
         self.mods = self.dat["mods"]
+        self.file = self.dat["file"]
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
