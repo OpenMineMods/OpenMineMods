@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 from GUI.InitialSetupWrapper import SetupWindow
 
 app = QApplication(sys.argv)
-win = SetupWindow()
+win = SetupWindow(".")
 
 win.win.exec_()
 

@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>387</height>
+    <height>360</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>360</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>OpenMineMods Setup</string>
@@ -110,7 +116,7 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox_2">
+               <widget class="QCheckBox" name="autoupdate">
                 <property name="maximumSize">
                  <size>
                   <width>16</width>
@@ -137,7 +143,7 @@ p, li { white-space: pre-wrap; }
                </widget>
               </item>
               <item>
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="analytics">
                 <property name="maximumSize">
                  <size>
                   <width>16</width>
