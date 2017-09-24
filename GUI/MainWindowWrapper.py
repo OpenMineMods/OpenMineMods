@@ -26,6 +26,7 @@ from GUI.UpdateDialog import Ui_UpdateDialog
 from GUI.FileDialogWrapper import FileDialog
 from GUI.DownloadDialogWrapper import DownloadDialog
 from GUI.InitialSetupWrapper import SetupWindow
+from GUI.ExportDialogWrapper import ExportDialog
 
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
@@ -111,6 +112,7 @@ class MainWindow:
 
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
             el.instance_edit.clicked.connect(partial(self.edit_clicked, instance))
+            el.share_button.clicked.connect(partial(ExportDialog, instance))
 
             el.instance_update.hide()
 
