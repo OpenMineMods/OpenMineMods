@@ -163,8 +163,10 @@ class MainWindow:
         else:
             f = fs[0]
 
+        print(f)
+
         dia = DownloadDialog()
-        dia.download_pack(project, self.curse.db.get_file(f), self.curse, self.mmc)
+        dia.download_pack(project, self.curse.get_file(f), self.curse, self.mmc)
 
     # Settings Checkboxes
 

@@ -55,6 +55,12 @@ class CurseAPI:
             return False
         return CurseProject(mod)
 
+    def get_file(self, fid: int):
+        file = self.db.get_file(fid)
+        if not file:
+            return False
+        return CurseFile(file)
+
     # END SECTION
 
     # SECTION MODPACKS
@@ -106,6 +112,8 @@ class CurseAPI:
 class CurseProject:
     def __init__(self, meta: dict):
         self.meta = meta
+
+        self.id = self.meta["id"]
 
         self.type = self.meta["type"]
 
@@ -218,9 +226,10 @@ class CurseModpack:
         modf = (90 / len(manifest.mods))
 
         for x, mod in enumerate(manifest.mods):
-            stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            r = self.curse.db.get_file(mod[1])
-            f = CurseFile(r)
+            #stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
+            f = self.curse.get_file(mod[1])
+            if not f:
+                continue
 
             prog_label(translate("downloading.mod").format(f.filename))
             progbar_1(10 + (x * modf))
