@@ -123,7 +123,11 @@ class InstanceWindow:
             f = fs[0]
 
         dia = DownloadDialog()
-        print(dia.download_mod(f, self.curse, self.instance))
+        dia.download_mod(f, self.curse, self.instance)
+        for dep in f.deps:
+            if dep["Type"] != "required":
+                continue
+            self.mod_install(self.curse.get_project(dep["AddOnId"]))
         self.setup_mods()
 
     def mod_delete(self, fpath: str):
