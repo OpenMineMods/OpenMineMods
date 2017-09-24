@@ -34,7 +34,7 @@ class InstanceWindow:
 
         self.ui.pack_version.setText("Minecraft: {}".format(instance.version))
 
-        if instance.file is not None:
+        if instance.file:
             self.file = self.curse.get_file(instance.file)
             self.pack = self.curse.get_project(self.file.project)
             self.ui.pack_pack.setText("Modpack ID: {} ({})".format(self.pack.name, self.file.pub_time))
