@@ -79,6 +79,8 @@ class InstanceWindow:
             proj = self.curse.get_project(modf.project)
             el.mod_name.setText(proj.name)
 
+            el.mod_delete.clicked.connect(partial(self.mod_delete, mod["path"]))
+
             el.mod_install.hide()
             el.mod_info.hide()
             el.mod_update.hide()
@@ -122,4 +124,8 @@ class InstanceWindow:
 
         dia = DownloadDialog()
         print(dia.download_mod(f, self.curse, self.instance))
+        self.setup_mods()
+
+    def mod_delete(self, fpath: str):
+        self.instance.uninstall_mod(fpath)
         self.setup_mods()
