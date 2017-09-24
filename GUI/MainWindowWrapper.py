@@ -175,10 +175,10 @@ class MainWindow:
         else:
             f = fs[0]
 
-        print(f)
-
         dia = DownloadDialog()
         dia.download_pack(project, self.curse.get_file(f), self.curse, self.mmc)
+        self.mmc = MultiMC(self.conf.read(Setting.location))
+        self.init_instances()
 
     # Settings Checkboxes
 
