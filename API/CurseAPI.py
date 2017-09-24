@@ -1,13 +1,10 @@
 import requests
 import os
-import shelve
 
 from bs4 import BeautifulSoup
-from bs4.element import Tag
 from datetime import datetime
 from zipfile import ZipFile
 from json import loads
-from uuid import uuid4
 from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
@@ -16,6 +13,7 @@ from shutil import move, copytree, rmtree
 from hashlib import md5
 
 from GUI.Strings import Strings
+from CurseMetaDB.DB import DB
 
 useUserAgent = "Mozilla/5.0 (Windows NT 10.0; rv:50.0) Gecko/20100101 Firefox/50.0"
 
@@ -38,82 +36,41 @@ class CurseAPI:
     baseUrl = "https://mods.curse.com"
     forgeUrl = "https://minecraft.curseforge.com"
 
-    def __init__(self, data_dir="."):
-        self.data_dir = data_dir
+    def __init__(self, db: DB):
+        self.db = db
 
         # Set User Agent header for extra sneakyness
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": useUserAgent})
 
-        self.db = shelve.open(os.path.join(self.data_dir, "omm.db"))
-
-        self.baseDir = ""
-
-        if "baseDir" in self.db:
-            self.baseDir = self.db["baseDir"]
-
-        if "packs" not in self.db:
-            self.db["packs"] = list()
-
-        if "uuid" not in self.db:
-            self.db["uuid"] = str(uuid4())
-
-        self.packs = self.db["packs"]
-        self.uuid = self.db["uuid"]
-
     # SECTION MODS
 
-    def get_mod_list(self, version="", page=0, callback=False):
+    def get_mod_list(self, version="*"):
         """Get an array of `CurseProject`s"""
-        parsed = self.get(params={
-            "filter-project-game-version": version,
-            "page": page
-        }, path="/mc-mods/minecraft")
-        projects = parsed.select("#addons-browse")[0].select("ul > li > ul")
-        if callback:
-            for i in projects:
-                callback(CurseProject(i, self))
-            return
-        return [CurseProject(i, self) for i in projects]
+        mods = self.db.get_popular("mod", 100, version)
+        return [self.get_project(i) for i in mods]
 
-    def get_version_list(self):
-        """Get all versions available on Curse"""
-        parsed = self.get(path="/mc-mods/minecraft")
-        options = parsed.select("#filter-project-game-version > option")
-        return [i["value"] for i in options if i["value"] != ""]
+    def get_project(self, pid: int):
+        mod = self.db.get_project(pid)
+        if not mod:
+            return False
+        return CurseProject(mod)
 
     # END SECTION
 
     # SECTION MODPACKS
 
-    def get_modpacks(self, version="", page=0, callback=False):
-        parsed = self.get(params={
-            "filter-project-game-version": version,
-            "page": page
-        }, path="/modpacks/minecraft")
-        projects = parsed.select("#addons-browse")[0].select("ul > li > ul")
-        if callback:
-            for i in projects:
-                callback(CurseProject(i, self))
-            return
-        return [CurseProject(i, self) for i in projects]
+    def get_modpacks(self, version="*"):
+        packs = self.db.get_popular("modpack", 25, version)
+        return [CurseProject(self.db.get_project(i)) for i in packs]
 
     # END SECTION
 
     # SECTION UTILS
 
-    def search(self, query: str, stype="mc-mods", callback=False):
-        parsed = self.get(params={
-            "game-slug": "minecraft",
-            "search": query
-        }, path="/search")
-        results = parsed.select("tr.minecraft")
-        results = [i for i in results if i.select("dt > a")[0]["href"].split("/")[1] == stype]
-        if callback:
-            for i in results:
-                callback(CurseProject(i, self, search=True))
-            return
-        return [CurseProject(i, self, search=True) for i in results]
+    def search(self, query: str, ptype="mod", version="*"):
+        res = self.db.search_projects(query, ptype, 25, version=version)
+        return [CurseProject(i) for i in res]
 
     def download_file(self, url: str, filepath: str, fname="", progf=False):
         """Download a file from `url` to `filepath/name`"""
@@ -144,53 +101,22 @@ class CurseAPI:
             return [BeautifulSoup(html, "html.parser"), r.url]
         return BeautifulSoup(html, "html.parser")
 
-    def get_json(self, path: str):
-        r = requests.get("https://cursemeta.dries007.net" + path,
-                         headers={"User-Agent": "OpenMineMods/v"+CurseAPI.version})
-        return r.json()
-
     # END SECTION
 
 
 class CurseProject:
-    def __init__(self, el: Tag, curse: CurseAPI, detailed=False, search=False):
-        self.el = el
-        self.curse = curse
+    def __init__(self, meta: dict):
+        self.meta = meta
 
-        if type(el) == str:
-            self.el = None
-            self.id = el
-        else:
-            if not detailed:
-                if search:
-                    r = self.curse.get(path=self.get_tag("dt > a", "href"))
-                else:
-                    r = self.curse.get(path=self.get_tag("h4 > a", "href"))
-                self.el = r
+        self.type = self.meta["type"]
 
-            self.id = self.get_tag(".curseforge > a", "href").split("/")[-2]
+        self.name = self.meta["title"]
+        self.author = self.meta["primaryAuthor"]
+        self.desc = self.meta["desc"]
 
-        self.meta = self.curse.get_json("/{}.json".format(self.id))
+        self.page = self.meta["site"]
 
-        self.type = self.meta["PackageType"]
-
-        self.name = self.meta["Name"]
-        self.author = self.meta["PrimaryAuthorName"]
-        self.desc = self.meta["Summary"]
-
-        try:
-            self.icon = self.meta["Attachments"][0]["ThumbnailUrl"]
-        except KeyError:
-            self.icon = False
-        self.page = self.meta["WebSiteURL"]
-
-        self.files = [CurseFile(i) for i in self.curse.get_json("/{}/files.json".format(self.id))]
-
-        self.versions = list(set([i.mc_ver for i in self.files]))
-        self.versions.sort(key=lambda ver: [int(i) for i in ver.split(".")])
-
-    def get_tag(self, selector, tag, index=0):
-        return self.el.select(selector)[index][tag]
+        self.versions = self.meta["versions"]
 
 
 class CurseFile:

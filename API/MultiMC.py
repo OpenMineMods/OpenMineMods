@@ -1,13 +1,10 @@
 import re
-import shelve
-import os
 
 from json import dumps
 from glob import glob
 from os import remove, path, makedirs
 from shutil import rmtree, move
 from sys import setrecursionlimit
-from hashlib import md5
 
 from Utils.Utils import noop, moveTree
 
@@ -17,27 +14,13 @@ setrecursionlimit(8096)
 
 class MultiMC:
     """Class for managing MultiMC instances"""
-    def __init__(self, fpath: str, db=False):
+    def __init__(self, fpath: str):
         self.path = fpath
 
-        if not db:
-            self.metaDb = shelve.open("{}/meta.db".format(self.path))
-        else:
-            self.metaDb = db
-
         cfgFiles = [i.replace("instance.cfg", '')[:-1] for i in glob("{}/instances/*/instance.cfg".format(self.path))]
-        self.instances = [MultiMCInstance(i, self.metaDb) for i in cfgFiles]
-
-        self.instanceMap = dict()
-
-        for instance in self.instances:
-            self.instanceMap[instance.uuid] = instance
+        self.instances = [MultiMCInstance(i) for i in cfgFiles]
 
     def delete_instance(self, instance):
-        if instance.uuid in self.metaDb:
-            del self.metaDb[instance.uuid]
-
-        del self.instanceMap[instance.uuid]
         del self.instances[self.instances.index(instance)]
 
         rmtree(instance.path)
@@ -117,26 +100,10 @@ class InstalledMod:
 
 class MultiMCInstance:
     """MultiMC Instance"""
-    def __init__(self, path: str, db: shelve):
+    def __init__(self, path: str):
         self.path = path
-        self.db = db
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
         self.modDir = "{}/minecraft/mods".format(self.path)
-        if os.name == "nt":
-            self.path = self.path.replace("/", "\\")
-            self.uuid = md5((self.path+"\\").encode()).hexdigest()
-        else:
-            self.uuid = md5((self.path+"/").encode()).hexdigest()
-
-        if self.uuid in self.db:
-            self.mods = self.db[self.uuid]["mods"]
-            self.pack = self.db[self.uuid]["pack"]
-            self.file = self.db[self.uuid]["file"]
-        else:
-            self.mods = list()
-            self.pack = None
-            self.file = None
-            self._save()
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)

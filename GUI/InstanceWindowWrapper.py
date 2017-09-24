@@ -6,7 +6,6 @@ from webbrowser import open as webopen
 
 from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI, CurseProject
-from API.Threads import CurseMetaThread
 
 from Utils.Utils import clear_layout
 

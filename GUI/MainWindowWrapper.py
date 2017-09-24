@@ -5,24 +5,27 @@ from functools import partial
 from os import path, makedirs
 from webbrowser import open as webopen
 from sys import platform
+from json import loads
 
 from API.CurseAPI import CurseAPI, CurseProject, CurseModpack
 from API.MultiMC import MultiMC, MultiMCInstance
 
-from Utils.Utils import clear_layout, confirm_box, dir_box
-from Utils.Analytics import send_data
+from CurseMetaDB.DB import DB
+
+from Utils.Utils import clear_layout, confirm_box
 from Utils.Updater import UpdateCheckThread
 from Utils.Logger import *
+from Utils.Config import Config, Setting
 
 from GUI.MainWindow import Ui_MainWindow
 
 from GUI.InstanceWindowWrapper import InstanceWindow
 
-from GUI.AnalyticsDialog import Ui_AnalyticsDialog
 from GUI.UpdateDialog import Ui_UpdateDialog
 
 from GUI.FileDialogWrapper import FileDialog
 from GUI.DownloadDialogWrapper import DownloadDialog
+from GUI.InitialSetupWrapper import SetupWindow
 
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
@@ -31,45 +34,28 @@ from GUI.PackWidget import Ui_PackWidget
 class MainWindow:
     def __init__(self):
         data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
-        cache_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
+        cache_dir = QStandardPaths.writableLocation(QStandardPaths.CacheLocation)
         if not path.exists(data_dir):
             makedirs(data_dir)
         if not path.exists(cache_dir):
             makedirs(cache_dir)
-        self.curse = CurseAPI(data_dir)
 
-        info("Starting OpenMineMods v{}".format(self.curse.version))
         info("Data dir: {}".format(data_dir))
-        info("Cache dir: {}")
+        info("Cache dir: {}".format(cache_dir))
 
-        self.curse_mthread = CurseMetaThread(self.curse)
-        self.curse_thread = QThread()
+        if not path.isfile(path.join(data_dir, "settings.ini")):
+            dia = SetupWindow(data_dir, cache_dir)
+            dia.win.exec_()
 
-        self.curse_mthread.moveToThread(self.curse_thread)
-        self.curse_mthread.data_found.connect(self.pack_found)
+        self.conf = Config(data_dir)
+        self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
+        self.curse = CurseAPI(self.db)
+
+        self.conf.write(Setting.current_version, self.curse.version)
 
         self.win = QMainWindow()
 
-        while not self.curse.baseDir:
-            self.curse.baseDir = dir_box(self.win, "Select Your MultiMC Folder", path.expanduser("~"))
-            self.curse.db["baseDir"] = self.curse.baseDir
-
-        if "updater" not in self.curse.db:
-            self.curse.db["updater"] = True
-
-        if "filepick" not in self.curse.db:
-            self.curse.db["filepick"] = False
-
-        if "analytics" not in self.curse.db:
-            ad = QDialog(self.win)
-            ad.setWindowTitle("OpenMineMods Setup")
-            an = Ui_AnalyticsDialog()
-            an.setupUi(ad)
-            self.curse.db["analytics"] = ad.exec_()
-            if self.curse.db["analytics"]:
-                send_data(self.curse)
-
-        self.mmc = MultiMC(self.curse.baseDir)
+        self.mmc = MultiMC(self.conf.read(Setting.location))
 
         self.children = list()
 
@@ -78,25 +64,26 @@ class MainWindow:
 
         self.init_instances()
 
-        self.ui.mmc_folder.setText(self.curse.baseDir)
+        self.ui.mmc_folder.setText(self.conf.read(Setting.location))
 
-        self.ui.analytics_check.setChecked(self.curse.db["analytics"])
+        self.ui.analytics_check.setChecked(self.conf.read(Setting.analytics))
         self.ui.analytics_check.clicked.connect(self.analytics_checked)
 
-        self.ui.update_check.setChecked(self.curse.db["updater"])
+        self.ui.update_check.setChecked(self.conf.read(Setting.update))
         self.ui.update_check.clicked.connect(self.update_checked)
 
-        self.ui.file_check.setChecked(self.curse.db["filepick"])
+        self.ui.file_check.setChecked(self.conf.read(Setting.ask_file))
         self.ui.file_check.clicked.connect(self.file_checked)
+
+        self.ui.pack_search.textChanged.connect(self.q_typed)
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
+        self.init_packs(self.curse.get_modpacks())
+
         self.win.show()
 
-        self.curse_thread.started.connect(self.curse_mthread.get_packs)
-        self.curse_thread.start()
-
-        if self.curse.db["updater"]:
+        if self.conf.read(Setting.update):
             self.update_tr = QThread()
             self.uc = UpdateCheckThread(self.curse)
             self.uc.done.connect(self.update_check_done)
@@ -139,6 +126,19 @@ class MainWindow:
 
         self.ui.pack_box.insertWidget(self.ui.pack_box.count() - 2, widget)
 
+    def init_packs(self, packs: list):
+        clear_layout(self.ui.pack_box)
+
+        for pack in packs:
+            widget = QWidget()
+            el = Ui_PackWidget()
+
+            el.setupUi(widget)
+
+            el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
+            el.pack_more.clicked.connect(partial(webopen, pack.page))
+            self.ui.pack_box.addWidget(widget)
+
     def reset_packs(self):
         clear_layout(self.ui.pack_box)
 
@@ -146,6 +146,12 @@ class MainWindow:
         self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     """Event Listeners"""
+
+    def q_typed(self):
+        if self.ui.pack_search.text() == "":
+            self.init_packs(self.curse.get_modpacks())
+            return
+        self.init_packs(self.curse.search(self.ui.pack_search.text(), "modpack"))
 
     def delete_clicked(self, instance: MultiMCInstance):
         print(confirm_box(self.win, QMessageBox.Question,
@@ -176,13 +182,13 @@ class MainWindow:
     # Settings Checkboxes
 
     def analytics_checked(self):
-        self.curse.db["analytics"] = self.ui.analytics_check.isChecked()
+        self.conf.write(Setting.analytics, self.ui.analytics_check.isChecked())
 
     def update_checked(self):
-        self.curse.db["updater"] = self.ui.update_check.isChecked()
+        self.conf.write(Setting.update, self.ui.update_check.isChecked())
 
     def file_checked(self):
-        self.curse.db["filepick"] = self.ui.file_check.isChecked()
+        self.conf.write(Setting.ask_file, self.ui.file_check.isChecked())
 
     # Update Checker
 

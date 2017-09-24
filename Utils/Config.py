@@ -1,5 +1,6 @@
 from os import path
 from configparser import ConfigParser
+from uuid import uuid4
 
 
 class Config:
@@ -13,7 +14,8 @@ class Config:
                 "Analytics": False,
                 "AutoUpdate": True,
                 "AskFile": False,
-                "CurrentVersion": "0.0"
+                "CurrentVersion": "0.0",
+                "UUID": str(uuid4())
             }
             self.config["MultiMC"] = {
                 "Location": ""
@@ -39,5 +41,6 @@ class Setting:
     update = ("Settings", "AutoUpdate", bool)
     ask_file = ("Settings", "AskFile", bool)
     current_version = ("Settings", "CurrentVersion", str)
+    uuid = ("Settings", "UUID", str)
 
     location = ("MultiMC", "Location", str)
