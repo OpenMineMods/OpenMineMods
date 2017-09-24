@@ -7,7 +7,6 @@ from webbrowser import open as webopen
 from sys import platform
 
 from API.CurseAPI import CurseAPI, CurseProject, CurseModpack
-from API.Threads import CurseMetaThread
 from API.MultiMC import MultiMC, MultiMCInstance
 
 from Utils.Utils import clear_layout, confirm_box, dir_box
