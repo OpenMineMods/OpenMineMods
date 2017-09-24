@@ -101,6 +101,7 @@ class MultiMCInstance:
                 "file": False,
                 "mods": []
             }
+            self.mods = []
             self._save()
         else:
             self.dat = loads(open(self.dat_file).read())
