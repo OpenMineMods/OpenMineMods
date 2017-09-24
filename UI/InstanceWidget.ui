@@ -23,6 +23,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="instance_update">
+     <property name="toolTip">
+      <string>Update Instance</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>
@@ -34,6 +37,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="share_button">
+     <property name="toolTip">
+      <string>Export To Zip</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>
@@ -45,6 +51,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="instance_delete">
+     <property name="toolTip">
+      <string>Delete Instance</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>
@@ -56,6 +65,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="instance_edit">
+     <property name="toolTip">
+      <string>Edit Instance</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>

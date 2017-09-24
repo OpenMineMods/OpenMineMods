@@ -23,6 +23,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="pack_more">
+     <property name="toolTip">
+      <string>Open Pack Website</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>
@@ -34,6 +37,9 @@
    </item>
    <item>
     <widget class="QToolButton" name="pack_install">
+     <property name="toolTip">
+      <string>Install Modpack</string>
+     </property>
      <property name="text">
       <string>...</string>
      </property>
