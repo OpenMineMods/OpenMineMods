@@ -75,6 +75,9 @@ class MainWindow:
         self.ui.file_check.setChecked(self.conf.read(Setting.ask_file))
         self.ui.file_check.clicked.connect(self.file_checked)
 
+        self.ui.search_check.setChecked(self.conf.read(Setting.live_search))
+        self.ui.search_check.clicked.connect(self.search_checked)
+
         self.ui.pack_search.textChanged.connect(self.q_typed)
         self.ui.pack_search.returnPressed.connect(self.search_packs)
         self.ui.pack_search_button.clicked.connect(self.search_packs)
@@ -192,6 +195,9 @@ class MainWindow:
 
     def file_checked(self):
         self.conf.write(Setting.ask_file, self.ui.file_check.isChecked())
+
+    def search_checked(self):
+        self.conf.write(Setting.live_search, self.ui.search_check.isChecked())
 
     # Update Checker
 

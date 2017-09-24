@@ -2,3 +2,4 @@ beautifulsoup4
 pyqt5
 requests
 fuzzywuzzy
+python-Levenshtein

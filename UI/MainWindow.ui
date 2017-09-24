@@ -43,7 +43,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>308</height>
+             <height>322</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -111,7 +111,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>255</height>
+             <height>275</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -199,94 +199,112 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="analytics_group">
+         <widget class="QGroupBox" name="groupBox_3">
           <property name="title">
-           <string>Analytics</string>
+           <string>Basic Settings</string>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QLabel" name="analytics_label">
-             <property name="text">
-              <string>Send basic analytics:</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <item>
+              <widget class="QLabel" name="analytics_label">
+               <property name="text">
+                <string>Send basic analytics:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="analytics_check">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QCheckBox" name="analytics_check">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Update Checker</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Check for updates when opening OpenMineMods:</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Automatically check for OpenMineMods updates:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="update_check">
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QCheckBox" name="update_check">
-             <property name="maximumSize">
-              <size>
-               <width>16</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-          <property name="title">
-           <string>File Picker</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Choose file before installing:</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_6">
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Choose file before installing:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="file_check">
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QCheckBox" name="file_check">
-             <property name="maximumSize">
-              <size>
-               <width>16</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Update search results as you type:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="search_check">
+               <property name="maximumSize">
+                <size>
+                 <width>16</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>CheckBox</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </widget>
@@ -316,7 +334,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>26</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
