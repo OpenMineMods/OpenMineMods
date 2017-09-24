@@ -173,6 +173,8 @@ class MainWindow:
 
     def install_clicked(self, project: CurseProject):
         fs = project.files
+        if len(fs) < 1:
+            return False
         if self.conf.read(Setting.ask_file):
             dia = FileDialog(fs)
             f = dia.dia.exec_()
