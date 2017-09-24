@@ -115,17 +115,6 @@ class MainWindow:
 
         self.ui.instance_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-    def pack_found(self, pack: CurseProject):
-        widget = QWidget()
-        el = Ui_PackWidget()
-
-        el.setupUi(widget)
-
-        el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
-        el.pack_more.clicked.connect(partial(webopen, pack.page))
-
-        self.ui.pack_box.insertWidget(self.ui.pack_box.count() - 2, widget)
-
     def init_packs(self, packs: list):
         clear_layout(self.ui.pack_box)
 
@@ -136,6 +125,7 @@ class MainWindow:
             el.setupUi(widget)
 
             el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
+            el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
             self.ui.pack_box.addWidget(widget)
 
@@ -161,8 +151,8 @@ class MainWindow:
         self.children.append(InstanceWindow(instance, self.curse))
 
     def install_clicked(self, project: CurseProject):
-        fs = project.files[::-1]
-        if self.curse.db["filepick"]:
+        fs = project.files
+        if self.conf.read(Setting.ask_file):
             dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:
@@ -173,11 +163,8 @@ class MainWindow:
         else:
             f = fs[0]
 
-        pack = CurseModpack(project, self.curse, self.mmc)
-
         dia = DownloadDialog()
-        dia.download_mod(mod.id, f, self.curse, self.instance)
-
+        dia.download_pack(project, self.curse.db.get_file(f), self.curse, self.mmc)
 
     # Settings Checkboxes
 

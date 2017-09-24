@@ -2,9 +2,8 @@ import requests
 import os
 
 from bs4 import BeautifulSoup
-from datetime import datetime
 from zipfile import ZipFile
-from json import loads
+from json import loads, dumps
 from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
@@ -117,28 +116,23 @@ class CurseProject:
         self.page = self.meta["site"]
 
         self.versions = self.meta["versions"]
+        self.files = self.meta["files"]
 
 
 class CurseFile:
     def __init__(self, f: dict):
         self.f = f
 
-        self.id = self.f["Id"]
-        self.pub_time = datetime.strptime(self.f["FileDate"], "%Y-%m-%dT%H:%M:%S")
-        self.mc_ver = self.f["GameVersion"][0]
+        self.id = self.f["id"]
+        self.pub_time = self.f["date"]
+        self.versions = self.f["versions"]
 
-        self.deps = self.f["Dependencies"]
+        self.deps = self.f["dependencies"]
 
-        self.dl = self.f["DownloadURL"]
+        self.dl = self.f["url"]
 
-        self.filename = self.f["FileNameOnDisk"]
-
-        if "_Project" in self.f:
-            self.name = self.f["_Project"]["Name"]
-            self.desc = self.f["_Project"]["Summary"]
-        else:
-            self.name = self.filename
-            self.desc = ""
+        self.filename = self.f["filename"]
+        self.project = self.f["project"]
 
 
 class CurseModpack:
@@ -149,32 +143,28 @@ class CurseModpack:
     def __init__(self, project: CurseProject, curse: CurseAPI, mmc: MultiMC):
         self.project = project
         self.curse = curse
+        self.mmc = mmc
 
         self.installed = False
 
         if os.name == "nt":
-            self.installLocation = "{}\\instances\\{}\\".format(self.curse.baseDir, self.project.name)
+            self.installLocation = "{}\\instances\\{}\\".format(self.mmc.path, self.project.name)
         else:
-            self.installLocation = "{}/instances/{}/".format(self.curse.baseDir, self.project.name)
-
-        self.uuid = md5(self.installLocation.encode()).hexdigest()
+            self.installLocation = "{}/instances/{}/".format(self.mmc.path, self.project.name)
 
         self.mmc = mmc
 
     def install(self, file: CurseFile, prog_label, progbar_1, progbar_2):
-
-        from API.MultiMC import InstalledMod
-
-        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.curse.baseDir, self.project.name)
+        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.mmc.path, self.project.name)
 
         progbar_1(0)
 
         prog_label(translate("downloading.icon"))
 
-        self.curse.download_file(self.project.icon, "{}/icons".format(self.curse.baseDir),
-                                 str(self.project.id)+".png", progf=progbar_2)
+        #self.curse.download_file(self.project.icon, "{}/icons".format(self.curse.baseDir),
+        #                         str(self.project.id)+".png", progf=progbar_2)
 
-        if os.path.exists(tempPath) and self.curse.baseDir:
+        if os.path.exists(tempPath):
             rmtree(tempPath)
 
         # Create instance temp folder if doesn't exist
@@ -214,8 +204,7 @@ class CurseModpack:
             os.makedirs(patchPath)
 
         # Configure Instance
-        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.title,
-                                  icon=str(self.project.id))
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.name)
         instanceCfg.write("{}/instance.cfg".format(tempPath))
 
         # Configure Forge
@@ -230,23 +219,19 @@ class CurseModpack:
 
         for x, mod in enumerate(manifest.mods):
             stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
-            r = self.curse.get_json("/{}/{}.json".format(mod[0], mod[1]))
-
+            r = self.curse.db.get_file(mod[1])
             f = CurseFile(r)
 
-            prog_label(translate("downloading.mod").format(f.name))
+            prog_label(translate("downloading.mod").format(f.filename))
             progbar_1(10 + (x * modf))
-            self.curse.download_file(r["DownloadURL"], modPath, progf=progbar_2)
-            modlist.append(InstalledMod(mod[0], f, False, modPath))
+            mpath = self.curse.download_file(f.dl, modPath, progf=progbar_2)
+            modlist.append({"id": mod[1], "path": mpath, "manual": False})
         stdout.write("\n\r")
 
-        if self.uuid in self.mmc.metaDb:
-            tmp = self.mmc.metaDb[self.uuid]
-            tmp["mods"] += modlist
-            tmp["pack"] = self.project
-            self.mmc.metaDb[self.uuid] = tmp
-        else:
-            self.mmc.metaDb[self.uuid] = {"mods": modlist, "pack": self.project, "file": file}
+        open("{}/omm_dat.json").write(dumps({
+            "file": file.id,
+            "mods": modlist
+        }, indent=4))
 
         newPath = "{}/instances/{}".format(self.curse.baseDir, self.project.title)
 

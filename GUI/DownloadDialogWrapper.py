@@ -3,8 +3,8 @@ from PyQt5.QtCore import QThread
 
 from functools import partial
 
-from API.CurseAPI import CurseFile, CurseAPI
-from API.MultiMC import MultiMCInstance
+from API.CurseAPI import CurseFile, CurseAPI, CurseProject, CurseModpack
+from API.MultiMC import MultiMCInstance, MultiMC
 
 from Utils.Downloader import DownloaderThread
 
@@ -29,12 +29,22 @@ class DownloadDialog:
         self.downloader.done.connect(self._dl_done)
 
     def download_mod(self, modid: str, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
-        self.dia.setWindowTitle("Downloading {}".format(f.name))
+        self.dia.setWindowTitle("Downloading {}".format(f.filename))
         self.ui.progbar_1.setValue(0)
         self.ui.status_label.hide()
         self.ui.progbar_2.hide()
 
         self.dlthread.started.connect(partial(self.downloader.download_mod, modid, f, curse, instance))
+        self.dlthread.start()
+        return self.dia.exec_()
+
+    def download_pack(self, project: CurseProject, file: CurseFile, curse: CurseAPI, mmc: MultiMC):
+        self.dia.setWindowTitle("Downloading {}".format(project.name))
+        self.ui.progbar_1.setValue(0)
+        self.ui.progbar_2.setValue(0)
+
+        pack = CurseModpack(project, curse, mmc)
+        self.dlthread.started.connect(partial(self.downloader.download_pack, pack, file))
         self.dlthread.start()
         return self.dia.exec_()
 

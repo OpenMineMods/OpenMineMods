@@ -1,6 +1,6 @@
 import re
 
-from json import dumps
+from json import dumps, loads
 from glob import glob
 from os import remove, path, makedirs
 from shutil import rmtree, move
@@ -76,34 +76,36 @@ class ForgePatch:
             file.write(dumps(self.dat))
 
 
-class InstalledMod:
-    """Information about a mod"""
-    def __init__(self, projectid: str, file, manual: bool, location: str):
-        self.file = file
-        self.proj = projectid
-        self.location = location
-        self.manual = manual
-        self.enabled = True
-
-    def set_enabled(self, enabled: bool):
-        # TODO: Less hacky solution
-        if enabled != self.enabled:
-            if enabled:
-                newLoc = self.location[:-9]
-                move(self.location, newLoc)
-                self.enabled = True
-                return
-            newLoc = self.location + ".disabled"
-            move(self.location, newLoc)
-            self.enabled = False
-
-
 class MultiMCInstance:
     """MultiMC Instance"""
-    def __init__(self, path: str):
-        self.path = path
+    def __init__(self, ipath: str, new=False):
+        self.path = ipath
+        if new:
+            inst = InstanceCfg(new["forgever"], new["instancever"], new["name"])
+            makedirs(self.path)
+            inst.write(path.join(self.path, "instance.cfg"))
+            patch = ForgePatch(new["mcver"], new["instancever"])
+            patchdir = path.join(self.path, "patches")
+            makedirs(patchdir)
+            patch.write(path.join(patchdir, "net.minecraftforge.json"))
+
+            makedirs(path.join(self.path, "minecraft"))
+            makedirs(path.join(self.path, "minecraft/mods"))
+
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
         self.modDir = "{}/minecraft/mods".format(self.path)
+
+        self.dat_file = path.join(self.path, "omm_dat.json")
+        if not path.isfile(self.dat_file):
+            self.dat = {
+                "file": False,
+                "mods": []
+            }
+            self._save()
+        else:
+            self.dat = loads(open(self.dat_file).read())
+
+        self.mods = self.dat["mods"]
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
@@ -139,7 +141,7 @@ class MultiMCInstance:
         moveTree(self.path, self.path + ".preupdate")
         move(self.path + ".preupdate", self.path)
 
-    def update_mod(self, mod: InstalledMod, file, curse, progress=False):
+    def update_mod(self, mod, file, curse, progress=False):
         if mod not in self.mods:
             return False
 
@@ -147,4 +149,4 @@ class MultiMCInstance:
         self.install_mod(mod.proj, file, curse, mod.manual, progress)
 
     def _save(self):
-        self.db[self.uuid] = {"mods": self.mods, "pack": self.pack, "file": self.file}
+        open(self.dat_file, 'w+').write(dumps(self.dat, indent=4))
