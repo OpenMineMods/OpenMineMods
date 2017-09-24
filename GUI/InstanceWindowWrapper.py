@@ -21,6 +21,7 @@ class InstanceWindow:
     def __init__(self, instance: MultiMCInstance, curse: CurseAPI, conf: Config):
         self.curse = curse
         self.instance = instance
+        self.installed_mods = list()
         self.conf = conf
 
         self.mod_widgets = list()
@@ -67,6 +68,7 @@ class InstanceWindow:
         self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod", self.instance.version))
 
     def setup_mods(self):
+        self.installed_mods = [self.curse.get_file(i["id"]).project for i in self.instance.mods]
         clear_layout(self.ui.mod_box)
         for mod in self.instance.mods:
             widget = QWidget()
@@ -125,7 +127,7 @@ class InstanceWindow:
         dia = DownloadDialog()
         dia.download_mod(f, self.curse, self.instance)
         for dep in f.deps:
-            if dep["Type"] != "required":
+            if dep["Type"] != "required" or dep["AddOnId"] in self.installed_mods:
                 continue
             self.mod_install(self.curse.get_project(dep["AddOnId"]))
         self.setup_mods()
