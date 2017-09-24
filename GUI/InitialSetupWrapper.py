@@ -81,3 +81,4 @@ class SetupWindow:
                 f2.write(f.read())
         remove(path.join(self.cache, "cursemeta.json.xz"))
         self.ui.prog_label.setText("Doing stuff and things")
+        self.win.done(1)
