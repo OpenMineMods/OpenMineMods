@@ -1,7 +1,11 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 
+from requests import get
+from pathlib import Path
+from urllib.parse import unquote
+
 from API.CurseAPI import CurseFile, CurseAPI, CurseModpack
-from API.MultiMC import MultiMC, MultiMCInstance
+from API.MultiMC import MultiMCInstance
 
 
 class DownloaderThread(QThread):
@@ -32,5 +36,21 @@ class DownloaderThread(QThread):
 
     def download_file(self, f: str, path: str, curse: CurseAPI, fname=""):
         curse.download_file(f, path, fname)
+        self.done.emit(1)
+        self.exit()
+
+    def download_file_raw(self, f: str, path: str, fname=""):
+        r = get(f, stream=True)
+        dlen = r.headers.get("content-length")
+        step = (100 / int(dlen))
+        prog = 0
+        if not fname:
+            fname = unquote(Path(r.url).name)
+        with open(path+"/"+fname, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    prog += len(chunk)
+                    self.prog_1.emit(int(step * prog))
+                    f.write(chunk)
         self.done.emit(1)
         self.exit()

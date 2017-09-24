@@ -1,15 +1,21 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QThread
 
-from os import path
+from os import path, remove
+from functools import partial
+from lzma import open as copen
 
 from Utils.Config import Config, Setting
+from Utils.Utils import dir_box
+from Utils.Downloader import DownloaderThread
 
 from GUI.SetupDialog import Ui_SetupDialog
 
 
 class SetupWindow:
-    def __init__(self, config_folder: str):
+    def __init__(self, config_folder: str, cache_folder: str):
         self.conf = Config(config_folder)
+        self.cache = cache_folder
         self.win = QDialog()
         self.ui = Ui_SetupDialog()
         self.ui.setupUi(self.win)
@@ -21,11 +27,22 @@ class SetupWindow:
         self.ui.pushButton_2.clicked.connect(self.next_tab)
 
         self.ui.mmc_folder.textChanged.connect(self.folder_changed)
+        self.ui.toolButton.clicked.connect(self.file_search)
+
+        self.dlthread = QThread()
+        self.downloader = DownloaderThread()
+
+        self.downloader.moveToThread(self.dlthread)
+
+        self.downloader.label.connect(self.ui.prog_label.setText)
+        self.downloader.prog_1.connect(self.ui.prog_1.setValue)
+
+        self.downloader.done.connect(self._dl_done)
 
     def next_tab(self):
         ind = self.ui.tabWidget.currentIndex()
         if ind == 1:
-            self.write_config()
+            self.start_downloads()
             self.ui.tabWidget.setTabEnabled(0, False)
             self.ui.tabWidget.setTabEnabled(1, False)
         self.ui.tabWidget.setTabEnabled(ind + 1, True)
@@ -39,8 +56,28 @@ class SetupWindow:
         else:
             self.ui.pushButton_2.setEnabled(False)
 
-    def write_config(self):
+    def start_downloads(self):
         self.conf.write(Setting.analytics, self.ui.analytics.isChecked())
         self.conf.write(Setting.update, self.ui.autoupdate.isChecked())
 
         self.conf.write(Setting.location, self.mmc_folder)
+
+        self.ui.prog_label.setText("Downloading Latest CurseMeta")
+        self.ui.prog_1.setValue(0)
+        self.dlthread.started.connect(partial(self.downloader.download_file_raw,
+                                              "https://openminemods.digitalfishfun.com/cursemeta.json.xz",
+                                              self.cache))
+        self.dlthread.start()
+
+    def file_search(self):
+        dir = dir_box(self.win, "Select your MultiMC folder", path.expanduser("~"))
+        if dir:
+            self.ui.mmc_folder.setText(dir)
+
+    def _dl_done(self):
+        self.ui.prog_label.setText("Decompressing CurseMeta")
+        with copen(path.join(self.cache, "cursemeta.json.xz")) as f:
+            with open(path.join(self.cache, "meta.json"), "wb+") as f2:
+                f2.write(f.read())
+        remove(path.join(self.cache, "cursemeta.json.xz"))
+        self.ui.prog_label.setText("Doing stuff and things")
