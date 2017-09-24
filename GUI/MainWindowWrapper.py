@@ -181,10 +181,16 @@ class MainWindow:
             if not f:
                 return
 
-            f = fs[f - 1]
+            try:
+                f = fs[f - 1]
+            except IndexError:
+                return False
 
         else:
-            f = fs[0]
+            try:
+                f = fs[0]
+            except IndexError:
+                return False
 
         dia = DownloadDialog()
         dia.download_pack(project, self.curse.get_file(f), self.curse, self.mmc)
