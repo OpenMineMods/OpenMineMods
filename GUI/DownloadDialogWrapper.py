@@ -28,13 +28,13 @@ class DownloadDialog:
 
         self.downloader.done.connect(self._dl_done)
 
-    def download_mod(self, modid: str, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
+    def download_mod(self, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
         self.dia.setWindowTitle("Downloading {}".format(f.filename))
         self.ui.progbar_1.setValue(0)
         self.ui.status_label.hide()
         self.ui.progbar_2.hide()
 
-        self.dlthread.started.connect(partial(self.downloader.download_mod, modid, f, curse, instance))
+        self.dlthread.started.connect(partial(self.downloader.download_mod, f, curse, instance))
         self.dlthread.start()
         return self.dia.exec_()
 
@@ -63,8 +63,6 @@ class DownloadDialog:
         return self.dia.exec_()
 
     def _dl_done(self, status: int):
-        try:
-            self.dlthread.terminate()
-        except:
-            pass
+        self.downloader.exit()
+        self.dlthread.exit()
         self.dia.done(status)

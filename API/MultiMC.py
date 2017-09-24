@@ -111,22 +111,19 @@ class MultiMCInstance:
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
 
-    def install_mod(self, projectid: str, file, curse, manual=False, progress=False):
+    def install_mod(self, file, curse, progress=False):
         if not path.exists(self.modDir):
             makedirs(self.modDir)
 
         fname = curse.download_file(file.dl, self.modDir, progf=progress)
-        file.filename = fname.split("/")[-1]
-        mod = InstalledMod(projectid, file, manual, fname)
-        self.mods.append(mod)
+        self.mods.append({"id": file.id, "path": fname, "manual": True})
         self._save()
 
-    def uninstall_mod(self, filename):
-        fpath = "{}/minecraft/mods/{}".format(self.path, filename)
+    def uninstall_mod(self, fpath):
         if path.exists(fpath):
             remove(fpath)
         for x, mod in enumerate(self.mods):
-            if mod.file.filename == filename:
+            if mod["path"] == fpath:
                 del self.mods[x]
                 break
         self._save()
@@ -142,12 +139,6 @@ class MultiMCInstance:
         moveTree(self.path, self.path + ".preupdate")
         move(self.path + ".preupdate", self.path)
 
-    def update_mod(self, mod, file, curse, progress=False):
-        if mod not in self.mods:
-            return False
-
-        self.uninstall_mod(mod.file.filename)
-        self.install_mod(mod.proj, file, curse, mod.manual, progress)
-
     def _save(self):
+        self.dat["mods"] = self.mods
         open(self.dat_file, 'w+').write(dumps(self.dat, indent=4))

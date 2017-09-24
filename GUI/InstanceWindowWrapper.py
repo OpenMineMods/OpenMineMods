@@ -56,15 +56,15 @@ class InstanceWindow:
         if not self.conf.read(Setting.live_search):
             return
         if self.ui.pack_search.text() == "":
-            self.setup_mod_browse(self.curse.get_mod_list())
+            self.setup_mod_browse(self.curse.get_mod_list(self.instance.version))
             return
-        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod"))
+        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod", self.instance.version))
 
     def search_packs(self):
         if self.ui.pack_search.text() == "":
-            self.setup_mod_browse(self.curse.get_mod_list())
+            self.setup_mod_browse(self.curse.get_mod_list(self.instance.version))
             return
-        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod"))
+        self.setup_mod_browse(self.curse.search(self.ui.pack_search.text(), "mod", self.instance.version))
 
     def setup_mods(self):
         clear_layout(self.ui.mod_box)
@@ -95,7 +95,10 @@ class InstanceWindow:
             el.setupUi(widget)
 
             el.mod_name.setText(mod.name)
+            el.mod_install.clicked.connect(partial(self.mod_install, mod))
+
             el.mod_delete.hide()
+            el.mod_update.hide()
 
             el.mod_info.clicked.connect(partial(webopen, mod.page))
 
@@ -104,8 +107,9 @@ class InstanceWindow:
         self.ui.browse_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def mod_install(self, mod: CurseProject):
-        fs = [i for i in mod.files if i.mc_ver == self.instance.version][::-1]
-        if self.curse.db["filepick"]:
+        files = [self.curse.get_file(i) for i in mod.files]
+        fs = [i for i in files if self.instance.version in i.versions]
+        if self.conf.read(Setting.ask_file):
             dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:
@@ -117,5 +121,5 @@ class InstanceWindow:
             f = fs[0]
 
         dia = DownloadDialog()
-        print(dia.download_mod(mod.id, f, self.curse, self.instance))
+        print(dia.download_mod(f, self.curse, self.instance))
         self.setup_mods()

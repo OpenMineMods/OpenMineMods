@@ -18,26 +18,21 @@ class DownloaderThread(QThread):
     def __init__(self):
         super().__init__()
 
-    def download_mod(self, modid: str, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
-        manual = True
-        existing = [i for i in instance.mods if i.proj == modid]
+    def download_mod(self, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
+        existing = [i for i in instance.mods if curse.get_file(i["id"]).project == curse.get_file(f.id).project]
         if len(existing) > 0:
             for i in existing:
-                manual = i.manual
-                instance.uninstall_mod(i.file.filename)
-        instance.install_mod(modid, f, curse, manual, self.prog_1.emit)
+                instance.uninstall_mod(i["path"])
+        instance.install_mod(f, curse, self.prog_1.emit)
         self.done.emit(1)
-        self.exit()
 
     def download_pack(self, pack: CurseModpack, f: CurseFile):
         pack.install(f, self.label.emit, self.prog_1.emit, self.prog_2.emit)
         self.done.emit(1)
-        self.exit()
 
     def download_file(self, f: str, path: str, curse: CurseAPI, fname=""):
         curse.download_file(f, path, fname)
         self.done.emit(1)
-        self.exit()
 
     def download_file_raw(self, f: str, path: str, fname=""):
         r = get(f, stream=True)
@@ -53,4 +48,3 @@ class DownloaderThread(QThread):
                     self.prog_1.emit(int(step * prog))
                     f.write(chunk)
         self.done.emit(1)
-        self.exit()
