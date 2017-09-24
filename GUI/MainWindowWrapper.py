@@ -7,12 +7,12 @@ from webbrowser import open as webopen
 from sys import platform
 from json import loads
 
-from API.CurseAPI import CurseAPI, CurseProject, CurseModpack
+from API.CurseAPI import CurseAPI, CurseProject
 from API.MultiMC import MultiMC, MultiMCInstance
 
 from CurseMetaDB.DB import DB
 
-from Utils.Utils import clear_layout, confirm_box
+from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box
 from Utils.Updater import UpdateCheckThread
 from Utils.Logger import *
 from Utils.Config import Config, Setting
@@ -84,6 +84,8 @@ class MainWindow:
         self.ui.pack_search.textChanged.connect(self.q_typed)
         self.ui.pack_search.returnPressed.connect(self.search_packs)
         self.ui.pack_search_button.clicked.connect(self.search_packs)
+
+        self.ui.mmc_edit.clicked.connect(self.dir_clicked)
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
@@ -163,8 +165,9 @@ class MainWindow:
         self.init_packs(self.curse.search(self.ui.pack_search.text(), "modpack"))
 
     def delete_clicked(self, instance: MultiMCInstance):
-        print(confirm_box(self.win, QMessageBox.Question,
-                          "Are you sure you want to delete {}".format(instance.name)))
+        if not confirm_box(self.win, QMessageBox.Question,
+                          "Are you sure you want to delete {}".format(instance.name)):
+            return
         self.mmc.delete_instance(instance)
         self.init_instances()
 
@@ -204,6 +207,13 @@ class MainWindow:
 
     def search_checked(self):
         self.conf.write(Setting.live_search, self.ui.search_check.isChecked())
+
+    def dir_clicked(self):
+        ndir = dir_box(self.win, "MultiMC Folder", path.expanduser("~"))
+        if ndir:
+            self.conf.write(Setting.location, ndir)
+            self.ui.mmc_folder.setText(ndir)
+            msg_box(self.win, QMessageBox.Information, "A restart is required for settings to take effect")
 
     # Update Checker
 
