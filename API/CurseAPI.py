@@ -233,6 +233,9 @@ class CurseModpack:
 
         newPath = "{}/instances/{}".format(self.mmc.path, self.project.name)
 
+        while os.path.exists(newPath):
+            newPath += "_"
+
         for x, mod in enumerate(manifest.mods):
             #stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             f = self.curse.get_file(mod[1])
@@ -250,11 +253,8 @@ class CurseModpack:
             "mods": modlist
         }, indent=4))
 
+        rmtree("{}/raw".format(tempPath))
 
-        rmtree("{}/raw/overrides".format(tempPath))
-
-        if os.path.exists(newPath):
-            rmtree(newPath)
         move(tempPath, "{}/instances".format(self.mmc.path))
 
 
