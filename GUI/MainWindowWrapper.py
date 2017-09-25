@@ -185,7 +185,8 @@ class MainWindow:
         if len(fs) < 1:
             return False
         if self.conf.read(Setting.ask_file):
-            dia = FileDialog(fs)
+            askfs = [self.curse.get_file(i) for i in fs]
+            dia = FileDialog(askfs)
             f = dia.dia.exec_()
             if not f:
                 return
