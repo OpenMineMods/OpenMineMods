@@ -181,12 +181,12 @@ class MainWindow:
         self.children.append(InstanceWindow(instance, self.curse, self.conf))
 
     def install_clicked(self, project: CurseProject):
-        fs = project.files
+        fs = [self.curse.get_file(i) for i in project.files]
         if len(fs) < 1:
             return False
+        fs.sort(key=lambda x: x.pub_time, reverse=True)
         if self.conf.read(Setting.ask_file):
-            askfs = [self.curse.get_file(i) for i in fs]
-            dia = FileDialog(askfs)
+            dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:
                 return
@@ -197,7 +197,7 @@ class MainWindow:
             f = fs[0]
 
         dia = DownloadDialog()
-        dia.download_pack(project, self.curse.get_file(f), self.curse, self.mmc)
+        dia.download_pack(project, f, self.curse, self.mmc)
         self.mmc = MultiMC(self.conf.read(Setting.location))
         self.init_instances()
 
