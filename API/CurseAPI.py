@@ -221,7 +221,7 @@ class CurseModpack:
             os.makedirs(patchPath)
 
         # Configure Instance
-        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.name)
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.name, icon=self.project.id)
         instanceCfg.write("{}/instance.cfg".format(tempPath))
 
         # Configure Forge
