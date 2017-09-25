@@ -175,8 +175,9 @@ class CurseModpack:
         prog_label(translate("downloading.icon"))
 
         if self.project.default_attachment:
+            ft = self.project.default_attachment["url"].split(".")[-1]
             self.curse.download_file(self.project.default_attachment["url"], "{}/icons".format(self.mmc.path),
-                                     str(self.project.id)+".png", progf=progbar_2)
+                                     "{}.{}".format(self.project.id, ft), progf=progbar_2)
 
         if os.path.exists(tempPath):
             rmtree(tempPath)
