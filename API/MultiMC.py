@@ -2,11 +2,13 @@ import re
 
 from json import dumps, loads
 from glob import glob
-from os import remove, path, makedirs
+from os import remove, path, makedirs, listdir
 from shutil import rmtree, move
 from sys import setrecursionlimit
 
 from Utils.Utils import noop, moveTree
+
+from CurseMetaDB.DB import DB
 
 # Don't worry about it
 setrecursionlimit(8096)
@@ -143,6 +145,20 @@ class MultiMCInstance:
         self.pack.install(file, noop, noop, noop)
         moveTree(self.path, self.path + ".preupdate")
         move(self.path + ".preupdate", self.path)
+
+    def find_mods(self, db: DB):
+        installed_mods = [i["path"] for i in self.mods]
+
+        for f in listdir(self.modDir):
+            p = path.join(self.path, f)
+            if p in installed_mods:
+                continue
+            fi = db.search_files(f)
+            if fi:
+                self.mods.append({"id": fi["id"], "path": p, "manual": True})
+
+        self._save()
+
 
     def _save(self):
         self.dat["mods"] = self.mods

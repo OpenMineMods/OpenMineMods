@@ -180,9 +180,9 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="pack_update">
+         <widget class="QPushButton" name="meta_scan">
           <property name="text">
-           <string>Check For Updates</string>
+           <string>Scan Mods (May take a while)</string>
           </property>
          </widget>
         </item>

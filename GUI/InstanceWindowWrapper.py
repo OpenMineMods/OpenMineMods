@@ -51,6 +51,8 @@ class InstanceWindow:
         self.ui.pack_search.returnPressed.connect(self.search_packs)
         self.ui.pack_search_button.clicked.connect(self.search_packs)
 
+        self.ui.meta_scan.clicked.connect(self.mod_scan)
+
         self.win.show()
 
     def q_typed(self):
@@ -136,4 +138,8 @@ class InstanceWindow:
 
     def mod_delete(self, fpath: str):
         self.instance.uninstall_mod(fpath)
+        self.setup_mods()
+
+    def mod_scan(self):
+        self.instance.find_mods(self.curse.db)
         self.setup_mods()
