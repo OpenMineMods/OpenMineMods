@@ -204,8 +204,11 @@ class CurseModpack:
 
         # Overrides
         mcPath = "{}/minecraft".format(tempPath)
+
         if os.path.exists("{}/raw/overrides".format(tempPath)):
             copytree("{}/raw/overrides".format(tempPath), mcPath)
+        else:
+            os.makedirs(mcPath)
 
         # Make mods folder
         modPath = "{}/mods".format(mcPath)
