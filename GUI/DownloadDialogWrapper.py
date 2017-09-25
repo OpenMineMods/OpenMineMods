@@ -63,6 +63,6 @@ class DownloadDialog:
         return self.dia.exec_()
 
     def _dl_done(self, status: int):
-        self.downloader.exit()
         self.dlthread.exit()
+        self.downloader.exit()
         self.dia.done(status)
