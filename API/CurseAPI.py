@@ -125,6 +125,12 @@ class CurseProject:
         self.versions = self.meta["versions"]
         self.files = self.meta["files"]
 
+        self.attachments = self.meta["attachments"]
+        if len(self.attachments) > 0:
+            self.default_attachment = [i for i in self.attachments if i["default"]][0]
+        else:
+            self.default_attachment = False
+
 
 class CurseFile:
     def __init__(self, f: dict):
@@ -168,8 +174,9 @@ class CurseModpack:
 
         prog_label(translate("downloading.icon"))
 
-        #self.curse.download_file(self.project.icon, "{}/icons".format(self.curse.baseDir),
-        #                         str(self.project.id)+".png", progf=progbar_2)
+        if self.project.default_attachment:
+            self.curse.download_file(self.project.default_attachment["url"], "{}/icons".format(self.mmc.path),
+                                     str(self.project.id)+".png", progf=progbar_2)
 
         if os.path.exists(tempPath):
             rmtree(tempPath)

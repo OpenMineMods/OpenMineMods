@@ -57,10 +57,11 @@ class SetupWindow:
             self.ui.pushButton_2.setEnabled(False)
 
     def start_downloads(self):
-        self.conf.write(Setting.analytics, self.ui.analytics.isChecked())
-        self.conf.write(Setting.update, self.ui.autoupdate.isChecked())
+        if self.mmc_folder:
+            self.conf.write(Setting.analytics, self.ui.analytics.isChecked())
+            self.conf.write(Setting.update, self.ui.autoupdate.isChecked())
 
-        self.conf.write(Setting.location, self.mmc_folder)
+            self.conf.write(Setting.location, self.mmc_folder)
 
         self.ui.prog_label.setText("Downloading Latest CurseMeta")
         self.ui.prog_1.setValue(0)

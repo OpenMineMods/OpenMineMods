@@ -50,6 +50,12 @@ class MainWindow:
             dia = SetupWindow(data_dir, cache_dir)
             dia.win.exec_()
 
+        if not path.isfile(path.join(cache_dir, "meta.json")):
+            dia = SetupWindow(data_dir, cache_dir)
+            dia.next_tab()
+            dia.next_tab()
+            dia.win.exec_()
+
         self.conf = Config(data_dir)
         self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
         self.curse = CurseAPI(self.db)

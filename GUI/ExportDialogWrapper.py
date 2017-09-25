@@ -114,4 +114,6 @@ class ExportDialog:
 
         zip_dir(self.temp, path.join(path.expanduser("~"), self.instance.name))
 
+        rmtree(self.temp)
+
         self.dia.done(1)
