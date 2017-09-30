@@ -16,7 +16,7 @@ from API.MultiMC import MultiMC, MultiMCInstance
 from CurseMetaDB.DB import DB
 
 from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box
-from Utils.Updater import UpdateCheckThread
+from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
 from Utils.Config import Config, Setting
 
@@ -250,6 +250,10 @@ class MainWindow:
 
         if not up_win.exec_():
             return
+
+        update = Update(self.curse, res["update"])
+        update.apply_update()
+
 
     def data_found(self, dat: dict):
         if len(dat["res"]) < 1 and dat["succ"]:

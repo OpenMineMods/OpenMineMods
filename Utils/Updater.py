@@ -3,13 +3,13 @@ import shutil
 from PyQt5.QtCore import QThread, pyqtSignal
 from requests import get
 from os import path, makedirs, remove, listdir
-from sys import platform
+from sys import platform, executable
 from zipfile import ZipFile
 
 from GUI.Strings import Strings
 
 from API.CurseAPI import CurseAPI
-from Utils.Utils import parseSemanticVersion, getInstallDir, msg_box
+from Utils.Utils import parseSemanticVersion, msg_box
 from Utils.Logger import err
 
 from GUI.DownloadDialogWrapper import DownloadDialog
@@ -30,18 +30,14 @@ class UpdateCheckThread(QThread):
     def check_updates(self):
         ver = parseSemanticVersion(self.curse.version)
 
-        try:
-            vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
-        except:
-            err("Update check failed!")
-            return
-        latest = parseSemanticVersion(vers["latest_stable"])
+        vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
+        latest = parseSemanticVersion(vers["v2_latest_stable"])
 
         if latest > ver:
             self.done.emit({
                 "res": True,
-                "update": vers["versions"][vers["latest_stable"]],
-                "ver": vers["latest_stable"]
+                "update": vers["versions"][vers["v2_latest_stable"]],
+                "ver": vers["v2_latest_stable"]
             })
             return
 
@@ -57,28 +53,19 @@ class Update:
 
     def apply_update(self):
         dl_url = self.update["downloads"][platform]
-        idir = getInstallDir()
 
-        self.idir = idir
+        self.idir = path.dirname(executable)
+
+        if platform != "linux":
+            self.ext = "." + dl_url.split(".")[-1]
+        else:
+            self.ext = ""
 
         self.dlwin = DownloadDialog()
-        self.dlwin.download_file(dl_url, path.dirname(idir), self.curse, "omm-update.zip")
-        self.zip_downloaded()
+        self.dlwin.download_file(dl_url, self.idir, self.curse, "OpenMineMods_Update" + self.ext)
 
-    def zip_downloaded(self):
-        idir = self.idir
-        odir = path.dirname(idir)
+        remove(executable)
 
-        makedirs(idir + ".new")
+        shutil.move(path.join(self.idir, "OpenMineMods_Update" + self.ext), executable)
 
-        f = ZipFile(odir + "/omm-update.zip")
-        f.extractall(idir + ".new")
-        f.close()
-
-        remove(odir + "/omm-update.zip")
-
-        shutil.move(idir, idir + ".old")
-        shutil.move(idir + ".new/" + listdir(idir + ".new/")[0], idir)
-        shutil.rmtree(idir + ".new")
-
-        msg_box(text=translate("prompt.update.restart"))
+        msg_box(None, text=translate("prompt.update.restart"))
