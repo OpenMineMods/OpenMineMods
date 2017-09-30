@@ -3,29 +3,33 @@ language: python
 python: "3.5.3"
 
 os:
-        - linux
-        - osx
+  - linux
+  - osx
+
+matrix:
+  allow_failures:
+    - os: osx
 
 install:
-        - git submodule update --init
-        - pip install -r requirements.txt
-        - pip install pyinstaller
-        - "./uibuild.sh"
-        - pyinstaller OpenMineMods.spec
+  - git submodule update --init
+  - pip install -r requirements.txt
+  - pip install pyinstaller
+  - "./uibuild.sh"
+  - pyinstaller OpenMineMods.spec
 
 before_script:
-        - "export DISPLAY=:99.0"
-        - "sh -e /etc/init.d/xvfb start"
-        - sleep 3
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3
 script: "python debug.py"
 
 before_deploy: "zip -r $TRAVIS_OS_NAME dist/OpenMineMods"
 
 deploy:
-        provider: releases
-        api_key:
-                secure: sdjsd
-        file: "$TRAVIS_OS_NAME.zip"
-        skip_cleanup: true
-        on:
-                tags: true
+  provider: releases
+  api_key:
+          secure: sdjsd
+  file: "$TRAVIS_OS_NAME.zip"
+  skip_cleanup: true
+  on:
+          tags: true
