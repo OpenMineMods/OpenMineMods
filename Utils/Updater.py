@@ -9,8 +9,10 @@ from zipfile import ZipFile
 from GUI.Strings import Strings
 
 from API.CurseAPI import CurseAPI
-from Utils.Utils import parseSemanticVersion, getInstallDir
+from Utils.Utils import parseSemanticVersion, getInstallDir, msg_box
 from Utils.Logger import err
+
+from GUI.DownloadDialogWrapper import DownloadDialog
 
 
 strings = Strings()
@@ -59,7 +61,9 @@ class Update:
 
         self.idir = idir
 
-        self.dlwin = FileDownloaderWindow(dl_url, self.curse, path.dirname(idir), "omm-update.zip", self.zip_downloaded)
+        self.dlwin = DownloadDialog()
+        self.dlwin.download_file(dl_url, path.dirname(idir), self.curse, "omm-update.zip")
+        self.zip_downloaded()
 
     def zip_downloaded(self):
         idir = self.idir
@@ -77,4 +81,4 @@ class Update:
         shutil.move(idir + ".new/" + listdir(idir + ".new/")[0], idir)
         shutil.rmtree(idir + ".new")
 
-        msgBox(text=translate("prompt.update.restart"))
+        msg_box(text=translate("prompt.update.restart"))
