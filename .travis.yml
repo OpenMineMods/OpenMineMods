@@ -2,10 +2,6 @@ language: python
 
 python: "3.6.2"
 
-os:
-  - linux
-  - osx
-
 matrix:
   include:
     - os: osx
@@ -20,6 +16,7 @@ before_install:
 
 install:
   - git submodule update --init
+  - pip install --upgrade pip
   - pip install -r requirements.txt
   - pip install pyinstaller
   - "./uibuild.sh"
