@@ -40,7 +40,7 @@ class Config:
 
     def read(self, key: tuple):
         if not self.config.has_option(key[0], key[1]):
-            self.config.set(key[0], key[1], key[2])
+            self.config.set(key[0], key[1], str(key[2]))
         if type(key[2]) == bool:
             return {"True": True, "False": False}[self.config.get(key[0], key[1])]
         return type(key[2])(self.config.get(key[0], key[1]))
