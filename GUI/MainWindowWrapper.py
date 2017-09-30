@@ -1,11 +1,14 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QThread, QStandardPaths
 
+import sys
+
 from functools import partial
 from os import path, makedirs
 from webbrowser import open as webopen
 from sys import platform
 from json import loads
+from time import time
 
 from API.CurseAPI import CurseAPI, CurseProject
 from API.MultiMC import MultiMC, MultiMCInstance
@@ -34,8 +37,10 @@ from GUI.PackWidget import Ui_PackWidget
 
 class MainWindow:
     def __init__(self):
-        data_dir = QStandardPaths.writableLocation(QStandardPaths.AppDataLocation)
-        cache_dir = QStandardPaths.writableLocation(QStandardPaths.CacheLocation)
+        data_dir = QStandardPaths.writableLocation(QStandardPaths.GenericConfigLocation)
+        cache_dir = QStandardPaths.writableLocation(QStandardPaths.GenericCacheLocation)
+        data_dir = path.join(data_dir, "openminemods")
+        cache_dir = path.join(cache_dir, "openminemods")
         if not path.exists(data_dir):
             makedirs(data_dir)
         if not path.exists(cache_dir):
@@ -50,14 +55,18 @@ class MainWindow:
             dia = SetupWindow(data_dir, cache_dir)
             dia.win.exec_()
 
-        if not path.isfile(path.join(cache_dir, "meta.json")):
+        self.conf = Config(data_dir)
+
+        new_meta_time = self.conf.read(Setting.last_meta) + (self.conf.read(Setting.meta_interval) * 60 ** 3)
+
+        if not path.isfile(path.join(cache_dir, "meta.json")) or int(time()) > new_meta_time:
             dia = SetupWindow(data_dir, cache_dir)
             dia.next_tab()
             dia.next_tab()
             dia.win.exec_()
 
-        self.conf = Config(data_dir)
         self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
+
         self.curse = CurseAPI(self.db)
 
         self.conf.write(Setting.current_version, self.curse.version)
@@ -99,15 +108,17 @@ class MainWindow:
 
         self.win.show()
 
-        if self.conf.read(Setting.update):
-            self.update_tr = QThread()
-            self.uc = UpdateCheckThread(self.curse)
-            self.uc.done.connect(self.update_check_done)
+        if self.conf.read(Setting.update) and getattr(sys, "frozen", False):
+            new_client_time = self.conf.read(Setting.last_client) + (self.conf.read(Setting.client_interval) * 60 ** 3)
+            if int(time()) > new_client_time:
+                self.update_tr = QThread()
+                self.uc = UpdateCheckThread(self.curse)
+                self.uc.done.connect(self.update_check_done)
 
-            self.uc.moveToThread(self.update_tr)
-            self.update_tr.started.connect(self.uc.check_updates)
+                self.uc.moveToThread(self.update_tr)
+                self.update_tr.started.connect(self.uc.check_updates)
 
-            self.update_tr.start()
+                self.update_tr.start()
 
     """UI Initializations"""
 
@@ -225,6 +236,7 @@ class MainWindow:
     # Update Checker
 
     def update_check_done(self, res: dict):
+        self.conf.write(Setting.last_client, int(time()))
         if not res["res"] or not res["update"]["downloads"][platform]:
             return
 

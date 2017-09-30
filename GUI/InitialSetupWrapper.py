@@ -4,6 +4,7 @@ from PyQt5.QtCore import QThread
 from os import path, remove
 from functools import partial
 from lzma import open as copen
+from time import time
 
 from Utils.Config import Config, Setting
 from Utils.Utils import dir_box
@@ -81,6 +82,7 @@ class SetupWindow:
             with open(path.join(self.cache, "meta.json"), "wb+") as f2:
                 f2.write(f.read())
         remove(path.join(self.cache, "cursemeta.json.xz"))
+        self.conf.write(Setting.last_meta, int(time()))
         self.dlthread.terminate()
         self.downloader.terminate()
         self.win.done(1)
