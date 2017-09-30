@@ -8,5 +8,6 @@ dist
 GUI/*.py
 !GUI/*Wrapper.py
 !GUI/Strings.py
+!GUI/__init__.py
 
 icons_rc.py
