@@ -7,6 +7,9 @@ os:
   - osx
 
 matrix:
+  include:
+    - os: osx
+      language: generic
   allow_failures:
     - os: osx
 
