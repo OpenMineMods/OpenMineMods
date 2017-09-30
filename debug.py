@@ -1,7 +1,4 @@
 from API.CurseAPI import *
+from CurseMetaDB.DB import DB
 
-c = CurseAPI()
-#r = c.get(path="/mc-mods/minecraft")
-#l = r.select("#addons-browse")[0].select("ul > li > ul")
-
-#cf = CurseProject(l[0], c)
+c = CurseAPI(DB({"projects": [], "files": [], "categories": [], "authors": []}))

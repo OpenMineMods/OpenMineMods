@@ -4,6 +4,7 @@ python: "3.5.3"
 
 
 install:
+        - git submodule update --init
         - pip install -r requirements.txt
         - pip install pyinstaller
         - "./uibuild.sh"

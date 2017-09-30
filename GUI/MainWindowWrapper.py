@@ -64,6 +64,7 @@ class MainWindow:
             dia.next_tab()
             dia.next_tab()
             dia.win.exec_()
+            self.conf.write(Setting.last_meta, int(time()))
 
         self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
 
@@ -111,6 +112,7 @@ class MainWindow:
         if self.conf.read(Setting.update) and getattr(sys, "frozen", False):
             new_client_time = self.conf.read(Setting.last_client) + (self.conf.read(Setting.client_interval) * 60 ** 3)
             if int(time()) > new_client_time:
+                info("Starting update check")
                 self.update_tr = QThread()
                 self.uc = UpdateCheckThread(self.curse)
                 self.uc.done.connect(self.update_check_done)

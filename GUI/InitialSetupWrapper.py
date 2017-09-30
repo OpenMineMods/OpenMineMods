@@ -67,7 +67,7 @@ class SetupWindow:
         self.ui.prog_label.setText("Downloading Latest CurseMeta")
         self.ui.prog_1.setValue(0)
         self.dlthread.started.connect(partial(self.downloader.download_file_raw,
-                                              "https://openminemods.digitalfishfun.com/cursemeta.json.xz",
+                                              "https://cursemeta.dries007.net/raw_cleaned.json.xz",
                                               self.cache))
         self.dlthread.start()
 
@@ -78,10 +78,10 @@ class SetupWindow:
 
     def _dl_done(self):
         self.ui.prog_label.setText("Decompressing CurseMeta")
-        with copen(path.join(self.cache, "cursemeta.json.xz")) as f:
+        with copen(path.join(self.cache, "raw_cleaned.json.xz")) as f:
             with open(path.join(self.cache, "meta.json"), "wb+") as f2:
                 f2.write(f.read())
-        remove(path.join(self.cache, "cursemeta.json.xz"))
+        remove(path.join(self.cache, "raw_cleaned.json.xz"))
         self.conf.write(Setting.last_meta, int(time()))
         self.dlthread.terminate()
         self.downloader.terminate()
