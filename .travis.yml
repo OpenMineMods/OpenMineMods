@@ -2,6 +2,9 @@ language: python
 
 python: "3.5.3"
 
+os:
+        - linux
+        - osx
 
 install:
         - git submodule update --init
@@ -16,13 +19,13 @@ before_script:
         - sleep 3
 script: "python debug.py"
 
-before_deploy: "zip -r Linux.zip dist/OpenMineMods"
+before_deploy: "zip -r $TRAVIS_OS_NAME dist/OpenMineMods"
 
 deploy:
         provider: releases
         api_key:
                 secure: sdjsd
-        file: "Linux.zip"
+        file: "$TRAVIS_OS_NAME.zip"
         skip_cleanup: true
         on:
                 tags: true

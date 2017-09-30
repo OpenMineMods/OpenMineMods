@@ -1,7 +1,6 @@
 # An alternative to the Twitch/Curse launcher for MultiMC
 
 [![Build Status](https://travis-ci.org/OpenMineMods/OpenMineMods.svg?branch=ui-v2)](https://travis-ci.org/joonatoona/OpenMineMods)
-
 ![Works On My Machine](https://cdn.rawgit.com/nikku/works-on-my-machine/v0.2.0/badge.svg)
 
 ![Designed in MS Paint](https://forthebadge.com/images/badges/designed-in-ms-paint.svg)
