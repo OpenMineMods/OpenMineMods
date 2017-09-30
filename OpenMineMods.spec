@@ -27,3 +27,10 @@ exe = EXE(pyz,
           upx=True,
           console=True,
           icon='OMM.ico' )
+app = BUNDLE(exe,
+             name='OpenMineMods.app',
+             icon='OMM.icns',
+             bundle_identifier=None,
+             info_plist={
+                'NSHighResolutionCapable': True,
+             },)
