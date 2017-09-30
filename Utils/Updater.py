@@ -2,7 +2,7 @@ import shutil
 
 from PyQt5.QtCore import QThread, pyqtSignal
 from requests import get
-from os import path, makedirs, remove, listdir
+from os import path, remove
 from sys import platform, executable
 from zipfile import ZipFile
 
@@ -10,13 +10,18 @@ from GUI.Strings import Strings
 
 from API.CurseAPI import CurseAPI
 from Utils.Utils import parseSemanticVersion, msg_box
-from Utils.Logger import err
 
 from GUI.DownloadDialogWrapper import DownloadDialog
 
 
 strings = Strings()
 translate = strings.get
+
+dl_data = {
+    "linux": "Linux.zip",
+    "darwin": "MacOS.zip",
+    "win32": "Windows.zip"
+}
 
 
 class UpdateCheckThread(QThread):
@@ -30,14 +35,34 @@ class UpdateCheckThread(QThread):
     def check_updates(self):
         ver = parseSemanticVersion(self.curse.version)
 
-        vers = get("https://openminemods.digitalfishfun.com/versions.json").json()
-        latest = parseSemanticVersion(vers["v2_latest_stable"])
+        vers = get("https://api.github.com/repos/OpenMineMods/OpenMineMods/releases").json()
 
-        if latest > ver:
+        latest_ver = ver
+        latest_release = False
+
+        for release in vers:
+            try:
+                rel_ver = parseSemanticVersion(release["tag_name"][1:])
+            except:
+                continue
+            if rel_ver > latest_ver:
+                latest_release = release
+                latest_ver = rel_ver
+
+        if latest_release:
+            out = {
+                "url": latest_release["html_url"],
+                "downloads": dict(),
+                "changelog": latest_release["body"]
+            }
+            for dl in latest_release["assets"]:
+                for nm in dl_data:
+                    if dl_data[nm] == dl["name"]:
+                        out["downloads"][nm] = dl["browser_download_url"]
             self.done.emit({
                 "res": True,
-                "update": vers["versions"][vers["v2_latest_stable"]],
-                "ver": vers["v2_latest_stable"]
+                "update": out,
+                "ver": latest_ver
             })
             return
 
@@ -56,16 +81,15 @@ class Update:
 
         self.idir = path.dirname(executable)
 
-        if platform != "linux":
-            self.ext = "." + dl_url.split(".")[-1]
-        else:
-            self.ext = ""
-
         self.dlwin = DownloadDialog()
-        self.dlwin.download_file(dl_url, self.idir, self.curse, "OpenMineMods_Update" + self.ext)
+        self.dlwin.download_file(dl_url, self.idir, self.curse, "OpenMineMods_Update.zip")
+
+        zipf = ZipFile("OpenMineMods_Update.zip")
+        zipf.extractall("OpenMineMods_Update")
 
         remove(executable)
+        remove("OpenMineMods_Update.zip")
 
-        shutil.move(path.join(self.idir, "OpenMineMods_Update" + self.ext), executable)
+        shutil.move("OpenMineMods_Update", executable)
 
         msg_box(None, text=translate("prompt.update.restart"))
