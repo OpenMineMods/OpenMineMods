@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ErrorDialog</class>
+ <widget class="QDialog" name="ErrorDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Oh Noes!</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>OpenMineMods has crashed!</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTextBrowser" name="exc_info"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Send the crash report to the developers?</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="send_box">
+       <property name="maximumSize">
+        <size>
+         <width>16</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>CheckBox</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="donebutton">
+     <property name="text">
+      <string>Quit</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
