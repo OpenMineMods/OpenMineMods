@@ -233,7 +233,7 @@ class MainWindow:
         if ndir:
             self.conf.write(Setting.location, ndir)
             self.ui.mmc_folder.setText(ndir)
-            msg_box(self.win, QMessageBox.Information, "A restart is required for settings to take effect")
+            msg_box(self.win, "A restart is required for settings to take effect")
 
     # Update Checker
 
