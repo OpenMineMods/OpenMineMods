@@ -52,7 +52,7 @@ class SetupWindow:
     def folder_changed(self):
         mmc_folder = self.ui.mmc_folder.text()
         self.mmc_folder = path.expanduser(mmc_folder)
-        if path.isfile(path.join(self.mmc_folder, "multimc.cfg")):
+        if path.isfile(path.join(self.mmc_folder, "multimc.cfg")) or path.exists(path.join(self.mmc_folder, "MultiMC.app")):
             self.ui.pushButton_2.setEnabled(True)
         else:
             self.ui.pushButton_2.setEnabled(False)
@@ -67,7 +67,7 @@ class SetupWindow:
         self.ui.prog_label.setText("Downloading Latest CurseMeta")
         self.ui.prog_1.setValue(0)
         self.dlthread.started.connect(partial(self.downloader.download_file_raw,
-                                              "https://cursemeta.dries007.net/raw_cleaned.json.xz",
+                                              "https://openminemods.digitalfishfun.com/raw_cleaned.json.xz",
                                               self.cache))
         self.dlthread.start()
 
