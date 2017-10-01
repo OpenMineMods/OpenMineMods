@@ -1,5 +1,9 @@
 from PyQt5.QtWidgets import *
 
+from API.CurseAPI import CurseAPI
+
+from requests import post
+
 from functools import partial
 from uuid import uuid4
 
@@ -35,12 +39,13 @@ class ErrorDialog:
 
     def send_crash_report(self):
         to_send = {
-            "exc_info": self.exc,
+            "exc": self.exc,
             "email": self.ui.email_box.text(),
             "notes": self.ui.notes_edit.toPlainText(),
-            "uuid": str(uuid4()).split("-")[0]
+            "uuid": str(uuid4()).split("-")[0],
+            "ver": CurseAPI.version
         }
 
-        print(to_send)
+        post("https://openminemods.digitalfishfun.com/analytics/crash", json=to_send)
 
-        msg_box(None, "Your error has been recorded.\nUUID: {}".format(to_send["uuid"]))
+        msg_box(None, "Your error has been recorded.\nReport ID: {}".format(to_send["uuid"]))
