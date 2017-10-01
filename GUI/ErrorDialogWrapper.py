@@ -1,8 +1,11 @@
 from PyQt5.QtWidgets import *
 
 from functools import partial
+from uuid import uuid4
 
 from GUI.ErrorDialog import Ui_ErrorDialog
+
+from Utils.Utils import msg_box
 
 
 class ErrorDialog:
@@ -18,22 +21,26 @@ class ErrorDialog:
 
         self.toggle_details()
 
-        self.ui.donebutton.clicked.connect(partial(self.win.done, 0))
+        self.ui.donebutton.clicked.connect(partial(self.win.done, 1))
 
-        self.win.exec_()
+        res = self.win.exec_()
 
-        if self.ui.send_box.isChecked():
+        if self.ui.send_box.isChecked() and res:
             self.send_crash_report()
 
     def toggle_details(self):
         self.ui.email_box.setHidden(not self.ui.send_box.isChecked())
         self.ui.notes_edit.setHidden(not self.ui.send_box.isChecked())
+        self.ui.donebutton.setText(["Quit", "Send Report"][self.ui.send_box.isChecked()])
 
     def send_crash_report(self):
         to_send = {
             "exc_info": self.exc,
             "email": self.ui.email_box.text(),
-            "notes": self.ui.notes_edit.toPlainText()
+            "notes": self.ui.notes_edit.toPlainText(),
+            "uuid": str(uuid4()).split("-")[0]
         }
 
         print(to_send)
+
+        msg_box(None, "Your error has been recorded.\nUUID: {}".format(to_send["uuid"]))
