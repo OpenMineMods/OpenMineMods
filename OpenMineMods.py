@@ -14,7 +14,6 @@ sys.excepthook = handle_exception
 app = QApplication(sys.argv)
 win = MainWindow()
 
-print(sys.argv)
 if len(sys.argv) > 1 and sys.argv[1] == "--test":
     sys.exit(0)
 

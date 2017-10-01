@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>600</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,6 +23,20 @@
    </item>
    <item>
     <widget class="QTextBrowser" name="exc_info"/>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="email_box">
+     <property name="placeholderText">
+      <string>Email Address (OPTIONAL)</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="notes_edit">
+     <property name="placeholderText">
+      <string>Additional Notes (OPTIONAL)</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
