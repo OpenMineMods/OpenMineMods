@@ -30,7 +30,7 @@ class CurseAPI:
           _|_|    _|      _|  _|      _|
     """
 
-    version = "2.0.0"
+    version = "2.0.1"
     baseUrl = "https://mods.curse.com"
     forgeUrl = "https://minecraft.curseforge.com"
 

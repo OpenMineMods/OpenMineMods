@@ -52,7 +52,7 @@ class SetupWindow:
     def folder_changed(self):
         mmc_folder = self.ui.mmc_folder.text()
         self.mmc_folder = path.expanduser(mmc_folder)
-        if path.isfile(path.join(self.mmc_folder, "multimc.cfg")) or path.exists(path.join(self.mmc_folder, "MultiMC.app")):
+        if path.isfile(path.join(self.mmc_folder, "multimc.cfg")):
             self.ui.pushButton_2.setEnabled(True)
         else:
             self.ui.pushButton_2.setEnabled(False)

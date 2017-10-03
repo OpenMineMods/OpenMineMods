@@ -18,6 +18,7 @@ from CurseMetaDB.DB import DB
 from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
+from Utils.Analytics import send_data
 from Utils.Config import Config, Setting
 
 from GUI.MainWindow import Ui_MainWindow
@@ -69,6 +70,11 @@ class MainWindow:
         self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
 
         self.curse = CurseAPI(self.db)
+
+        if self.conf.read(Setting.analytics):
+            if self.curse.version != self.conf.read(Setting.current_version):
+                info("Sending analytics packet")
+                send_data(self.conf)
 
         self.conf.write(Setting.current_version, self.curse.version)
 
@@ -253,7 +259,6 @@ class MainWindow:
 
         update = Update(self.curse, res["update"])
         update.apply_update()
-
 
     def data_found(self, dat: dict):
         if len(dat["res"]) < 1 and dat["succ"]:

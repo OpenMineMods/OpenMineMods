@@ -4,20 +4,21 @@ from platform import system, release, processor
 from threading import Thread
 
 from Utils.Utils import getInstallDir
+from Utils.Config import Config, Setting
 
 from API.CurseAPI import CurseAPI
 
 
-def send_data(curse: CurseAPI):
-    Thread(send_thread(curse)).start()
+def send_data(conf: Config):
+    Thread(send_thread(conf)).start()
 
 
-def send_thread(curse: CurseAPI):
+def send_thread(conf: Config):
     post("https://openminemods.digitalfishfun.com/analytics/installed",
          json={
-             "uuid": curse.uuid,
+             "uuid": conf.read(Setting.uuid),
              "ver": CurseAPI.version,
-             "mmc": censor_string(curse.baseDir),
+             "mmc": censor_string(conf.read(Setting.location)),
              "inst": censor_string(getInstallDir()),
              "sys": get_system()
          })

@@ -9,7 +9,7 @@ class Setting:
     update = ("Settings", "AutoUpdate", True)
     ask_file = ("Settings", "AskFile", False)
     current_version = ("Settings", "CurrentVersion", "0.0")
-    uuid = ("Settings", "UUID", uuid4())
+    uuid = ("Settings", "UUID", str(uuid4()))
     live_search = ("Settings", "LiveSearch", False)
     meta_interval = ("Settings", "MetaInterval", 24)
     client_interval = ("Settings", "ClientInterval", 48)
