@@ -107,6 +107,8 @@ class MainWindow:
         self.ui.pack_search.returnPressed.connect(self.search_packs)
         self.ui.pack_search_button.clicked.connect(self.search_packs)
 
+        self.ui.instance_reload.clicked.connect(self.init_instances)
+
         self.ui.mmc_edit.clicked.connect(self.dir_clicked)
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
@@ -131,6 +133,7 @@ class MainWindow:
     """UI Initializations"""
 
     def init_instances(self):
+        self.mmc = MultiMC(self.conf.read(Setting.location))
         clear_layout(self.ui.instance_box)
 
         for instance in self.mmc.instances:

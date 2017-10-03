@@ -43,7 +43,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>322</height>
+             <height>316</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -111,7 +111,7 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>275</height>
+             <height>267</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -322,6 +322,13 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QPushButton" name="instance_reload">
+          <property name="text">
+           <string>Reload Instance List</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -334,7 +341,7 @@
      <x>0</x>
      <y>0</y>
      <width>500</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
