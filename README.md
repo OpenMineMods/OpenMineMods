@@ -11,16 +11,19 @@
 
 ### Generic
 
-Download and unpack `Linux.zip` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods`
+Download and unpack `Linux.zip` from the latest [release](https://github.com/OpenMineMods/OpenMineMods/releases), then run `OpenMineMods`
 
 Alternatively, clone this repo and run these commands:
 
 ```
 pip3 install -r requirements.txt
-python3 Main.py
+./uibuild.sh
+./OpenMineMods.py
 ```
 
 ### Arch Linux
+
+***THE AUR PACKAGE IS OUT OF DATE. PLEASE RUN FROM SOURCE OR THE LINUX BINARY***
 
 Install [OpenMineMods](https://aur.archlinux.org/packages/openminemods/) from the AUR.
 
