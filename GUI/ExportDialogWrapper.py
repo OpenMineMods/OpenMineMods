@@ -99,7 +99,7 @@ class ExportDialog:
         mods_path = path.join(overrides_path, "mods")
         if path.exists(mods_path):
             for mod in self.instance.mods:
-                remove(path.join(mods_path, mod["path"].split("/")[-1]))
+                remove(path.join(mods_path, path.basename(mod["path"])))
 
         for mod in self.instance.mods:
             prj = self.curse.get_project(self.curse.get_file(mod["id"]).project).id
