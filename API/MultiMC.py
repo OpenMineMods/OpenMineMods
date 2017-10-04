@@ -97,6 +97,9 @@ class MultiMCInstance:
         self.instanceCfg = open("{}/instance.cfg".format(self.path)).read()
         self.modDir = "{}/minecraft/mods".format(self.path)
 
+        if not path.exists(self.modDir):
+            makedirs(self.modDir)
+
         self.dat_file = path.join(self.path, "omm_dat.json")
         if not path.isfile(self.dat_file):
             self.dat = {
