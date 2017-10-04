@@ -7,45 +7,56 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>41</height>
+    <height>52</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="pack_name">
-     <property name="text">
-      <string>TextLabel</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="pack_name">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="pack_more">
+       <property name="toolTip">
+        <string>Open Pack Website</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Assets/icons.qrc">
+         <normaloff>:/icons/web-browser-symbolic.svg</normaloff>:/icons/web-browser-symbolic.svg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="pack_install">
+       <property name="toolTip">
+        <string>Install Modpack</string>
+       </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Assets/icons.qrc">
+         <normaloff>:/icons/download.svg</normaloff>:/icons/download.svg</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QToolButton" name="pack_more">
-     <property name="toolTip">
-      <string>Open Pack Website</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../Assets/icons.qrc">
-       <normaloff>:/icons/web-browser-symbolic.svg</normaloff>:/icons/web-browser-symbolic.svg</iconset>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QToolButton" name="pack_install">
-     <property name="toolTip">
-      <string>Install Modpack</string>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../Assets/icons.qrc">
-       <normaloff>:/icons/download.svg</normaloff>:/icons/download.svg</iconset>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
