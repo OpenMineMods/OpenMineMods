@@ -84,6 +84,7 @@ class InstanceWindow:
             el.mod_name.setText(proj.name)
 
             el.mod_delete.clicked.connect(partial(self.mod_delete, mod["path"]))
+            el.mod_update.clicked.connect(partial(self.mod_install, proj, True))
 
             el.mod_install.hide()
             el.mod_info.hide()
@@ -119,14 +120,14 @@ class InstanceWindow:
 
         self.ui.browse_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
-    def mod_install(self, mod: CurseProject):
+    def mod_install(self, mod: CurseProject, force_latest=False):
         files = [self.curse.get_file(i) for i in mod.files]
         fs = [i for i in files if self.instance.version in i.versions]
         if len(fs) < 1:
             return False
 
         fs.sort(key=lambda x: x.pub_time, reverse=True)
-        if self.conf.read(Setting.ask_file):
+        if self.conf.read(Setting.ask_file) and force_latest:
             dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:
