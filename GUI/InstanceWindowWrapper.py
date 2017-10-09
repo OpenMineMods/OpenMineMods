@@ -89,6 +89,13 @@ class InstanceWindow:
             el.mod_info.hide()
             el.mod_update.hide()
 
+            fs = [self.curse.get_file(i) for i in proj.files]
+            fs = [i for i in fs if self.instance.version in i.versions]
+            fs.sort(key=lambda x: x.pub_time, reverse=True)
+
+            if fs[0].pub_time > modf.pub_time:
+                el.mod_update.show()
+
             self.ui.mod_box.addWidget(widget)
 
         self.ui.mod_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))

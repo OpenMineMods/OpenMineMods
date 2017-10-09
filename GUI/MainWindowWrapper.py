@@ -148,6 +148,16 @@ class MainWindow:
 
             el.instance_update.hide()
 
+            if instance.file:
+                f = self.curse.get_file(instance.file)
+                p = self.curse.get_project(f.project)
+
+                fs = [self.curse.get_file(i) for i in p.files]
+                fs.sort(key=lambda x: x.pub_time, reverse=True)
+
+                if fs[0].pub_time > f.pub_time:
+                    el.instance_update.show()
+
             el.instance_name.setText(instance.name)
 
             self.ui.instance_box.addWidget(widget)
