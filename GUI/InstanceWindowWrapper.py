@@ -72,7 +72,11 @@ class InstanceWindow:
     def setup_mods(self):
         self.installed_mods = [self.curse.get_file(i["id"]).project for i in self.instance.mods]
         clear_layout(self.ui.mod_box)
-        for mod in self.instance.mods:
+
+        rl_mods = [i for i in self.instance.mods if self.curse.get_file(i["id"])]
+        rl_mods.sort(key=lambda x: self.curse.get_project(self.curse.get_file(x["id"]).project).name.lower())
+
+        for mod in rl_mods:
             widget = QWidget()
             el = Ui_ModWidget()
             el.setupUi(widget)
