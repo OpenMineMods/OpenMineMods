@@ -152,6 +152,8 @@ class MainWindow:
                 f = self.curse.get_file(instance.file)
                 p = self.curse.get_project(f.project)
 
+                el.instance_update.clicked.connect(partial(self.install_clicked, p, True))
+
                 fs = [self.curse.get_file(i) for i in p.files]
                 fs.sort(key=lambda x: x.pub_time, reverse=True)
 
@@ -212,12 +214,12 @@ class MainWindow:
     def edit_clicked(self, instance: MultiMCInstance):
         self.children.append(InstanceWindow(instance, self.curse, self.conf))
 
-    def install_clicked(self, project: CurseProject):
+    def install_clicked(self, project: CurseProject, force_latest=False):
         fs = [self.curse.get_file(i) for i in project.files]
         if len(fs) < 1:
             return False
         fs.sort(key=lambda x: x.pub_time, reverse=True)
-        if self.conf.read(Setting.ask_file):
+        if self.conf.read(Setting.ask_file) and not force_latest:
             dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:
@@ -229,7 +231,7 @@ class MainWindow:
             f = fs[0]
 
         dia = DownloadDialog()
-        dia.download_pack(project, f, self.curse, self.mmc)
+        dia.download_pack(project, f, self.curse, self.mmc, force_latest)
         self.mmc = MultiMC(self.conf.read(Setting.location))
         self.init_instances()
 

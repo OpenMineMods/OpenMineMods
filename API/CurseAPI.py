@@ -9,7 +9,9 @@ from urllib.parse import unquote
 from sys import stdout
 from API.MultiMC import InstanceCfg, ForgePatch
 from shutil import move, copytree, rmtree
+from copy import deepcopy
 
+from Utils.Utils import moveTree
 from GUI.Strings import Strings
 from CurseMetaDB.DB import DB
 
@@ -167,8 +169,15 @@ class CurseModpack:
 
         self.mmc = mmc
 
-    def install(self, file: CurseFile, prog_label, progbar_1, progbar_2):
-        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.mmc.path, self.project.name)
+    def install(self, file: CurseFile, prog_label, progbar_1, progbar_2, is_update=False):
+        if is_update:
+            print("WARNING: UPDATING IS STILL EXPERIMENTAL")
+
+        safe_name = self.project.name + ""
+        for c in "\\/:*?\"<>|":
+            safe_name = safe_name.replace(c, '')
+
+        tempPath = "{}/instances/_MMC_TEMP/{}".format(self.mmc.path, safe_name)
 
         progbar_1(0)
 
@@ -235,12 +244,31 @@ class CurseModpack:
 
         modf = (90 / len(manifest.mods))
 
-        newPath = "{}/instances/{}".format(self.mmc.path, self.project.name)
+        newPath = "{}/instances/{}".format(self.mmc.path, safe_name)
 
-        while os.path.exists(newPath):
-            newPath += "_"
+        ignore_files = list()
+
+        if not is_update:
+            while os.path.exists(newPath):
+                newPath += "_"
+        else:
+            from API.MultiMC import MultiMCInstance
+            inst = MultiMCInstance(newPath)
+
+            nmds = [i[1] for i in manifest.mods]
+
+            for mod in inst.mods:
+                if mod["id"] in nmds:
+                    ignore_files.append(mod["id"])
+                    modlist.append(mod)
+                elif not mod["manual"]:
+                    inst.uninstall_mod(mod["path"])
+                else:
+                    modlist.append(mod)
 
         for x, mod in enumerate(manifest.mods):
+            if mod[1] in ignore_files:
+                continue
             #stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             f = self.curse.get_file(mod[1])
             if not f:
@@ -259,7 +287,11 @@ class CurseModpack:
 
         rmtree("{}/raw".format(tempPath))
 
-        move(tempPath, "{}/instances".format(self.mmc.path))
+        if not os.path.exists(newPath):
+            os.makedirs(newPath)
+        moveTree(tempPath, newPath)
+        if os.path.exists(tempPath):
+            rmtree(tempPath)
 
 
 class ModpackManifest:

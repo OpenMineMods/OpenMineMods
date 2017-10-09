@@ -131,7 +131,7 @@ class InstanceWindow:
             return False
 
         fs.sort(key=lambda x: x.pub_time, reverse=True)
-        if self.conf.read(Setting.ask_file) and force_latest:
+        if self.conf.read(Setting.ask_file) and not force_latest:
             dia = FileDialog(fs)
             f = dia.dia.exec_()
             if not f:

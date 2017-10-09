@@ -38,13 +38,13 @@ class DownloadDialog:
         self.dlthread.start()
         return self.dia.exec_()
 
-    def download_pack(self, project: CurseProject, file: CurseFile, curse: CurseAPI, mmc: MultiMC):
+    def download_pack(self, project: CurseProject, file: CurseFile, curse: CurseAPI, mmc: MultiMC, update: bool):
         self.dia.setWindowTitle("Downloading {}".format(project.name))
         self.ui.progbar_1.setValue(0)
         self.ui.progbar_2.setValue(0)
 
         pack = CurseModpack(project, curse, mmc)
-        self.dlthread.started.connect(partial(self.downloader.download_pack, pack, file))
+        self.dlthread.started.connect(partial(self.downloader.download_pack, pack, file, update))
         self.dlthread.start()
         return self.dia.exec_()
 
