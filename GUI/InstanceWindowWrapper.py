@@ -98,7 +98,7 @@ class InstanceWindow:
             fs = [i for i in fs if self.instance.version in i.versions]
             fs.sort(key=lambda x: x.pub_time, reverse=True)
 
-            if fs[0].pub_time > modf.pub_time:
+            if len(fs) > 0 and fs[0].pub_time > modf.pub_time:
                 el.mod_update.show()
 
             self.ui.mod_box.addWidget(widget)
