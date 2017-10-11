@@ -256,12 +256,13 @@ class CurseModpack:
             inst = MultiMCInstance(newPath)
 
             nmds = [i[1] for i in manifest.mods]
+            npids = [i[0] for i in manifest.mods]
 
             for mod in inst.mods:
                 if mod["id"] in nmds:
                     ignore_files.append(mod["id"])
                     modlist.append(mod)
-                elif not mod["manual"]:
+                elif not mod["manual"] or self.curse.get_file(mod["id"]).project in npids:
                     inst.uninstall_mod(mod["path"])
                 else:
                     modlist.append(mod)
