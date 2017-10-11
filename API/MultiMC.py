@@ -153,7 +153,7 @@ class MultiMCInstance:
         installed_mods = [i["path"] for i in self.mods]
 
         for f in listdir(self.modDir):
-            p = path.join(self.path, f)
+            p = path.join(self.modDir, f)
             if p in installed_mods:
                 continue
             fi = db.search_files(f)
