@@ -87,9 +87,14 @@ class Update:
         zipf = ZipFile("OpenMineMods_Update.zip")
         zipf.extractall("OpenMineMods_Update")
 
-        remove(executable)
         remove("OpenMineMods_Update.zip")
 
-        shutil.move("OpenMineMods_Update", executable)
+        app_dir = path.dirname(path.dirname(path.dirname(executable)))
+        if platform == "darwin" and path.basename(app_dir) == "OpenMineMods.app":
+            shutil.rmtree(app_dir)
+            shutil.move("OpenMineMods_Update", app_dir)
+        else:
+            remove(executable)
+            shutil.move("OpenMineMods_Update", executable)
 
         msg_box(None, text=translate("prompt.update.restart"))
