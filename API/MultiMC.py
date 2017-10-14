@@ -116,6 +116,7 @@ class MultiMCInstance:
 
         self.name = re.search("name=(.*)", self.instanceCfg).groups(1)[0]
         self.version = re.search("IntendedVersion=(.*)\n", self.instanceCfg).group(1)
+        self.iconKey = re.search("iconKey=(.*)", self.instanceCfg).groups(1)[0]
         try:
             self.forge = re.search("ForgeVersion=(.*)\n", self.instanceCfg).group(1)
         except AttributeError:

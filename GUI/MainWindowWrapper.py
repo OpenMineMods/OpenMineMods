@@ -85,7 +85,6 @@ class MainWindow:
 
         self.style = load_style_sheet('main')
 
-
         self.win.setStyleSheet(self.style)
 
         self.mmc = MultiMC(self.conf.read(Setting.location))
@@ -148,13 +147,19 @@ class MainWindow:
         self.mmc = MultiMC(self.conf.read(Setting.location))
         clear_layout(self.ui.instance_box)
 
+        icons = self.mmc.path + "/icons/"
+
         for instance in self.mmc.instances:
             widget = QWidget()
             el = Ui_InstanceWidget()
 
             el.setupUi(widget)
 
-            widget.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
+            icon = icons + instance.iconKey + ".png"
+            if path.isfile(icon):
+                widget.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+            else:
+                widget.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
             el.instance_edit.clicked.connect(partial(self.edit_clicked, instance))
             el.share_button.clicked.connect(partial(ExportDialog, instance, self.curse, self.cache_dir))
@@ -293,5 +298,3 @@ class MainWindow:
 
         update = Update(self.curse, res["update"])
         update.apply_update()
-
-
