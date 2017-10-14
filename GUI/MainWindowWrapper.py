@@ -281,14 +281,3 @@ class MainWindow:
 
         update = Update(self.curse, res["update"])
         update.apply_update()
-
-    def data_found(self, dat: dict):
-        if len(dat["res"]) < 1 and dat["succ"]:
-            return
-
-        if dat["type"] == "packs":
-            if not dat["succ"]:
-                err("Pack loading failed!")
-                self.ui.loading_label.setText("Network Error!")
-                return
-            self.init_packs(dat["res"])
