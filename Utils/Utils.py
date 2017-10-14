@@ -2,7 +2,7 @@ import os
 import zipfile
 
 from os import path
-from sys import executable
+from sys import executable, platform
 from PyQt5.QtWidgets import *
 
 
@@ -44,6 +44,22 @@ def dir_box(parent: QWidget, text: str, de_dir=""):
     fd.setWindowTitle(parent.windowTitle())
     return fd.getExistingDirectory(parent, text, de_dir)
 
+
+def get_multimc_executable(mmc_dir: str):
+    if platform == "linux":
+        if path.isfile("/usr/bin/multimc"):
+            return "/usr/bin/multimc"
+        elif path.isfile(path.join(mmc_dir, "MultiMC")):
+            return path.join(mmc_dir, "MultiMC")
+        return False
+    elif platform == "darwin":
+        if path.isfile(path.join(mmc_dir, "MultiMC")):
+            return path.join(mmc_dir, "MultiMC")
+        return False
+    elif platform == "win32":
+        if path.isfile(path.join(mmc_dir, "MultiMC.exe")):
+            return path.join(mmc_dir, "MultiMC.exe")
+    return False
 
 def parseSemanticVersion(ver: str):
     return tuple([int(i) for i in ver.split(".")])

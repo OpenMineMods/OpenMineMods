@@ -9,13 +9,14 @@ from webbrowser import open as webopen
 from sys import platform
 from json import loads
 from time import time
+from subprocess import Popen, DEVNULL
 
 from API.CurseAPI import CurseAPI, CurseProject
 from API.MultiMC import MultiMC, MultiMCInstance
 
 from CurseMetaDB.DB import DB
 
-from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box
+from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
 from Utils.Analytics import send_data
@@ -81,6 +82,7 @@ class MainWindow:
         self.win = QMainWindow()
 
         self.mmc = MultiMC(self.conf.read(Setting.location))
+        self.mmc_exe = get_multimc_executable(self.conf.read(Setting.location))
 
         self.children = list()
 
@@ -161,6 +163,11 @@ class MainWindow:
                     el.instance_update.show()
 
             el.instance_name.setText(instance.name)
+
+            if self.mmc_exe:
+                el.play_button.clicked.connect(partial(Popen, [self.mmc_exe, '-l', path.basename(instance.path)], stdout=DEVNULL, stderr=DEVNULL))
+            else:
+                el.play_button.hide()
 
             self.ui.instance_box.addWidget(widget)
 
