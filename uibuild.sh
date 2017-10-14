@@ -6,4 +6,4 @@ for f in UI/*.ui; do
 	python3 -m PyQt5.uic.pyuic $f -o $pyn
 done
 
-pyrcc5 Assets/icons.qrc -o icons_rc.py
+python3 -m PyQt5.pyrcc_main Assets/icons.qrc -o icons_rc.py
