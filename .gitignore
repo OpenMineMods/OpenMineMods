@@ -9,6 +9,7 @@ GUI/*.py
 !GUI/*Wrapper.py
 !GUI/Strings.py
 !GUI/__init__.py
+!GUI/FlowLayout.py
 
 icons_rc.py
 

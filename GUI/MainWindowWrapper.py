@@ -36,6 +36,8 @@ from GUI.ExportDialogWrapper import ExportDialog
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
 
+from GUI.FlowLayout import FlowLayout
+
 
 class MainWindow:
     def __init__(self):
@@ -83,6 +85,7 @@ class MainWindow:
 
         self.style = load_style_sheet('main')
 
+
         self.win.setStyleSheet(self.style)
 
         self.mmc = MultiMC(self.conf.read(Setting.location))
@@ -92,6 +95,9 @@ class MainWindow:
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.win)
+
+        self.ui.instance_box = FlowLayout()
+        self.ui.scroll_box_w.setLayout(self.ui.instance_box)
 
         self.init_instances()
 

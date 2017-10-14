@@ -34,10 +34,7 @@
           <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-          <widget class="QWidget" name="fjhgdsf">
+          <widget class="QWidget" name="scroll_box_w">
            <property name="geometry">
             <rect>
              <x>0</x>
@@ -46,15 +43,6 @@
              <height>316</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <layout class="QVBoxLayout" name="instance_box">
-              <property name="sizeConstraint">
-               <enum>QLayout::SetNoConstraint</enum>
-              </property>
-             </layout>
-            </item>
-           </layout>
           </widget>
          </widget>
         </item>
