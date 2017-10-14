@@ -84,13 +84,13 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 }
 
 QScrollBar::add-line:vertical {
-    background-color:$button-color;
+    background-color:$background-color;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
 }
 
 QScrollBar::sub-line:vertical {
-    background-color:$button-color;
+    background-color:$background-color;
     subcontrol-position: top;
     subcontrol-origin: margin;
 }
