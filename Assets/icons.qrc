@@ -1,15 +1,16 @@
 <RCC>
-  <qresource prefix="/icons">
-    <file>player_play.svg</file>
-    <file>emblem-shared-symbolic.svg</file>
-    <file>web-browser-symbolic.svg</file>
-    <file>configure.svg</file>
-    <file>download.svg</file>
-    <file>edit.svg</file>
-    <file>edit-delete.svg</file>
-    <file>search.svg</file>
-    <file>software-update-available-symbolic.svg</file>
-    <file>view-refresh.svg</file>
-    <file>OpenMineMods.svg</file>
+  <qresource prefix="/">
+    <file>icons/player_play.svg</file>
+    <file>icons/emblem-shared-symbolic.svg</file>
+    <file>icons/web-browser-symbolic.svg</file>
+    <file>icons/configure.svg</file>
+    <file>icons/download.svg</file>
+    <file>icons/edit.svg</file>
+    <file>icons/edit-delete.svg</file>
+    <file>icons/search.svg</file>
+    <file>icons/software-update-available-symbolic.svg</file>
+    <file>icons/view-refresh.svg</file>
+    <file>icons/OpenMineMods.svg</file>
+    <file>style/main.qss</file>
   </qresource>
 </RCC>

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QThread, QStandardPaths
+from PyQt5.QtCore import QThread, QStandardPaths, QFile
 
 import sys
 
@@ -80,6 +80,10 @@ class MainWindow:
         self.conf.write(Setting.current_version, self.curse.version)
 
         self.win = QMainWindow()
+
+        self.style = self.load_style_sheet('main')
+
+        self.win.setStyleSheet(self.style)
 
         self.mmc = MultiMC(self.conf.read(Setting.location))
         self.mmc_exe = get_multimc_executable(self.conf.read(Setting.location))
@@ -165,7 +169,8 @@ class MainWindow:
             el.instance_name.setText(instance.name)
 
             if self.mmc_exe:
-                el.play_button.clicked.connect(partial(Popen, [self.mmc_exe, '-l', path.basename(instance.path)], stdout=DEVNULL, stderr=DEVNULL))
+                el.play_button.clicked.connect(
+                    partial(Popen, [self.mmc_exe, '-l', path.basename(instance.path)], stdout=DEVNULL, stderr=DEVNULL))
             else:
                 el.play_button.hide()
 
@@ -213,7 +218,7 @@ class MainWindow:
 
     def delete_clicked(self, instance: MultiMCInstance):
         if not confirm_box(self.win, QMessageBox.Question,
-                          "Are you sure you want to delete {}".format(instance.name)):
+                           "Are you sure you want to delete {}".format(instance.name)):
             return
         self.mmc.delete_instance(instance)
         self.init_instances()
@@ -281,3 +286,8 @@ class MainWindow:
 
         update = Update(self.curse, res["update"])
         update.apply_update()
+
+    def load_style_sheet(self, sheetName):
+        file = QFile(':/style/%s.qss' % sheetName.lower())
+        file.open(QFile.ReadOnly)
+        return str(file.readAll(), encoding='utf8')

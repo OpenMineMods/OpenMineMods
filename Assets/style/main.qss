@@ -1,0 +1,9 @@
+* {
+   background-color: #666;
+   color: #FFF;
+}
+
+.QWidget * {
+   background-color: #666;
+   color: #FFF;
+}

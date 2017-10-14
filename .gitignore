@@ -11,3 +11,5 @@ GUI/*.py
 !GUI/__init__.py
 
 icons_rc.py
+
+*.autosave
