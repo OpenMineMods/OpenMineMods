@@ -17,7 +17,6 @@ def load_style_sheet(sheet_name):
     for match in finditer("(\$.+):\w*(.+);", style_sheet):
         style_sheet = style_sheet.replace(match.group(0), "")
         vars[match.group(1)] = match.group(2)
-    print(vars)
     for name, val in vars.items():
         style_sheet = style_sheet.replace(name, val)
     return style_sheet
