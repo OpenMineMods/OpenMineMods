@@ -14,18 +14,16 @@ QWidget * {
 }
 
 QToolButton {
-    margin: 6px;
  	background-color: $button-color;
     border: 2px solid $button-color;
-    min-width: 8ex;
+    min-width: 4ex;
     padding: 2px;
 }
 
 QToolButton:hover,QToolButton:pressed {
-    margin: 6px;
  	background-color: $button-hover-color;
     border: 2px solid $button-hover-color;
-    min-width: 8ex;
+    min-width: 4ex;
     padding: 2px;
 }
 
@@ -60,4 +58,74 @@ QLabel {
     background-color: $alpha($background-color, 150);
     border: 2px solid $alpha($background-color, 150);
     border-radius: 10px;
+}
+
+
+QScrollBar:vertical {
+    background-color: $background-color;
+}
+
+QScrollBar::handle:vertical {
+    background-color:$button-color;
+}
+
+QScrollBar:left-arrow:vertical {
+    background-color:$button-color;
+    border: 1px solid $button-color;
+}
+
+QScrollBar::right-arrow:vertical {
+    background-color:$button-color;
+    border: 1px solid $button-color;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QScrollBar::add-line:vertical {
+    background-color:$button-color;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+    background-color:$button-color;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+
+
+QScrollBar:horizontal {
+    background-color: $background-color;
+}
+
+QScrollBar::handle:horizontal {
+    background-color:$button-color;
+}
+
+QScrollBar:left-arrow:horizontal {
+    background-color:$button-color;
+    border: 1px solid $button-color;
+}
+
+QScrollBar::right-arrow:horizontal {
+    background-color:$button-color;
+    border: 1px solid $button-color;
+}
+
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+QScrollBar::add-line:horizontal {
+    background-color:$button-color;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:horizontal {
+    background-color:$button-color;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
 }
