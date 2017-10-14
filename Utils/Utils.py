@@ -2,7 +2,7 @@ import os
 import zipfile
 
 from os import path
-from re import findall
+from re import finditer
 from sys import executable, platform
 
 from PyQt5.QtCore import QFile
@@ -14,8 +14,10 @@ def load_style_sheet(sheet_name):
     file = QFile(':/style/%s.qss' % sheet_name.lower())
     file.open(QFile.ReadOnly)
     style_sheet = str(file.readAll(), encoding='utf8')
-    for match in findall("\$(.+):\w*(.+);", style_sheet):
-        vars[match[0]] = match[1]
+    for match in finditer("(\$.+):\w*(.+);", style_sheet):
+        style_sheet = style_sheet.replace(match.group(0), "")
+        vars[match.group(1)] = match.group(2)
+    print(vars)
     for name, val in vars.items():
         style_sheet = style_sheet.replace(name, val)
     return style_sheet

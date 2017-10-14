@@ -1,4 +1,4 @@
-$background-color: #002828;
+$background-color: #282828;
 $text-color: #FFFFFF;
 
 * {
