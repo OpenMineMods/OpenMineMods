@@ -13,15 +13,13 @@ colors = {
 }
 
 
-def load_style_sheet(sheetName):
-    file = QFile(':/style/%s.qss' % sheetName.lower())
+def load_style_sheet(sheet_name):
+    file = QFile(':/style/%s.qss' % sheet_name.lower())
     file.open(QFile.ReadOnly)
     style_sheet = str(file.readAll(), encoding='utf8')
-
     for name, color in colors.items():
         style_sheet = style_sheet.replace(name, color)
-    print(style_sheet)
-    return
+    return style_sheet
 
 
 def clear_layout(layout: QLayout):
