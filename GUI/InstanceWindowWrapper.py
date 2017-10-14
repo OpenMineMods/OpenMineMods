@@ -6,7 +6,7 @@ from webbrowser import open as webopen
 from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI, CurseProject
 
-from Utils.Utils import clear_layout
+from Utils.Utils import clear_layout, load_style_sheet
 from Utils.Config import Config, Setting
 
 from GUI.InstanceWindow import Ui_InstanceWindow
@@ -52,6 +52,10 @@ class InstanceWindow:
         self.ui.pack_search_button.clicked.connect(self.search_packs)
 
         self.ui.meta_scan.clicked.connect(self.mod_scan)
+
+        self.style = load_style_sheet('main')
+
+        self.win.setStyleSheet(self.style)
 
         self.win.show()
 
