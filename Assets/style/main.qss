@@ -2,7 +2,6 @@ $background-color: #282828;
 $text-color: #FFFFFF;
 $button-color: #3D3D3D;
 $button-hover-color: #0D9179;
-$label-background-color: rgba(40, 40, 40, 150);
 
 * {
     background-color: $background-color;
@@ -58,7 +57,7 @@ QLineEdit {
 }
 
 QLabel {
-    background-color: $label-background-color;
-    border: 2px solid $label-background-color;
+    background-color: $alpha($background-color, 150);
+    border: 2px solid $alpha($background-color, 150);
     border-radius: 10px;
 }

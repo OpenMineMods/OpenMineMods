@@ -14,11 +14,17 @@ def load_style_sheet(sheet_name):
     file = QFile(':/style/%s.qss' % sheet_name.lower())
     file.open(QFile.ReadOnly)
     style_sheet = str(file.readAll(), encoding='utf8')
-    for match in finditer("(\$.+):\w*(.+);", style_sheet):
+    for match in finditer("(\$.+):\s*(.+);", style_sheet):
         style_sheet = style_sheet.replace(match.group(0), "")
         vars[match.group(1)] = match.group(2)
     for name, val in vars.items():
         style_sheet = style_sheet.replace(name, val)
+    for match in finditer("\$alpha\((.*),\s*(\d+)\)", style_sheet):
+        color_code = match.group(1)[1:]
+        rgba = (int(color_code[:2], 16), int(color_code[2:4], 16), int(color_code[4:], 16))
+        alpha = int(match.group(2))
+        new = "rgba({}, {}, {}, {})".format(rgba[0], rgba[1], rgba[2], alpha)
+        style_sheet = style_sheet.replace(match.group(0), new)
     return style_sheet
 
 
