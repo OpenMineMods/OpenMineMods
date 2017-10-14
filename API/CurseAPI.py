@@ -8,8 +8,7 @@ from pathlib import Path
 from urllib.parse import unquote
 from sys import stdout
 from API.MultiMC import InstanceCfg, ForgePatch
-from shutil import move, copytree, rmtree
-from copy import deepcopy
+from shutil import copytree, rmtree
 
 from Utils.Utils import moveTree
 from GUI.Strings import Strings
@@ -32,7 +31,7 @@ class CurseAPI:
           _|_|    _|      _|  _|      _|
     """
 
-    version = "2.1.0"
+    version = "2.1.5"
     baseUrl = "https://mods.curse.com"
     forgeUrl = "https://minecraft.curseforge.com"
 
