@@ -10,6 +10,7 @@ from sys import platform
 from json import loads
 from time import time
 from subprocess import Popen, DEVNULL
+from glob import glob
 
 from API.CurseAPI import CurseAPI, CurseProject
 from API.MultiMC import MultiMC, MultiMCInstance
@@ -147,7 +148,7 @@ class MainWindow:
         self.mmc = MultiMC(self.conf.read(Setting.location))
         clear_layout(self.ui.instance_box)
 
-        icons = self.mmc.path + "/icons/"
+        icons = path.join(self.mmc.path, "icons")
 
         for instance in self.mmc.instances:
             widget = QWidget()
@@ -155,9 +156,9 @@ class MainWindow:
 
             el.setupUi(widget)
 
-            icon = icons + instance.iconKey + ".png"
-            if path.isfile(icon):
-                widget.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+            icon = glob(path.join(icons, instance.iconKey + ".*"))
+            if len(icon) > 0:
+                widget.setStyleSheet(".QWidget { border-image: url(" + icon[0] + "); }")
             else:
                 widget.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
