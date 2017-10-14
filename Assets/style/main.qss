@@ -51,3 +51,7 @@ QTabBar::tab:selected, QTabBar::tab:hover {
  	background-color: $button-hover-color;
     border: 2px solid $button-hover-color;
 }
+
+QLineEdit {
+    border: 1px solid $button-color;
+}

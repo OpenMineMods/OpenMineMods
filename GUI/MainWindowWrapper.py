@@ -148,6 +148,7 @@ class MainWindow:
 
             el.setupUi(widget)
 
+            widget.setStyleSheet("border-image: url(:/icons/OpenMineMods.svg);")
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
             el.instance_edit.clicked.connect(partial(self.edit_clicked, instance))
             el.share_button.clicked.connect(partial(ExportDialog, instance, self.curse, self.cache_dir))
