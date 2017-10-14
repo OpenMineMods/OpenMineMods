@@ -2,6 +2,7 @@ import os
 import zipfile
 
 from os import path
+from sys import executable
 from PyQt5.QtWidgets import *
 
 
@@ -53,7 +54,7 @@ def getVersionString(ver: tuple):
 
 
 def getInstallDir():
-    return path.dirname(path.dirname(path.realpath(__file__)))
+    return path.dirname(executable)
 
 
 def moveTree(sourceRoot, destRoot):
