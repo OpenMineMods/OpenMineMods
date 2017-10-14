@@ -3,7 +3,25 @@ import zipfile
 
 from os import path
 from sys import executable, platform
+
+from PyQt5.QtCore import QFile
 from PyQt5.QtWidgets import *
+
+colors = {
+    "$background-color": "#282828",
+    "$text-color": "#FFFFFF"
+}
+
+
+def load_style_sheet(sheetName):
+    file = QFile(':/style/%s.qss' % sheetName.lower())
+    file.open(QFile.ReadOnly)
+    style_sheet = str(file.readAll(), encoding='utf8')
+
+    for name, color in colors.items():
+        style_sheet = style_sheet.replace(name, color)
+    print(style_sheet)
+    return
 
 
 def clear_layout(layout: QLayout):
@@ -60,6 +78,7 @@ def get_multimc_executable(mmc_dir: str):
         if path.isfile(path.join(mmc_dir, "MultiMC.exe")):
             return path.join(mmc_dir, "MultiMC.exe")
     return False
+
 
 def parseSemanticVersion(ver: str):
     return tuple([int(i) for i in ver.split(".")])

@@ -16,7 +16,7 @@ from API.MultiMC import MultiMC, MultiMCInstance
 
 from CurseMetaDB.DB import DB
 
-from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable
+from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
 from Utils.Analytics import send_data
@@ -81,7 +81,7 @@ class MainWindow:
 
         self.win = QMainWindow()
 
-        self.style = self.load_style_sheet('main')
+        self.style = load_style_sheet('main')
 
         self.win.setStyleSheet(self.style)
 
@@ -287,7 +287,4 @@ class MainWindow:
         update = Update(self.curse, res["update"])
         update.apply_update()
 
-    def load_style_sheet(self, sheetName):
-        file = QFile(':/style/%s.qss' % sheetName.lower())
-        file.open(QFile.ReadOnly)
-        return str(file.readAll(), encoding='utf8')
+
