@@ -1,3 +1,5 @@
+$background-color: #002828;
+$text-color: #FFFFFF;
 
 * {
     background-color: $background-color;

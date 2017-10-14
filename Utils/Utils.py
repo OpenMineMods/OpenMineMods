@@ -2,23 +2,22 @@ import os
 import zipfile
 
 from os import path
+from re import findall
 from sys import executable, platform
 
 from PyQt5.QtCore import QFile
 from PyQt5.QtWidgets import *
 
-colors = {
-    "$background-color": "#282828",
-    "$text-color": "#FFFFFF"
-}
-
 
 def load_style_sheet(sheet_name):
+    vars = dict()
     file = QFile(':/style/%s.qss' % sheet_name.lower())
     file.open(QFile.ReadOnly)
     style_sheet = str(file.readAll(), encoding='utf8')
-    for name, color in colors.items():
-        style_sheet = style_sheet.replace(name, color)
+    for match in findall("\$(.+):\w*(.+);", style_sheet):
+        vars[match[0]] = match[1]
+    for name, val in vars.items():
+        style_sheet = style_sheet.replace(name, val)
     return style_sheet
 
 
