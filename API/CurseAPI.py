@@ -66,8 +66,8 @@ class CurseAPI:
     # SECTION MODPACKS
 
     def get_modpacks(self, version="*"):
-        packs = self.db.get_popular("modpack", 25, version)
-        return [CurseProject(self.db.get_project(i)) for i in packs]
+        packs = self.db.search_projects("", "modpack", version=version)
+        return [CurseProject(i) for i in packs]
 
     # END SECTION
 
@@ -85,7 +85,7 @@ class CurseAPI:
         prog = 0
         if not fname:
             fname = unquote(Path(r.url).name)
-        with open(filepath+"/"+fname, 'wb') as f:
+        with open(filepath + "/" + fname, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     prog += len(chunk)
@@ -94,7 +94,7 @@ class CurseAPI:
                     f.write(chunk)
         if progf:
             progf(0)
-        return filepath+"/"+fname
+        return filepath + "/" + fname
 
     def get(self, params={}, path="", host="", includeUrl=False):
         """HTTP GET with HTML parsing"""
@@ -106,7 +106,7 @@ class CurseAPI:
             return [BeautifulSoup(html, "html.parser"), r.url]
         return BeautifulSoup(html, "html.parser")
 
-    # END SECTION
+        # END SECTION
 
 
 class CurseProject:
@@ -131,6 +131,22 @@ class CurseProject:
             self.default_attachment = [i for i in self.attachments if i["default"]][0]
         else:
             self.default_attachment = False
+
+        if self.default_attachment:
+            self.icon_url = self.default_attachment["url"]
+        else:
+            self.icon_url = None
+
+    def download_icon(self, api, dir):
+        if self.icon_url is not None:
+            extension = self.icon_url.split(".")[-1]
+            file = "{}.{}".format(self.id, extension)
+            full_path = os.path.join(dir, file)
+            if not os.path.isfile(full_path):
+                api.download_file(self.icon_url, dir,
+                              file, progf=False)
+            return full_path
+        return None
 
 
 class CurseFile:
@@ -182,11 +198,6 @@ class CurseModpack:
 
         prog_label(translate("downloading.icon"))
 
-        if self.project.default_attachment:
-            ft = self.project.default_attachment["url"].split(".")[-1]
-            self.curse.download_file(self.project.default_attachment["url"], "{}/icons".format(self.mmc.path),
-                                     "{}.{}".format(self.project.id, ft), progf=progbar_2)
-
         if os.path.exists(tempPath):
             rmtree(tempPath)
 
@@ -230,12 +241,13 @@ class CurseModpack:
             os.makedirs(patchPath)
 
         # Configure Instance
-        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.name, icon=str(self.project.id))
+        instanceCfg = InstanceCfg(manifest.mcVersion, manifest.forgeVersion, self.project.name,
+                                  icon=str(self.project.id))
         instanceCfg.write("{}/instance.cfg".format(tempPath))
 
         # Configure Forge
         forgeCfg = ForgePatch(manifest.mcVersion, manifest.forgeVersion)
-        forgeCfg.write(patchPath+"/net.minecraftforge.json")
+        forgeCfg.write(patchPath + "/net.minecraftforge.json")
 
         modlist = list()
 
@@ -269,7 +281,7 @@ class CurseModpack:
         for x, mod in enumerate(manifest.mods):
             if mod[1] in ignore_files:
                 continue
-            #stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
+            # stdout.write("\rDownloading mod {}/{}".format(x+1, len(manifest.mods)))
             f = self.curse.get_file(mod[1])
             if not f:
                 continue
@@ -296,6 +308,7 @@ class CurseModpack:
 
 class ModpackManifest:
     """Parse a modpack's manifest.json"""
+
     def __init__(self, filename: str):
         self.filename = filename
 

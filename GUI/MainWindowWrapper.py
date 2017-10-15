@@ -55,6 +55,10 @@ class MainWindow:
         info("Cache dir: {}".format(cache_dir))
 
         self.cache_dir = cache_dir
+        self.icon_dir = path.join(self.cache_dir, "icons")
+
+        if not path.isdir(self.icon_dir):
+            makedirs(self.icon_dir)
 
         if not path.isfile(path.join(data_dir, "settings.ini")):
             dia = SetupWindow(data_dir, cache_dir)
@@ -195,11 +199,13 @@ class MainWindow:
         clear_layout(self.ui.pack_box)
 
         for pack in packs:
+            icon = pack.download_icon(self.curse, self.icon_dir)
+            if icon is None:
+                icon = ":/icons/OpenMineMods.svg"
             widget = QWidget()
             el = Ui_PackWidget()
-
             el.setupUi(widget)
-
+            el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
             el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
             el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
