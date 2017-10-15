@@ -203,6 +203,12 @@ class MainWindow:
 
             self.ui.instance_box.addWidget(widget)
 
+        # new_widget = QWidget()
+        # new_widget.setStyleSheet(".QWidget { border-image: url(:/icons/new_instance.png) }")
+        # new_widget.setFixedSize(200, 200)
+        # new_widget.setToolTip("Create New Instance")
+        # self.ui.instance_box.addWidget(new_widget)
+
         self.ui.instance_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def init_packs(self, packs: list):
