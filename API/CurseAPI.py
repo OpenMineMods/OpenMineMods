@@ -153,7 +153,7 @@ class CurseProject:
             full_path = os.path.join(dir, file)
             if not os.path.isfile(full_path):
                 api.download_file(self.icon_url, dir,
-                              file, progf=False)
+                                  file, progf=False)
             return full_path
         return None
 
@@ -206,6 +206,8 @@ class CurseModpack:
         progbar_1(0)
 
         prog_label(translate("downloading.icon"))
+
+        self.project.download_icon(self.curse, os.path.join(self.mmc.path, "icons"))
 
         if os.path.exists(tempPath):
             rmtree(tempPath)
