@@ -18,7 +18,7 @@ from API.MultiMC import MultiMC, MultiMCInstance
 from CurseMetaDB.DB import DB
 
 from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet, \
-    human_format
+    human_format, confirmation
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
 from Utils.Downloader import DownloaderThread
@@ -266,11 +266,10 @@ class MainWindow:
         self.init_packs(self.curse.search(self.ui.pack_search.text(), "modpack"))
 
     def delete_clicked(self, instance: MultiMCInstance):
-        if not confirm_box(self.win, QMessageBox.Question,
-                           "Are you sure you want to delete {}".format(instance.name)):
-            return
-        self.mmc.delete_instance(instance)
-        self.init_instances()
+        def delete():
+            self.mmc.delete_instance(instance)
+            self.init_instances()
+        confirmation(self.win, delete, instance.name)
 
     def edit_clicked(self, instance: MultiMCInstance):
         self.children.append(InstanceWindow(instance, self.curse, self.conf, self.icon_dir))

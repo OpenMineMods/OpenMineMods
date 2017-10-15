@@ -13,25 +13,19 @@ QWidget * {
     color: $text-color;
 }
 
-QToolButton {
+QToolButton, QPushButton {
  	background-color: $button-color;
     border: 2px solid $button-color;
     min-width: 4ex;
     padding: 2px;
 }
 
-QToolButton:hover,QToolButton:pressed {
+QToolButton:hover,QToolButton:pressed, QPushButton:hover,QPushButton:pressed  {
  	background-color: $button-hover-color;
     border: 2px solid $button-hover-color;
     min-width: 4ex;
     padding: 2px;
 }
-
-QToolButton {
- 	background-color: $button-color;
-    border: 2px solid $button-color;
-}
-
 
 QTabWidget::pane {
     border:none;
@@ -128,4 +122,9 @@ QScrollBar::sub-line:horizontal {
     background-color:$button-color;
     subcontrol-position: top;
     subcontrol-origin: margin;
+}
+
+QCheckBox {
+    border: 1px solid $button-color;
+    background-color: $background-color;
 }

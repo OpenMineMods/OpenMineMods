@@ -9,6 +9,13 @@ from PyQt5.QtCore import QFile
 from PyQt5.QtWidgets import *
 
 
+def confirmation(win, func, name):
+    if not confirm_box(win, QMessageBox.Question,
+                       "Are you sure you want to delete {}".format(name)):
+        return
+    func()
+
+
 def human_format(num):
     magnitude = 0
     while abs(num) >= 1000:

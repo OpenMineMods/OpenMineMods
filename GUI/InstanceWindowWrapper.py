@@ -8,7 +8,7 @@ from webbrowser import open as webopen
 from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI, CurseProject
 
-from Utils.Utils import clear_layout, load_style_sheet, human_format
+from Utils.Utils import clear_layout, load_style_sheet, human_format, confirmation
 from Utils.Downloader import DownloaderThread
 from Utils.Config import Config, Setting
 
@@ -179,8 +179,10 @@ class InstanceWindow:
         self.setup_mods()
 
     def mod_delete(self, fpath: str):
-        self.instance.uninstall_mod(fpath)
-        self.setup_mods()
+        def delete():
+            self.instance.uninstall_mod(fpath)
+            self.setup_mods()
+        confirmation(self.win, delete, fpath)
 
     def mod_scan(self):
         self.instance.find_mods(self.curse.db)
