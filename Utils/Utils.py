@@ -9,6 +9,15 @@ from PyQt5.QtCore import QFile
 from PyQt5.QtWidgets import *
 
 
+def human_format(num):
+    magnitude = 0
+    while abs(num) >= 1000:
+        magnitude += 1
+        num /= 1000.0
+    # add more suffixes if you need them
+    return '%.2f%s' % (num, ['', 'K', 'M', 'G', 'T', 'P'][magnitude])
+
+
 def load_style_sheet(sheet_name):
     vars = dict()
     file = QFile(':/style/%s.qss' % sheet_name.lower())

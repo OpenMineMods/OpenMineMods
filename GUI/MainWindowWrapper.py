@@ -17,7 +17,8 @@ from API.MultiMC import MultiMC, MultiMCInstance
 
 from CurseMetaDB.DB import DB
 
-from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet
+from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet, \
+    human_format
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
 from Utils.Downloader import DownloaderThread
@@ -204,6 +205,8 @@ class MainWindow:
             widget = QWidget()
             el = Ui_PackWidget()
             el.setupUi(widget)
+            el.pack_downloads.setText("Downloads: {}".format(human_format(pack.downloads)))
+            el.pack_authors.setText("By {}".format(', '.join(pack.authors)))
             el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
             el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
@@ -214,7 +217,8 @@ class MainWindow:
                     icon_thread = QThread()
                     dltr = DownloaderThread()
                     dltr.moveToThread(icon_thread)
-                    icon_thread.started.connect(partial(dltr.download_file_raw, pack.icon_url, self.icon_dir, pack.icon_name))
+                    icon_thread.started.connect(
+                        partial(dltr.download_file_raw, pack.icon_url, self.icon_dir, pack.icon_name))
                     dltr.done.connect(partial(el.pack_icon.setStyleSheet,
                                               ".QWidget { border-image: url(" +
                                               path.join(self.icon_dir, pack.icon_name) + "); }"))

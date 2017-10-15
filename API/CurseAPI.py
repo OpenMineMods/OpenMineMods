@@ -126,6 +126,10 @@ class CurseProject:
         self.versions = self.meta["versions"]
         self.files = self.meta["files"]
 
+        self.popularity = float(self.meta["popularity"])
+        self.downloads = float(self.meta["downloads"])
+        self.authors = self.meta["authors"]
+
         self.attachments = self.meta["attachments"]
         if len(self.attachments) > 0:
             self.default_attachment = [i for i in self.attachments if i["default"]][0]
