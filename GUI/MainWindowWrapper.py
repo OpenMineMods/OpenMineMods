@@ -131,6 +131,13 @@ class MainWindow:
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
+        self.ui.ad_img = QWidget()
+        self.ui.ad_img.setStyleSheet(".QWidget { border-image: url(:/icons/ad.png) }")
+        self.ui.ad_img.setFixedSize(60, 40)
+        self.ui.ad_img.setParent(self.win)
+
+        self.win.resizeEvent = self.resizeEvent
+
         self.icon_threads = []
         self.init_packs(self.curse.get_modpacks())
 
@@ -328,3 +335,6 @@ class MainWindow:
 
         update = Update(self.curse, res["update"])
         update.apply_update()
+
+    def resizeEvent(self, event):
+        self.ui.ad_img.move(self.win.width() - self.ui.ad_img.width() - 10, 10)

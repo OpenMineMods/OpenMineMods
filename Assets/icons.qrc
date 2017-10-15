@@ -11,6 +11,7 @@
     <file>icons/software-update-available-symbolic.svg</file>
     <file>icons/view-refresh.svg</file>
     <file>icons/OpenMineMods.svg</file>
+    <file>icons/ad.png</file>
     <file>style/main.qss</file>
   </qresource>
 </RCC>
