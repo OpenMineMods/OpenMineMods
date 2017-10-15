@@ -138,3 +138,12 @@ QProgressBar::chunk {
 QProgressBar {
     text-align: center;
 }
+
+QComboBox {
+    border: 1px solid $button-color;
+    background: $background-color;
+}
+
+QComboBox:editable {
+    background: $background-color;
+}
