@@ -46,8 +46,8 @@ class CurseAPI:
 
     def get_mod_list(self, version="*"):
         """Get an array of `CurseProject`s"""
-        mods = self.db.get_popular("mod", 25, version)
-        return [self.get_project(i) for i in mods]
+        mods = self.db.search_projects("", "mod", version=version)
+        return [CurseProject(i) for i in mods]
 
     def get_project(self, pid: int):
         mod = self.db.get_project(pid)

@@ -1,12 +1,15 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QThread
 
 from functools import partial
+from os import path
 from webbrowser import open as webopen
 
 from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI, CurseProject
 
-from Utils.Utils import clear_layout, load_style_sheet
+from Utils.Utils import clear_layout, load_style_sheet, human_format
+from Utils.Downloader import DownloaderThread
 from Utils.Config import Config, Setting
 
 from GUI.InstanceWindow import Ui_InstanceWindow
@@ -14,12 +17,14 @@ from GUI.InstanceWindow import Ui_InstanceWindow
 from GUI.FileDialogWrapper import FileDialog
 from GUI.DownloadDialogWrapper import DownloadDialog
 
+from GUI.ModBrowseWidget import Ui_ModBrowseWidget
 from GUI.ModWidget import Ui_ModWidget
 
 
 class InstanceWindow:
-    def __init__(self, instance: MultiMCInstance, curse: CurseAPI, conf: Config):
+    def __init__(self, instance: MultiMCInstance, curse: CurseAPI, conf: Config, icon_dir: str):
         self.curse = curse
+        self.icon_dir = icon_dir
         self.instance = instance
         self.installed_mods = list()
         self.conf = conf
@@ -45,6 +50,7 @@ class InstanceWindow:
             self.ui.pack_pack.hide()
 
         self.setup_mods()
+        self.icon_threads = []
         self.setup_mod_browse(curse.get_mod_list(self.instance.version))
 
         self.ui.pack_search.textChanged.connect(self.q_typed)
@@ -113,16 +119,34 @@ class InstanceWindow:
         clear_layout(self.ui.browse_box)
         for mod in mods:
             widget = QWidget()
-            el = Ui_ModWidget()
+            el = Ui_ModBrowseWidget()
             el.setupUi(widget)
 
             el.mod_name.setText(mod.name)
+            el.mod_downloads.setText("Downloads: {}".format(human_format(mod.downloads)))
+            el.mod_authors.setText("By {}".format(', '.join(mod.authors)))
+            el.mod_desc.setText(mod.desc)
             el.mod_install.clicked.connect(partial(self.mod_install, mod))
 
-            el.mod_delete.hide()
-            el.mod_update.hide()
+            el.mod_more.clicked.connect(partial(webopen, mod.page))
 
-            el.mod_info.clicked.connect(partial(webopen, mod.page))
+            el.mod_icon.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
+
+            if mod.icon_name is not None:
+                icon = path.join(self.icon_dir, mod.icon_name)
+                if not path.isfile(icon):
+                    icon_thread = QThread()
+                    dltr = DownloaderThread()
+                    dltr.moveToThread(icon_thread)
+                    icon_thread.started.connect(
+                        partial(dltr.download_file_raw, mod.icon_url, self.icon_dir, mod.icon_name))
+                    dltr.done.connect(partial(el.mod_icon.setStyleSheet,
+                                              ".QWidget { border-image: url(" +
+                                              path.join(self.icon_dir, mod.icon_name) + "); }"))
+                    icon_thread.start()
+                    self.icon_threads.append(icon_thread)
+                else:
+                    el.mod_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
 
             self.ui.browse_box.addWidget(widget)
 

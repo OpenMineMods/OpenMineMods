@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QThread, QStandardPaths, QFile
+from PyQt5.QtCore import QThread, QStandardPaths
 
 import sys
 
@@ -273,7 +273,7 @@ class MainWindow:
         self.init_instances()
 
     def edit_clicked(self, instance: MultiMCInstance):
-        self.children.append(InstanceWindow(instance, self.curse, self.conf))
+        self.children.append(InstanceWindow(instance, self.curse, self.conf, self.icon_dir))
 
     def install_clicked(self, project: CurseProject, force_latest=False):
         fs = [self.curse.get_file(i) for i in project.files]
