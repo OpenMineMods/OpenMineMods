@@ -316,7 +316,8 @@ class MainWindow:
         self.init_instances()
 
     def create_instance(self, event):
-        self.children.append(NewInstanceDialog(self.forge_dat))
+        self.children.append(NewInstanceDialog(self.forge_dat, self.mmc.path))
+        self.init_instances()
 
     # Settings Checkboxes
 

@@ -1,12 +1,17 @@
 from PyQt5.QtWidgets import *
 
+from os import path, makedirs
+
+from API.MultiMC import InstanceCfg, ForgePatch
+
 from GUI.NewInstanceDialog import Ui_NewInstanceDialog
 from Utils.Utils import load_style_sheet
 
 
 class NewInstanceDialog:
-    def __init__(self, forgedat: dict):
+    def __init__(self, forgedat: dict, mmc_dir: str):
         self.forge_data = forgedat
+        self.mmc_dir = path.join(mmc_dir, "instances")
         self.dia = QDialog()
         self.ui = Ui_NewInstanceDialog()
 
@@ -27,7 +32,25 @@ class NewInstanceDialog:
         self.dia.exec_()
 
     def create_instance(self):
-        return
+        mc_ver = self.ui.mc_ver.currentText()
+        forge_ver = self.ui.forge_ver.currentText()
+        name = self.ui.inst_name.text()
+
+        folder = path.join(self.mmc_dir, name)
+
+        while path.exists(folder):
+            folder += "_"
+
+        makedirs(folder)
+        makedirs(path.join(folder, "patches"))
+
+        instancecfg = InstanceCfg(mc_ver, forge_ver, name)
+        instancecfg.write(path.join(folder, "instance.cfg"))
+
+        patch = ForgePatch(mc_ver, forge_ver)
+        patch.write(path.join(folder, "patches", "net.minecraftforge.json"))
+
+        self.dia.done(1)
 
     def mcver_changed(self):
         self.ui.forge_ver.clear()
