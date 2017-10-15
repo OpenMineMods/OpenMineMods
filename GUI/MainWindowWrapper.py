@@ -207,7 +207,9 @@ class MainWindow:
             el.setupUi(widget)
             el.pack_downloads.setText("Downloads: {}".format(human_format(pack.downloads)))
             el.pack_authors.setText("By {}".format(', '.join(pack.authors)))
-            el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
+            el.pack_mcver.setText("Minecraft {}".format(pack.versions[-1]))
+            el.pack_desc.setText(pack.desc)
+            el.pack_name.setText(pack.name)
             el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
 
