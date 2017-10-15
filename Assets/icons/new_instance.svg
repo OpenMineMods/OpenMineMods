@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="16"
-   height="16"
-   viewBox="0 0 4.2333332 4.2333332"
+   width="160"
+   height="160"
+   viewBox="0 0 42.333332 42.333332"
    version="1.1"
    id="svg8"
    sodipodi:docname="new_instance.svg"
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="32.897369"
-     inkscape:cx="12.40081"
-     inkscape:cy="8.188155"
+     inkscape:zoom="2.9077441"
+     inkscape:cx="-82.063184"
+     inkscape:cy="41.99949"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -37,7 +37,8 @@
      inkscape:window-y="33"
      inkscape:window-maximized="1"
      inkscape:pagecheckerboard="true"
-     units="px" />
+     units="px"
+     scale-x="10" />
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -46,7 +47,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,21 +55,21 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-292.76667)">
+     transform="translate(0,-254.66667)">
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.25719881;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:31.92899132;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4580"
-       width="4.2178321"
-       height="1.2899797"
-       x="0.0052828882"
-       y="294.25928" />
+       width="31.633741"
+       height="9.6748486"
+       x="5.4967766"
+       y="271.21893" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.25114775;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:31.88360977;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4580-5"
-       width="4.2316308"
-       height="1.2821207"
-       x="292.77637"
-       y="-2.7612503"
+       width="31.73723"
+       height="9.6159058"
+       x="260.09711"
+       y="-26.121599"
        transform="rotate(90)" />
   </g>
 </svg>
