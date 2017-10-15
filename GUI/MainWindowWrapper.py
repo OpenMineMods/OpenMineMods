@@ -20,6 +20,7 @@ from CurseMetaDB.DB import DB
 from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
+from Utils.Downloader import DownloaderThread
 from Utils.Analytics import send_data
 from Utils.Config import Config, Setting
 
@@ -129,6 +130,7 @@ class MainWindow:
 
         self.win.setWindowTitle("OpenMineMods v{}".format(self.curse.version))
 
+        self.icon_threads = []
         self.init_packs(self.curse.get_modpacks())
 
         self.win.show()
@@ -199,16 +201,31 @@ class MainWindow:
         clear_layout(self.ui.pack_box)
 
         for pack in packs:
-            icon = pack.download_icon(self.curse, self.icon_dir)
-            if icon is None:
-                icon = ":/icons/OpenMineMods.svg"
             widget = QWidget()
             el = Ui_PackWidget()
             el.setupUi(widget)
-            el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
             el.pack_name.setText("{} (MC {})".format(pack.name, pack.versions[-1]))
             el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
+
+            if pack.icon_name is not None:
+                icon = path.join(self.icon_dir, pack.icon_name)
+                if not path.isfile(icon):
+                    icon_thread = QThread()
+                    dltr = DownloaderThread()
+                    dltr.moveToThread(icon_thread)
+                    icon_thread.started.connect(partial(dltr.download_file_raw, pack.icon_url, self.icon_dir, pack.icon_name))
+                    dltr.done.connect(partial(el.pack_icon.setStyleSheet,
+                                              ".QWidget { border-image: url(" +
+                                              path.join(self.icon_dir, pack.icon_name) + "); }"))
+                    icon_thread.start()
+                    self.icon_threads.append(icon_thread)
+                else:
+                    el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+            else:
+                icon = ":/icons/OpenMineMods.svg"
+                el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+
             self.ui.pack_box.addWidget(widget)
 
         self.ui.pack_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))

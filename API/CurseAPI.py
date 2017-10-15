@@ -134,8 +134,10 @@ class CurseProject:
 
         if self.default_attachment:
             self.icon_url = self.default_attachment["url"]
+            self.icon_name = "{}.{}".format(self.id, self.icon_url.split(".")[-1])
         else:
             self.icon_url = None
+            self.icon_name = None
 
     def download_icon(self, api, dir):
         if self.icon_url is not None:
