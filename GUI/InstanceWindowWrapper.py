@@ -142,11 +142,11 @@ class InstanceWindow:
                         partial(dltr.download_file_raw, mod.icon_url, self.icon_dir, mod.icon_name))
                     dltr.done.connect(partial(el.mod_icon.setStyleSheet,
                                               ".QWidget { border-image: url(" +
-                                              path.join(self.icon_dir, mod.icon_name) + "); }"))
+                                              path.join(self.icon_dir, mod.icon_name).replace("\\", "/") + "); }"))
                     icon_thread.start()
                     self.icon_threads.append(icon_thread)
                 else:
-                    el.mod_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+                    el.mod_icon.setStyleSheet(".QWidget { border-image: url(" + icon.replace("\\", "/") + "); }")
 
             self.ui.browse_box.addWidget(widget)
 

@@ -187,7 +187,7 @@ class MainWindow:
 
             icon = glob(path.join(icons, instance.iconKey + ".*"))
             if len(icon) > 0:
-                widget.setStyleSheet(".QWidget { border-image: url(" + icon[0] + "); }")
+                widget.setStyleSheet(".QWidget { border-image: url(" + icon[0].replace("\\", "/") + "); }")
             else:
                 widget.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
             el.instance_delete.clicked.connect(partial(self.delete_clicked, instance))
@@ -253,11 +253,11 @@ class MainWindow:
                         partial(dltr.download_file_raw, pack.icon_url, self.icon_dir, pack.icon_name))
                     dltr.done.connect(partial(el.pack_icon.setStyleSheet,
                                               ".QWidget { border-image: url(" +
-                                              path.join(self.icon_dir, pack.icon_name) + "); }"))
+                                              path.join(self.icon_dir, pack.icon_name).replace("\\", "/") + "); }"))
                     icon_thread.start()
                     self.icon_threads.append(icon_thread)
                 else:
-                    el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
+                    el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon.replace("\\", "/") + "); }")
 
             self.ui.pack_box.addWidget(widget)
 
