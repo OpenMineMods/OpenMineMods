@@ -9,6 +9,7 @@ from API.MultiMC import MultiMCInstance, MultiMC
 from Utils.Downloader import DownloaderThread
 
 from GUI.ProgressDialog import Ui_ProgressDialog
+from Utils.Utils import load_style_sheet
 
 
 class DownloadDialog:
@@ -16,6 +17,9 @@ class DownloadDialog:
         self.dia = QDialog()
         self.ui = Ui_ProgressDialog()
         self.ui.setupUi(self.dia)
+
+        self.style = load_style_sheet('main')
+        self.dia.setStyleSheet(self.style)
 
         self.dlthread = QThread()
         self.downloader = DownloaderThread()

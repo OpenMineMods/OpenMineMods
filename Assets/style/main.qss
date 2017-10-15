@@ -128,3 +128,13 @@ QCheckBox {
     border: 1px solid $button-color;
     background-color: $background-color;
 }
+
+
+QProgressBar::chunk {
+    background-color: $button-hover-color;
+    width: 20px;
+}
+
+QProgressBar {
+    text-align: center;
+}

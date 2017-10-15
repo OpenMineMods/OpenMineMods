@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
+    <file>icons/new_instance.svg</file>
     <file>icons/player_play.svg</file>
     <file>icons/emblem-shared-symbolic.svg</file>
     <file>icons/web-browser-symbolic.svg</file>
