@@ -220,6 +220,7 @@ class MainWindow:
             el.pack_install.clicked.connect(partial(self.install_clicked, pack))
             el.pack_more.clicked.connect(partial(webopen, pack.page))
 
+            el.pack_icon.setStyleSheet(".QWidget { border-image: url(:/icons/OpenMineMods.svg); }")
             if pack.icon_name is not None:
                 icon = path.join(self.icon_dir, pack.icon_name)
                 if not path.isfile(icon):
@@ -235,9 +236,6 @@ class MainWindow:
                     self.icon_threads.append(icon_thread)
                 else:
                     el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
-            else:
-                icon = ":/icons/OpenMineMods.svg"
-                el.pack_icon.setStyleSheet(".QWidget { border-image: url(" + icon + "); }")
 
             self.ui.pack_box.addWidget(widget)
 
