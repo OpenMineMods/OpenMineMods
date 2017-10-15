@@ -219,7 +219,7 @@ class MainWindow:
             self.ui.instance_box.addWidget(widget)
 
         new_widget = QWidget()
-        new_widget.setStyleSheet(".QWidget { border-image: url(:/icons/new_instance.png) }")
+        new_widget.setStyleSheet(".QWidget { border-image: url(:/icons/new_instance.svg) }")
         new_widget.setFixedSize(200, 200)
         new_widget.setToolTip("Create New Instance")
         new_widget.mousePressEvent = self.create_instance
