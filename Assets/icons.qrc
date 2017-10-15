@@ -12,6 +12,7 @@
     <file>icons/view-refresh.svg</file>
     <file>icons/OpenMineMods.svg</file>
     <file>icons/ad.png</file>
+    <file>icons/new_instance.png</file>
     <file>style/main.qss</file>
   </qresource>
 </RCC>
