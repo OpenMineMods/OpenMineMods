@@ -17,7 +17,7 @@ from API.MultiMC import MultiMC, MultiMCInstance
 
 from CurseMetaDB.DB import DB
 
-from Utils.Utils import clear_layout, confirm_box, dir_box, msg_box, get_multimc_executable, load_style_sheet, \
+from Utils.Utils import clear_layout, dir_box, msg_box, get_multimc_executable, load_style_sheet, \
     human_format, confirmation
 from Utils.Updater import UpdateCheckThread, Update
 from Utils.Logger import *
@@ -35,6 +35,7 @@ from GUI.FileDialogWrapper import FileDialog
 from GUI.DownloadDialogWrapper import DownloadDialog
 from GUI.InitialSetupWrapper import SetupWindow
 from GUI.ExportDialogWrapper import ExportDialog
+from GUI.NewInstanceWrapper import NewInstanceDialog
 
 from GUI.InstanceWidget import Ui_InstanceWidget
 from GUI.PackWidget import Ui_PackWidget
@@ -70,16 +71,30 @@ class MainWindow:
 
         new_meta_time = self.conf.read(Setting.last_meta) + (self.conf.read(Setting.meta_interval) * 60 ** 3)
 
+        just_updated = False
         if not path.isfile(path.join(cache_dir, "meta.json")) or int(time()) > new_meta_time:
             dia = SetupWindow(data_dir, cache_dir)
             dia.next_tab()
             dia.next_tab()
             dia.win.exec_()
             self.conf.write(Setting.last_meta, int(time()))
+            just_updated = True
 
         self.db = DB(loads(open(path.join(cache_dir, "meta.json")).read()))
 
         self.curse = CurseAPI(self.db)
+
+        if not path.isfile(path.join(cache_dir, "forge.json")) or just_updated:
+            dia = DownloadDialog()
+            dia.download_file("https://meta.multimc.org/net.minecraftforge/", cache_dir, self.curse, "forge.json")
+
+        forge_dat = loads(open(path.join(cache_dir, "forge.json")).read())
+        self.forge_dat = dict()
+        for ver in forge_dat["versions"]:
+            mcver = ver["requires"]["net.minecraft"]
+            if mcver not in self.forge_dat:
+                self.forge_dat[mcver] = list()
+            self.forge_dat[mcver].append(ver["version"])
 
         if self.conf.read(Setting.analytics):
             if self.curse.version != self.conf.read(Setting.current_version):
@@ -203,11 +218,12 @@ class MainWindow:
 
             self.ui.instance_box.addWidget(widget)
 
-        # new_widget = QWidget()
-        # new_widget.setStyleSheet(".QWidget { border-image: url(:/icons/new_instance.png) }")
-        # new_widget.setFixedSize(200, 200)
-        # new_widget.setToolTip("Create New Instance")
-        # self.ui.instance_box.addWidget(new_widget)
+        new_widget = QWidget()
+        new_widget.setStyleSheet(".QWidget { border-image: url(:/icons/new_instance.png) }")
+        new_widget.setFixedSize(200, 200)
+        new_widget.setToolTip("Create New Instance")
+        new_widget.mousePressEvent = self.create_instance
+        self.ui.instance_box.addWidget(new_widget)
 
         self.ui.instance_box.addItem(QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
@@ -298,6 +314,9 @@ class MainWindow:
         dia.download_pack(project, f, self.curse, self.mmc, force_latest)
         self.mmc = MultiMC(self.conf.read(Setting.location))
         self.init_instances()
+
+    def create_instance(self, event):
+        self.children.append(NewInstanceDialog(self.forge_dat))
 
     # Settings Checkboxes
 

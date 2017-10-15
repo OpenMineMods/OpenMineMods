@@ -81,7 +81,10 @@ class CurseAPI:
         """Download a file from `url` to `filepath/name`"""
         r = self.session.get(url, stream=True)
         dlen = r.headers.get("content-length")
-        step = (100 / int(dlen))
+        try:
+            step = (100 / int(dlen))
+        except TypeError:
+            step = 0
         prog = 0
         if not fname:
             fname = unquote(Path(r.url).name)
