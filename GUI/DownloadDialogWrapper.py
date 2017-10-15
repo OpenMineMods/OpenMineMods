@@ -6,6 +6,7 @@ from functools import partial
 from API.CurseAPI import CurseFile, CurseAPI, CurseProject, CurseModpack
 from API.MultiMC import MultiMCInstance, MultiMC
 
+from Utils.Utils import load_style_sheet
 from Utils.Downloader import DownloaderThread
 
 from GUI.ProgressDialog import Ui_ProgressDialog
@@ -31,6 +32,9 @@ class DownloadDialog:
         self.downloader.prog_2.connect(self.ui.progbar_2.setValue)
 
         self.downloader.done.connect(self._dl_done)
+
+        self.style = load_style_sheet('main')
+        self.dia.setStyleSheet(self.style)
 
     def download_mod(self, f: CurseFile, curse: CurseAPI, instance: MultiMCInstance):
         self.dia.setWindowTitle("Downloading {}".format(f.filename))

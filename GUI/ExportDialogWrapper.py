@@ -9,7 +9,7 @@ from json import dumps
 from API.MultiMC import MultiMCInstance
 from API.CurseAPI import CurseAPI
 
-from Utils.Utils import zip_dir
+from Utils.Utils import zip_dir, load_style_sheet
 
 from GUI.ExportDialog import Ui_ExportDialog
 
@@ -54,6 +54,9 @@ class ExportDialog:
 
         self.ui.export_button.clicked.connect(self.export_clicked)
         self.ui.cancel_button.clicked.connect(partial(self.dia.done, 0))
+
+        self.style = load_style_sheet('main')
+        self.dia.setStyleSheet(self.style)
 
         self.dia.exec_()
 

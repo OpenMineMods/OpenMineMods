@@ -2,6 +2,8 @@ from PyQt5.QtWidgets import *
 
 from functools import partial
 
+from Utils.Utils import load_style_sheet
+
 from GUI.FileDialog import Ui_FileDialog
 
 from GUI.FileWidget import Ui_FileWidget
@@ -12,6 +14,9 @@ class FileDialog:
         self.dia = QDialog()
         self.ui = Ui_FileDialog()
         self.ui.setupUi(self.dia)
+
+        self.style = load_style_sheet('main')
+        self.dia.setStyleSheet(self.style)
 
         for x, f in enumerate(files):
             widget = QWidget()

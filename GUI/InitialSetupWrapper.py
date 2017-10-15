@@ -7,7 +7,7 @@ from lzma import open as copen
 from time import time
 
 from Utils.Config import Config, Setting
-from Utils.Utils import dir_box
+from Utils.Utils import dir_box, load_style_sheet
 from Utils.Downloader import DownloaderThread
 
 from GUI.SetupDialog import Ui_SetupDialog
@@ -39,6 +39,9 @@ class SetupWindow:
         self.downloader.prog_1.connect(self.ui.prog_1.setValue)
 
         self.downloader.done.connect(self._dl_done)
+
+        self.style = load_style_sheet('main')
+        self.win.setStyleSheet(self.style)
 
     def next_tab(self):
         ind = self.ui.tabWidget.currentIndex()

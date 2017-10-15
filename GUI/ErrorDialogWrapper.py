@@ -9,7 +9,7 @@ from uuid import uuid4
 
 from GUI.ErrorDialog import Ui_ErrorDialog
 
-from Utils.Utils import msg_box
+from Utils.Utils import msg_box, load_style_sheet
 
 
 class ErrorDialog:
@@ -26,6 +26,9 @@ class ErrorDialog:
         self.toggle_details()
 
         self.ui.donebutton.clicked.connect(partial(self.win.done, 1))
+
+        self.style = load_style_sheet('main')
+        self.dia.setStyleSheet(self.style)
 
         res = self.win.exec_()
 
