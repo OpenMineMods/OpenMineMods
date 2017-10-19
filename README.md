@@ -23,8 +23,6 @@ pip3 install -r requirements.txt
 
 ### Arch Linux
 
-***THE AUR PACKAGE IS OUT OF DATE. PLEASE RUN FROM SOURCE OR THE LINUX BINARY***
-
 Install [OpenMineMods](https://aur.archlinux.org/packages/openminemods/) from the AUR.
 
 ## Windows:
