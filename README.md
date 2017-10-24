@@ -29,7 +29,7 @@ Install [OpenMineMods](https://aur.archlinux.org/packages/openminemods/) from th
 
 ### Any:
 
-Download and unpack `Windows.zip` from the latest [release](https://github.com/OpenMineMods/releases), then run `OpenMineMods.exe`
+Download and unpack `Windows.zip` from the latest [release](https://github.com/OpenMineMods/OpenMineMods/releases), then run `OpenMineMods.exe`
 
 # Contributing:
 
